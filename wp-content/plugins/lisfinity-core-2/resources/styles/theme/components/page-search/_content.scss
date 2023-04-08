@@ -1,0 +1,13 @@
+#page-search {
+  .row {
+    &--products {
+      //width: calc(100% + 28px);
+    }
+  }
+
+  .track {
+    &--vertical {
+      width: 2px !important;
+    }
+  }
+}

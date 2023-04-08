@@ -1,0 +1,534 @@
+.skype-white.fill-white {
+  svg {
+    path:first-child {
+      fill: transparent;
+    }
+  }
+}
+
+input {
+  &::placeholder {
+    @apply text-grey-700;
+  }
+}
+
+@media screen and (max-width: 782px) {
+  html #wpadminbar {
+    position: fixed;
+    top: 0;
+  }
+}
+
+header {
+  &#header--main {
+    //max-height: auto;
+    .logo {
+      margin-top: 5px;
+    }
+  }
+
+  @media (max-width: 1030px) {
+    z-index: 99;
+  }
+}
+
+#header--main {
+  z-index: 9997;
+}
+
+#header-keyword {
+  align-self: center;
+  width: 100%;
+  @media (max-width: 740px) {
+    order: 1;
+  }
+  @media (min-width: 740px) {
+    width: auto;
+  }
+
+  .search-keyword {
+    min-width: 380px;
+    @media (max-width: 1280px) {
+      min-width: 300px;
+    }
+    @media (max-width: 960px) {
+      min-width: auto;
+      width: 100%;
+    }
+  }
+}
+
+body {
+  &.lisfinity-page-account {
+    @apply bg-grey-100;
+  }
+
+  select {
+    .lisfinity-field {
+      height: 46px;
+    }
+  }
+
+  &.page .bg-header h2 {
+    margin-top: 0;
+  }
+}
+
+main .elementor-section.elementor-section-boxed > .elementor-container,
+.container {
+  @media (min-width: 1980px) {
+    max-width: 1140px;
+  }
+  @media (min-width: 2180px) {
+    max-width: 1140px;
+  }
+  @media (max-width: 960px) {
+    max-width: 100%;
+  }
+}
+
+button {
+  outline: none;
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+}
+
+// menu custom.
+.menu-item-submit {
+  a {
+    transition: all .2s ease-in-out;
+    background-color: rgba(68, 68, 68, .7);
+
+    &:hover {
+      transition: all .2s ease-in-out;
+      @apply bg-blue-700;
+    }
+  }
+}
+
+@media (max-width: 1030px) {
+  .menu--lisfinity nav ul li {
+    &.menu-item-submit {
+      margin-top: 10px;
+
+      a {
+        @apply bg-blue-700 rounded text-white;
+      }
+    }
+  }
+}
+
+.ellipsis {
+  white-space: nowrap;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 960px) {
+  #notifications--wrapper {
+    //display: none;
+  }
+}
+
+@media (min-width: 960px) {
+  #notifications--wrapper-mobile {
+    //display: none;
+  }
+}
+
+// video specific.
+.video--hidden {
+  transition: all .2s ease-in-out;
+}
+
+// sticky menu
+#header--main.sticky {
+  position: sticky;
+  top: 0;
+  left: 0;
+  background-color: #1c1c1c;
+  width: 100%;
+  transition: all .2s ease-in-out;
+}
+
+#header--main-sticky {
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  transition: all .2s ease-out;
+}
+
+#header--main-sticky.sticky {
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: all .2s ease-in;
+}
+
+.logged-in {
+  #header--main-sticky.sticky {
+    top: 32px;
+  }
+
+  #header--main.sticky {
+    top: 32px;
+    transition: all .2s ease-in-out;
+  }
+}
+
+// footer specific.
+footer.footer .widget.carbon_fields_social_widget ul li a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+// default react select styles.
+body {
+  .css-kj6f9i-menu {
+    border: none;
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, .1);
+    z-index: 9;
+  }
+
+  .css-xo7z33-option,
+  .css-dpec0i-option {
+    @apply bg-grey-100 cursor-pointer text-grey-1100;
+  }
+
+  .elementor {
+    img.rounded-full {
+      height: 32px;
+    }
+  }
+}
+
+// footer custom widgets.
+.footer {
+  .socials {
+    a {
+      &:hover {
+        .icon {
+          @apply fill-white;
+        }
+      }
+
+      .icon {
+        width: 20px;
+        height: 20px;
+        opacity: .7;
+        @apply fill-grey-800;
+
+
+        &__medium {
+          width: 24px;
+          height: 24px;
+          zoom: .8;
+        }
+      }
+
+      &:hover {
+        .icon {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+#keyword[disabled] {
+  @apply bg-white;
+}
+
+@-webkit-keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 20%, 0);
+    transform: translate3d(0, 20%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.overlay {
+  &--close {
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, .2);
+    transition: all .2s ease-in-out;
+
+    button {
+      transition: none;
+    }
+  }
+}
+
+.figure {
+  &--uploader {
+
+    &:hover {
+      .overlay--close {
+        visibility: visible;
+        transition: all .2s ease-in-out;
+
+        button {
+          transition: none;
+        }
+      }
+    }
+  }
+}
+
+.iron-image__container {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  background-size: 100% 100%;
+}
+
+.iron-image {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  opacity: 0;
+
+  transition: opacity 1s ease;
+}
+
+.iron-image--fade-in {
+  opacity: 1;
+}
+
+body {
+  .text-sm-shadow {
+    @media (max-width: 640px) {
+      font-size: 24px;
+    }
+  }
+
+  .text-7xl {
+    @media (max-width: 640px) {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+  }
+}
+
+.pswp {
+  z-index: 99999;
+}
+
+.fadeInUp {
+  animation: fadeInUp .6s;
+}
+
+@media (max-width: 1030px) {
+  body footer .sub-menu {
+    @apply bg-grey-1100;
+  }
+}
+
+.css-16pqwjk-indicatorContainer + .css-bgvzuu-indicatorSeparator + .css-16pqwjk-indicatorContainer,
+.css-1thkkgx-indicatorContainer + .css-bgvzuu-indicatorSeparator + .css-1thkkgx-indicatorContainer {
+  display: none;
+}
+
+.stripe-connect-btn {
+  padding: 4px 10px;
+  border-radius: 4px;
+  background-color: #6772e5;
+  color: #fff;
+
+  &:hover {
+    color: #fff !important;
+  }
+}
+
+.elementor-control-type-repeater .elementor-control-lisfinity_features_categories .elementor-button-wrapper .elementor-button {
+  display: none;
+}
+
+//** ordering classes **//
+
+@for $i from 1 through 50 {
+  .lisfinity-order-#{$i} {
+    order: #{$i};
+  }
+}
+
+// elementor override
+.elementor .page-search-listings .lisfinity-products--custom div.h-full {
+  height: auto;
+}
+
+.elementor .page-search-listings .lisfinity-products--custom img.h-full {
+  height: 100%;
+
+  span.slide--current {
+    box-shadow: 0px 0px 0px 4px rgba(9, 103, 210, 1) inset;
+  }
+}
+
+.css-1pcexqc-container, .css-ssi0ig-container {
+  width: 100%;
+}
+
+.css-0 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-filter-top-label, label.flex.items-center.mr-4.text-sm.text-grey-500 {
+  width: -webkit-fill-available;
+}
+
+.bookmark-icon {
+  color: rgb(104, 104, 104);
+  fill: rgb(104, 104, 104);
+}
+
+.bookmarked-icon {
+  color: rgb(203, 110, 23);
+  fill: rgb(203, 110, 23);
+}
+
+.slick-next {
+  right: 25px;
+  z-index: 2;
+}
+
+.slick-prev {
+  left: 25px;
+  z-index: 2;
+}
+
+.slick-next::before {
+  content: "→";
+}
+
+.slick-prev::before {
+  content: "←";
+}
+
+.toastify--lisfinity.success {
+  color: #07818f;
+}
+
+.results {
+  z-index: 50;
+}
+
+.results {
+  z-index: 2;
+}
+
+.cursor-zoom-in {
+  cursor: zoom-in;
+}
+
+.author-verified-container {
+  z-index: 99;
+}
+
+// currency switcher
+.currency-switcher {
+  position: fixed;
+  top: 50%;
+  right: -170px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  transition: .2s ease-in;
+  z-index: 9999999;
+
+  &:hover {
+    right: 0;
+  }
+
+  .currency {
+    margin: 1px 0;
+    padding: 5px 10px;
+    background-color: #393643;
+    color: #fff;
+    transition: .2s ease-in;
+
+    &--full {
+      margin-left: 10px;
+      transition: .2s ease-in;
+    }
+
+    &.active {
+      background-color: #0967d2;
+    }
+
+    &:hover {
+      background-color: #0967d2;
+      transition: .2s ease-in;
+    }
+  }
+}
+
+#billing_country, #billing_state, #shipping_country, #billing_country, #shipping_state {
+  background-color: #f6f6f6;
+}
+
+.elementor-text-editor p {
+  font-size: inherit;
+}
+
+.elementor-text-editor ol {
+  list-style: decimal;
+}
+
+.packages-discount-select {
+  width: 30%;
+}
+
+.elementor-text-editor ul {
+  list-style: inherit;
+}
+
+#page-search .fill-taxonomy-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.premium_profile-template-default #mobile-menu--search {
+  display: none;
+}
+
+#lisfinityProducts {
+  .lisfinity-product .label--promoted {
+    top: -2px;
+  }
+}
+.elementor .pswp {
+  img {
+    max-width: none;
+  }
+}

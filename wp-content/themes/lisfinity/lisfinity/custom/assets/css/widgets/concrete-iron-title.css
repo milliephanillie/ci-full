@@ -1,0 +1,32 @@
+.ci-header-widget {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ci-header-widget.ci-header-widget-center {
+    justify-content: center;
+    text-align: center;
+}
+
+.ci-header-widget.ci-header-widget-center .ci-header-widget-content {
+    max-width: 700px;
+}
+
+.ci-header-widget-header h2 {
+    margin-top: 0 !important;
+    font-weight: 800;
+    font-size: 48px;
+    line-height: 66px;
+    color: var(--textPrimary);
+}
+
+.ci-header-widget-header h2 span {
+    color: var(--textAlt);
+}
+
+.ci-header-widget-subtitle p {
+    color: var(--textPrimary);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 150%;
+}

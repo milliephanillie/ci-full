@@ -1,0 +1,31 @@
+.modal {
+  //margin-top: 10%;
+  width: 95%;
+  @media (min-width: 670px) {
+    //margin-top: 5%;
+    width: 90%;
+  }
+  @media (min-width: 960px) {
+    width: 70%;
+  }
+  @media (min-width: 1140px) {
+    width: 50%;
+  }
+  @media (min-width: 1540px) {
+    width: 40%;
+    &--admin {
+      .modal {
+        width: 25%;
+      }
+    }
+  }
+
+  &--inner {
+    //margin-bottom: 5%;
+  }
+
+  &--wrapper {
+    background-color: rgba(0, 0, 0, .6);
+    z-index: 9999;
+  }
+}

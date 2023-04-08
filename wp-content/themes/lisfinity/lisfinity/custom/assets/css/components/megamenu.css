@@ -1,0 +1,87 @@
+header--main {}
+
+header#header--main .relative,
+header#header--main .elementor-column,
+header#header--main .elementor-widget-wrap,
+header#header--main .elementor-widget {
+    position: static;
+}
+
+header#header--main .megamenu {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    background: white;
+    top: 100%;
+    box-shadow: 0 5px 10px rgba(0,0,0,.1);
+}
+
+header#header--main ul li {
+    list-style-type: none;
+}
+#main-menu-ul  li {
+    list-style-type: none;
+}
+#main-menu-ul  > li > a svg {
+    margin-left: 10px;
+}
+
+.megamenu {
+    display: none;
+    padding: 20px 40px;
+}
+
+.megamenu-container {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+}
+
+header#header--main nav > ul > li > a {
+    height: var(--headerHeight);
+    display: flex;
+    align-items: center;
+}
+
+.menu--lisfinity ul li.has-dropdown:hover>.megamenu {
+    display: flex;
+}
+
+ul.mega-submenu {
+    width: 1400px;
+    margin: auto;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 20px;
+    display: grid;
+}
+
+.megamenu h4
+.megamenu a {
+    color: var(--black);
+}
+
+.megamenu h4 {
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0 10px 5px;
+    border-bottom: 1px solid var(--borderGrey);
+    position: relative;
+}
+
+.megamenu h4:after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: '';
+    height: 1px;
+    width: 100%;
+    background-color: var(--borderGrey);
+}
+
+.megamenu-cats ul li a {
+    font-weight: 500;
+    font-size: 14px !important;
+    line-height: 20px !important;
+    padding: 6px 10px;
+}

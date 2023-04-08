@@ -1,0 +1,11 @@
+.form {
+  &--product {
+    .wp-editor-container {
+      @apply bg-grey-100 rounded;
+    }
+
+    div.mce-panel {
+      @apply bg-grey-100;
+    }
+  }
+}

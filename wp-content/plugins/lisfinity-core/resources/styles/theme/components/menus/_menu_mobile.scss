@@ -1,0 +1,58 @@
+.logged-in {
+  .menu-mobile {
+    top: 32px;
+    @media screen and (max-width: 480px) {
+      top: 0px;
+    }
+  }
+}
+
+.logged-in.admin-bar {
+  .menu-mobile {
+    @media screen and (max-width: 480px) {
+      top: 46px;
+    }
+  }
+}
+
+.menu-mobile {
+  top: 0;
+  z-index: 999;
+  width: 40%;
+
+  &--socials {
+    p {
+      color: #7a8593;
+    }
+
+    a {
+      width: 34px;
+      height: 34px;
+      border-color: #7a8593;
+
+      svg {
+        height: 16px;
+        width: 16px;
+        fill: #7a8593;
+      }
+    }
+  }
+}
+
+@media (max-width: 680px) {
+  .menu-mobile {
+    width: 50%;
+  }
+}
+
+@media (max-width: 540px) {
+  .menu-mobile {
+    width: 70%;
+  }
+}
+
+@media (max-width: 420px) {
+  .menu-mobile {
+    width: 80%;
+  }
+}

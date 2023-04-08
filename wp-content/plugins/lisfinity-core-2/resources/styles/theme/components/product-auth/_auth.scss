@@ -1,0 +1,26 @@
+#page-auth {
+  .btn-auth-redirect {
+    .btn-loader {
+      top: 17px;
+      left: 100%;
+    }
+  }
+  .auth {
+    &--inner {
+      margin-top: -33px;
+      padding: 10% 10% 20%;
+      @media (min-width: 490px) {
+        padding: 20% 15%;
+      }
+      @media (min-width: 1030px) {
+        padding: 20%;
+      }
+      @media (min-width: 1280px) {
+        padding: 20% 25%;
+      }
+      @media (min-width: 1780px) {
+        padding: 20% 30%;
+      }
+    }
+  }
+}

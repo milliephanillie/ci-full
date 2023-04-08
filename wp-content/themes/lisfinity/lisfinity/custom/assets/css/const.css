@@ -1,0 +1,26 @@
+.root,
+#root,
+#docs-root,
+:root {
+    --white: #ffffff;
+    --black: #000000;
+
+    --textHeader: #343434;
+    --textPrimary: #000000;
+    --textAlt: #E4AD52;
+
+    --textGreyDark: #343434;
+    --textGreyMedium: #818181;
+    --textGreyAlt: #AFAFAF;
+
+    --borderGrey: #C6C6C6;
+
+
+    --brandPrimary: #E4AD52;
+
+    --headerHeight: 80px;
+}
+
+.brand-yellow {
+    color: var(--brandPrimary);
+}

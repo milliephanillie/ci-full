@@ -1,0 +1,384 @@
+/**
+ -----------------------------------------------------------
+ 04. Comments Styling
+ -----------------------------------------------------------
+ */
+
+#comments {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid;
+  @apply border-grey-200;
+  @media (max-width: 640px) {
+    margin-top: 60px;
+  }
+
+  h5 {
+    font-weight: 700;
+    @apply text-grey-1000;
+  }
+
+  .pingback,
+  .trackback {
+    margin-bottom: 20px;
+
+    a {
+      margin: 0 10px;
+
+      &:hover {
+        text-decoration: underline;
+        @apply text-blue-700;
+      }
+    }
+
+    .edit-link {
+      display: none;
+    }
+  }
+
+  .comment {
+    padding-bottom: 0;
+
+    &-body {
+      display: flex;
+
+      @media (max-width: 520px) {
+        flex-direction: column;
+      }
+    }
+
+    .avatar {
+      &--figure {
+        position: absolute;
+        top: 28px;
+        left: 0;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+        overflow: hidden;
+
+        .avatar.avatar-default {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border-radius: 0;
+          border: none;
+        }
+      }
+    }
+
+    &--author {
+      font-weight: 600;
+    }
+
+    &-meta {
+      padding-right: 30px;
+    }
+
+    &-metadata {
+      a {
+        font-size: 14px;
+        font-weight: 300;
+      }
+    }
+
+    &-content {
+      margin-top: 20px;
+
+      p {
+        margin-bottom: 10px;
+        font-size: 15px;
+        line-height: 25px;
+        @apply text-grey-800;
+      }
+
+      ul {
+        list-style-type: circle;
+      }
+
+      ol {
+        list-style-type: decimal;
+      }
+
+      @media (max-width: 640px) {
+        margin-top: 20px;
+      }
+    }
+
+    &-reply {
+      font-size: 13px;
+      font-weight: 700;
+      @apply text-grey-900;
+
+      a {
+        display: flex;
+
+        .icon {
+          position: relative;
+          top: -1px;
+          margin-left: 8px;
+          @apply fill-grey-500;
+        }
+      }
+    }
+  }
+
+  .pagination--wrapper {
+    width: 100%;
+
+    .comment-navigation {
+      width: 100%;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .nav-next {
+        margin-left: auto;
+      }
+    }
+
+    a {
+      font-size: 16px;
+      font-weight: 700;
+      @apply text-grey-500;
+      &:hover {
+        @apply text-grey-1000;
+      }
+    }
+  }
+
+  .children {
+    margin-bottom: 0;
+
+    li {
+      padding-bottom: 0;
+    }
+  }
+}
+
+.comment-respond {
+}
+
+
+.comment-respond {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid;
+  order: 2;
+  @apply border-grey-200;
+
+  p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+    @apply font-light text-lg;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+
+    .comment {
+      &-notes {
+        padding-top: 0;
+
+        .required {
+          position: relative;
+          top: -6px;
+        }
+      }
+
+      &-form-author {
+        order: 2;
+      }
+
+      &-form-email {
+        order: 3;
+      }
+
+      &-form-url {
+        order: 4;
+      }
+
+      &-form-comment {
+        order: 5;
+      }
+
+      &-form-cookies-consent {
+        order: 6;
+        display: flex;
+
+        label {
+          top: -2px;
+          margin-left: 6px;
+          font-weight: 300;
+          line-height: 1.4;
+          @apply relative pb-0 text-grey-700;
+        }
+      }
+
+    }
+
+    .form-submit {
+      order: 7;
+
+      input[type=submit] {
+        padding: 8px 24px;
+        font-weight: 700;
+        @apply bg-blue-700 rounded text-white;
+
+        &:hover {
+          @apply bg-blue-800;
+        }
+      }
+    }
+
+    @media (max-width: 1180px) {
+      width: 100%;
+    }
+
+    p {
+      &.comment-notes {
+        margin-top: -20px;
+        font-size: 14px;
+        @apply text-grey-700;
+      }
+
+      &.comment-form-cookies-consent {
+        align-items: center;
+
+        input {
+          position: relative;
+          top: -2px;
+        }
+      }
+
+      @apply text-grey-700;
+      label {
+        font-size: 14px;
+        font-weight: 600;
+        @apply text-grey-1000;
+
+        .required {
+          position: relative;
+          top: -6px;
+        }
+      }
+
+      input:not([type=checkbox]) {
+        @apply h-44;
+      }
+
+      input:not([type=checkbox]),
+      textarea {
+        @apply bg-grey-100 border-grey-300 rounded text-grey-1000;
+      }
+    }
+
+  }
+}
+
+.comments-title {
+  order: 1;
+  font-size: 20px;
+  @media (max-width: 640px) {
+    margin-top: 0;
+  }
+}
+
+.single:not(.woocommerce-page) main article h3.comment-reply-title {
+  margin-bottom: 0;
+}
+
+.comment-reply-title {
+  font-size: 20px;
+  font-weight: 700;
+  @apply text-grey-1000;
+}
+
+.comment-list {
+  .comment-respond {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid;
+    @apply border-grey-200;
+  }
+
+  .comment-form {
+    .comment-notes {
+      font-size: 12px;
+
+      .required {
+        position: relative;
+        top: -6px;
+      }
+    }
+
+    .comment-form-cookies-consent {
+      @apply text-grey-700;
+    }
+  }
+}
+
+@media (max-width: 1480px) {
+  #comments {
+    article.comment-body {
+      flex-direction: column;
+
+      footer {
+        width: 100%;
+      }
+
+      .comment-content {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 680px) {
+  #comments {
+    li.comment {
+      padding-left: 0;
+    }
+
+    article.comment-body {
+      footer {
+        display: flex;
+        flex-direction: column;
+
+        img {
+          position: relative;
+          top: auto;
+          left: auto;
+        }
+      }
+    }
+  }
+}
+
+.post-single {
+  .comment-content {
+    pre {
+      font-size: 12px;
+    }
+  }
+}
+
+.page {
+  #comments {
+    padding-top: 30px;
+  }
+}
+
+.cancel-comment-reply-link {
+  @apply font-normal;
+}

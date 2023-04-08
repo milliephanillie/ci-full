@@ -1,0 +1,75 @@
+/**
+ -----------------------------------------------------------
+ 07. WooCommerce Widget Styling
+ -----------------------------------------------------------
+ */
+
+.woocommerce,
+.woocommerce-page {
+
+  // widget | cart
+  .widget_shopping_cart {
+    .woocommerce-mini-cart {
+      &__total {
+        margin: 10px 0;
+      }
+    }
+  }
+
+  // widget | price
+  .widget_price_filter {
+    .ui-slider {
+      height: 4px;
+
+      .ui-slider-range {
+        @apply bg-grey-800;
+      }
+
+      .ui-slider-handle {
+        top: -5px;
+        @apply bg-grey-800;
+      }
+    }
+
+    .price_slider_amount {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+
+      .price_label {
+        margin-right: auto;
+        font-size: 14px;
+        @apply text-grey-700;
+      }
+    }
+  }
+
+  // widget | product search
+  .widget_product_search {
+    form {
+      display: flex;
+      flex-direction: column;
+
+      input:not([type=submit]) {
+        display: flex;
+        padding: 10px 20px;
+        border: 1px solid;
+        @apply bg-white border-grey-200 rounded;
+      }
+
+      button[type=submit] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 4px;
+        padding: 8px 24px;
+        font-weight: 700;
+        @apply bg-blue-700 rounded text-white;
+
+        &:hover {
+          @apply bg-blue-800;
+        }
+      }
+    }
+  }
+}

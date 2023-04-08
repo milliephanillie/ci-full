@@ -1,0 +1,15 @@
+@import '~react-toastify/dist/ReactToastify.css';
+@import '~toastify-js/src/toastify.css';
+
+.toastify {
+  display: flex;
+
+  &--lisfinity {
+    max-width: 400px;
+  }
+
+  .toast-close {
+    margin-left: auto;
+    @apply text-white;
+  }
+}

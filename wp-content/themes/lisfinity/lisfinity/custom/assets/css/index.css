@@ -1,0 +1,38 @@
+@import "const.css";
+@import "fonts/basic-style.css";
+
+
+@import "footer.css";
+
+/* Elementor Widgets */
+@import "layouts.css";
+@import "widgets/concrete-iron-title.css";
+@import "widgets/concreteiron-subtitle.css";
+@import "widgets/concreteiron-title-superscript.css";
+@import "widgets/concreteiron-subheading.css";
+@import "widgets/concreteiron-paragraph.css";
+@import "widgets/concrete-iron-latest-posts.css";
+@import "components/megamenu.css";
+@import "components/forms.css";
+@import "components/button.css";
+@import "components/search-sidebar.css";
+@import "components/expired.css";
+@import "components/product-single.css";
+@import "components/gf.css";
+
+/* Components */
+@import "components/home-search.css";
+
+html,
+body {
+    font-family: 'Manrope';
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/** hack to fix width of checkboxes on listing page **/
+.steps--wrapper .flex.flex-wrap {
+    width: 100%;
+}
+

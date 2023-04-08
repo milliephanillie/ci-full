@@ -1,0 +1,27 @@
+{
+  "type": "lisfinity",
+  "keywords": [
+    "wordpress",
+    "directory-listing",
+    "classifieds",
+    "classifieds-ads",
+    "pebas"
+  ],
+  "license": "GPL-2.0-only",
+  "require": {
+    "php": ">=5.5",
+    "composer/installers": "^1.4"
+  },
+  "require-dev": {
+    "filp/whoops": "^2.2",
+    "symfony/debug": "~3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lisfinity\\": "includes/src/"
+    }
+  },
+  "scripts": {
+    "install-wpcs": "composer create-project wp-coding-standards/wpcs --no-dev"
+  }
+}

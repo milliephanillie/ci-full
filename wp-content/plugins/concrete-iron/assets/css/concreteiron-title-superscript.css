@@ -1,0 +1,16 @@
+.ci-widget-title-superscript {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 25px;
+    /* identical to box height */
+
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--brandPrimary);
+}
+
+.ci-widget-title-superscript-inner {
+
+}

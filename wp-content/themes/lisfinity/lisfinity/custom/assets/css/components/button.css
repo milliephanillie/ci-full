@@ -1,0 +1,23 @@
+.button-search {
+
+}
+.profile--contact {
+    flex-wrap: wrap !important;
+}
+
+a.profile--my-store,
+div.send-message {
+    width: 100% !important;
+    padding: 0;
+    margin: 10px 0;
+}
+
+li.sell-equipment > a.mega-menu-link {
+    background: #E4AD52;
+    border-radius: 5px;
+    color: #FFFFFF;
+    padding: 0px 20px 0px 20px;
+    height: 50px;
+    display: flex;
+    line-height: 50px;
+}

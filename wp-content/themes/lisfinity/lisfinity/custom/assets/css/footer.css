@@ -1,0 +1,29 @@
+.footer-menus {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-menu h4 {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 19px;
+    /* identical to box height */
+    text-transform: uppercase;
+
+    letter-spacing: 0.05em;
+    color: var(--textGreyAlt);
+    margin-bottom: 10px;
+}
+
+.footer-menu ul li a {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 19px;
+    color: var(--white);
+    display: block;
+    padding: 5px 0;
+}

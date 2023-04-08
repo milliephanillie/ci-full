@@ -1,0 +1,76 @@
+.container {
+  @apply px-16;
+}
+
+.row {
+  @apply flex flex-wrap -mx-16;
+}
+
+.flex-center {
+  @apply flex justify-center items-center;
+}
+
+/* Reusables | Button */
+.btn {
+  @apply flex justify-center items-center px-30 h-30 rounded text-base text-white font-bold shadow-none outline-none border-0;
+  transition: .2s all;
+
+  &:hover {
+    transition: .2s all;
+  }
+
+  &-md {
+    @apply h-40;
+  }
+
+  &-lg {
+    @apply h-44;
+  }
+
+  &-xl {
+    @apply h-60;
+  }
+
+  &--light {
+    @apply h-44 bg-blue-200 border border-blue-300 rounded text-blue-600;
+    &:hover {
+      @apply shadow;
+    }
+  }
+
+  &--transparent-red {
+    @apply h-40 bg-transparent border border-red-600 rounded text-red-600;
+    span {
+      top: -10px;
+
+      &.span--label {
+        top: -8px;
+        right: -8px;
+        left: auto;
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+      }
+    }
+  }
+
+}
+
+i,
+img,
+svg {
+}
+
+button {
+  transition: all .2s ease-in-out;
+
+  &:hover {
+    transition: all .2s ease-in-out;
+  }
+}
+
+input {
+  &:focus {
+    @apply outline-none;
+  }
+}

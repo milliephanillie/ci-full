@@ -1,0 +1,15 @@
+.ci-widget-subheading h4 {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 150%;
+
+    color: var(--textPrimary);
+    marign-top: 0 !important;
+    margin-bottom: 30px !important;
+}
+
+.ci-widget-subheading-inner {
+
+}

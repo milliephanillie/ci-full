@@ -1,0 +1,40 @@
+body:not(.woocommerce-page) main article .lisfinity-product--title h6.product--title {
+  margin: 0;
+  line-height: 28px;
+
+  &.text-white {
+    color: #fff;
+  }
+}
+
+.lisfinity-products {
+  .lisfinity-product {
+    &--meta {
+      &__price {
+        line-height: 1;
+
+        ins,
+        del {
+          line-height: 1;
+        }
+      }
+    }
+  }
+}
+
+.product {
+  &__sold-out {
+    position: absolute;
+    top: 14px;
+    left: 10px;
+    padding: 4px 8px;
+    z-index: 99;
+    @apply bg-grey-100 text-grey-900 font-semibold rounded text-center;
+  }
+}
+
+.overlay {
+  &__sold-out {
+    background-color: rgba(255, 111, 111, .6);
+  }
+}

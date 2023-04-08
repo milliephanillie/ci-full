@@ -1,0 +1,112 @@
+.product--single-content-wrapper .amount,
+.product--single-content-wrapper .amount span {
+    font-size: 21px !important;
+
+}
+
+.product-info-fixed-price {
+    color: orange !important;
+    background-color: rgba(255, 165, 0, 15%) !important;
+    border-color: orange !important;
+}
+
+.send-message button {
+    color: orange !important;
+    border-color: orange !important;
+}
+
+@media (max-width: 960px) {
+    .product--single-content-wrapper .amount,
+    .product--single-content-wrapper .amount span {
+        font-size: 14px !important;
+    }
+}
+
+.product--single-content-wrapper .profile--owner {
+    display: none;
+}
+
+@media (max-width: 960px) {
+    .product--single-content-wrapper .profile--owner {
+        display:block;
+    }
+}
+
+.profile--my-store {
+    display: none;
+}
+
+.product--menu-sticky .amount,
+.product--menu-sticky .amount span {
+    font-size: 14px !important;
+}
+
+.product---header-custom {
+    display:flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+@media (max-width: 960px) {
+    .product--section .product---header-custom {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .product--section .product---header-custom > div {
+        width: 100%;
+        text-align: left;
+        padding: 0 0;
+    }
+    .product--section .product---header-custom > div:first-child {
+        margin-bottom: 30px;
+    }
+    .product--section .product---header-custom > div .ml-20 {
+        margin-left: 0;
+    }
+    .product--section .product---header-custom .auction--infos {
+        justify-content: flex-start;
+        margin-left: 0px !important;
+    }
+}
+
+section.product--title {
+    padding-right: 15px;
+}
+
+.product--expired .amount {
+    display: none;
+}
+
+.updated-expired {
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
+.new-orange-wrapper {
+    padding-right: 0;
+}
+.new-orange {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    color: orange;
+    background-color: rgba(255, 165, 0, 15%);
+    border-color: orange;
+}
+
+@media (max-width: 960px) {
+    .search--breadcrumb > ul > li:not(:first-child):not(:last-child)
+    {
+        display:none;
+    }
+
+    .search--breadcrumb > ul > li:last-child:before {
+        content: '/ ... ';
+        display: inline-block;
+        margin-right: 5px;
+    }
+}
+
+

@@ -1,0 +1,15 @@
+.field--category-type {
+    display: none;
+}
+
+.filters .group {
+    display: flex;
+    flex-wrap: wrap;
+}
+.filters .group .price {
+
+}
+
+.search-taxonomy {
+    width: 100%;
+}

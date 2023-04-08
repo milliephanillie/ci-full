@@ -1,0 +1,66 @@
+/**
+ -----------------------------------------------------------
+ 06. Widgets Styling
+ -----------------------------------------------------------
+ */
+
+.footer {
+  .widget {
+    form {
+      padding: 0;
+      background-color: transparent;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply text-white;
+    }
+
+    a {
+      &:hover {
+        @apply text-white;
+      }
+    }
+
+    h6 {
+      margin-bottom: 48px;
+      font-size: 16px;
+
+      @media (max-width: 640px) {
+        margin-bottom: 20px;
+      }
+
+      & + {
+        ul,
+        ol {
+          padding-top: 0;
+
+          li:first-child {
+            margin-top: 0;
+          }
+        }
+      }
+    }
+
+  }
+}
+
+.socials {
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: #5e5e5e;
+  }
+
+  a {
+    &:hover {
+      svg {
+        fill: #fff;
+      }
+    }
+  }
+}

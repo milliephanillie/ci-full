@@ -1,0 +1,101 @@
+/* General Styles */
+.cf-hidden {
+  display: none;
+}
+.postbox.carbon-box {
+  &.is-hidden {
+    display: none !important;
+  }
+}
+
+/* Choices */
+.choices {
+  &[data-type*=select-one] {
+    .choices__inner {
+      min-height: 20px;
+      width: 99%;
+      background-color: transparent;
+    }
+  }
+}
+
+/* Product specific styles */
+.post-type-product {
+  #postbox-container-2 {
+
+    .meta-box-sortables {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .postbox {
+      order: 3;
+      width: 100%;
+    }
+
+    .carbon-box {
+      order: 2;
+
+      & + .postbox:not(.carbon-box) {
+        order: 1;
+      }
+    }
+  }
+}
+
+.package-feature-tags {
+  display: flex;
+}
+
+.package-feature-tag {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 7px;
+}
+
+.package-feature-value {
+  margin-top: 3px;
+}
+
+.click-to-copy {
+  position: relative;
+
+  span {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    padding: 3px 0px;
+    width: 100%;
+    background-color: hsla(210, 13%, 16%, .8);
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1;
+    color: #fff;
+    transition: ease-in-out .2s;
+  }
+}
+
+/* Theme options specific styles */
+.cf-multiselect {
+  &__value-container,
+  &__indicators {
+    margin-top: -4px;
+  }
+}
+
+@import './vendor/*.scss';
+
+/* ------------------------------------------------------------ *\
+    Tailwind CSS
+\* ------------------------------------------------------------ */
+@tailwind base;
+
+@tailwind components;
+
+@import 'components/**/*.scss';
+@import 'taxonomies/taxonomy';
+
+@tailwind utilities;

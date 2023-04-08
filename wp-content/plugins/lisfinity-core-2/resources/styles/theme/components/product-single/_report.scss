@@ -1,0 +1,20 @@
+.select-custom,
+.product--reports {
+  div[class*=-container] {
+    @apply mb-24 w-1/2 cursor-pointer;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  div[class*=-control] {
+    @apply bg-grey-100 border-grey-300 cursor-pointer;
+  }
+}
+
+.select-custom {
+  div[class*=-control] {
+    height: 42px;
+    @apply border-0;
+  }
+}

@@ -1,0 +1,412 @@
+/**
+ -----------------------------------------------------------
+ 02. Sidebar Styling
+ -----------------------------------------------------------
+ */
+
+.blog--sidebar {
+
+  .widget_search {
+    form {
+      margin-top: 0;
+      padding: 10px 20px;
+      border: 1px solid;
+      @apply bg-white rounded border-grey-200;
+    }
+
+    label {
+      width: 100%;
+    }
+
+    input {
+      width: 100%;
+      font-weight: 600;
+      @apply text-grey-700;
+      &:focus,
+      &:active {
+        box-shadow: none;
+        outline: 0;
+      }
+
+      &[type=submit] {
+        display: none;
+      }
+    }
+  }
+
+  .widget--wrapper {
+    .widget {
+      margin-bottom: 0;
+
+      & + .widget {
+        margin-top: 40px;
+      }
+
+      &.widget_rss,
+      &.widget_recent_comments {
+        a:not(.rsswidget) {
+          @apply text-grey-900;
+          &:hover {
+            @apply text-blue-700 underline;
+          }
+        }
+      }
+
+      ul,
+      ol {
+        padding-bottom: 0;
+
+        &.sub-menu {
+          margin-bottom: 10px;
+        }
+
+        ol, ul {
+          padding-left: 10px;
+        }
+
+        ul.children {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: -10px;
+          width: 100%;
+        }
+
+        li {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          margin-bottom: 10px;
+          width: 100%;
+          font-weight: 400;
+
+          ul.children {
+            li {
+              padding-bottom: 0;
+              border: none;
+            }
+          }
+
+          a {
+            font-size: 15px;
+            font-weight: 700;
+            @apply text-grey-900;
+
+            &:hover {
+              @apply text-blue-700 underline;
+            }
+          }
+        }
+      }
+
+      h6 {
+        @apply flex items-center mb-10;
+        font-size: 22px;
+        font-weight: 700;
+
+        & + form {
+          margin-top: 10px;
+        }
+
+        a {
+          font-size: 20px;
+          font-weight: 700;
+          @apply text-grey-1000;
+
+          & + a {
+            @apply ml-4;
+          }
+        }
+      }
+    }
+
+    .widget_nav_menu {
+      ul {
+        li {
+          display: block;
+
+          .sub-menu {
+            li {
+              border: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.widget {
+  margin-bottom: 40px;
+
+  img {
+    @apply rounded;
+  }
+
+  &--wrapper {
+    padding: 30px 36px;
+    @apply bg-grey-100 rounded;
+  }
+
+  h6 {
+    font-size: 16px;
+    @apply text-grey-1000;
+    & + .textwidget {
+      margin-top: 20px;
+    }
+  }
+
+  ul,
+  ol {
+    padding: 7px;
+    padding-right: 0;
+    padding-left: 0;
+
+    li {
+      margin-bottom: 2px;
+      font-weight: 500;
+      font-size: 14px;
+      @apply text-grey-700;
+    }
+
+    &:not(.sub-menu) > li.menu-item-has-children {
+      margin-bottom: 14px;
+    }
+
+    a {
+      &:hover {
+        @apply text-blue-700 underline;
+      }
+    }
+
+    &.sub-menu {
+      li:last-child {
+        margin-bottom: -10px;
+      }
+    }
+  }
+
+  label {
+    font-size: 14px;
+    @apply text-grey-700;
+  }
+
+  select {
+    margin-top: 6px;
+    padding: 10px 20px;
+    width: 100%;
+    height: 44px;
+    border: 1px solid;
+    font-weight: 700;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 98%;
+    background-position-y: 10px;
+    @apply bg-white border-grey-200 rounded text-grey-900;
+  }
+
+  &_search {
+    form {
+      margin-top: 0;
+      padding: 10px 20px;
+      border: 1px solid;
+      @apply bg-white rounded border-grey-200;
+    }
+
+    label {
+      width: 100%;
+    }
+
+    input {
+      width: 100%;
+      font-weight: 600;
+      @apply text-grey-700;
+      &:focus,
+      &:active {
+        box-shadow: none;
+        outline: 0;
+      }
+
+      &[type=submit] {
+        display: none;
+      }
+    }
+  }
+
+  &.widget_rss {
+    li {
+      flex-direction: column;
+    }
+  }
+
+  &.widget_rss,
+  &.widget_recent_comments {
+    ul#recentcomments {
+      li.recentcomments {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: center;
+        border: none;
+        a {
+          font-weight: 600;
+        }
+        span {
+          font-weight: 400;
+          a {
+            font-weight: 400;
+          }
+        }
+      }
+    }
+
+    li.recentcomments {
+      @apply text-grey-600;
+      a {
+        @apply text-grey-900;
+      }
+
+      span {
+        margin-right: 3px;
+      }
+      span + a {
+        width: 100%;
+      }
+    }
+
+    ul {
+      li {
+        a {
+          font-weight: 600;
+          @apply text-grey-900;
+
+          &:hover {
+            @apply text-blue-700;
+          }
+        }
+      }
+    }
+  }
+
+  &.widget_rss {
+    ul {
+      li:not(:first-child) {
+        margin-top: 20px;
+      }
+    }
+
+    li {
+      cite {
+        @apply font-bold text-grey-900;
+      }
+    }
+  }
+
+  #calendar_wrap {
+    width: 100%;
+
+    .wp-calendar-nav-prev {
+      a {
+        &:hover {
+          @apply text-blue-700;
+        }
+      }
+    }
+  }
+
+  #wp-calendar {
+    table-layout: fixed;
+    width: 100%;
+
+    caption {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    thead {
+      font-size: 12px;
+
+      th {
+        padding-bottom: 10px;
+      }
+    }
+
+    tr:first-child td:first-child {
+      border-top-left-radius: 4px;
+    }
+
+    tr:first-child td:last-child {
+      border-top-right-radius: 4px;
+    }
+
+    tr:last-child td:first-child {
+      border-bottom-left-radius: 4px;
+    }
+
+    tr:last-child td:last-child {
+      border-bottom-right-radius: 4px;
+    }
+
+    tbody {
+      td {
+        position: relative;
+        padding: 10px;
+        border: 1px solid;
+        font-size: 14px;
+        text-align: center;
+        @apply bg-white border-0 text-grey-1000;
+        a {
+          position: absolute;
+          top: 0;
+          left: 0;
+          padding-top: 10px;
+          width: 100%;
+          height: 100%;
+          @apply bg-blue-700 text-white;
+          &:hover {
+            text-decoration: none;
+            @apply bg-blue-700 text-white;
+          }
+        }
+
+        &:hover {
+          @apply bg-grey-100;
+        }
+
+        &.pad {
+          &:hover {
+            @apply bg-white;
+          }
+        }
+      }
+    }
+
+    tfoot {
+      #next {
+        font-size: 14px;
+        text-align: right;
+
+        &:hover {
+          @apply text-blue-700;
+        }
+      }
+
+      #prev {
+        padding-top: 10px;
+        font-size: 14px;
+
+        &:hover {
+          @apply text-blue-700;
+        }
+      }
+    }
+  }
+
+  .wp-calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+}

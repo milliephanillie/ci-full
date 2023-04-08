@@ -1,0 +1,1 @@
+!function(){"use strict";const t=document.getElementById("main-search");t&&t.addEventListener("submit",(e=>{e.preventDefault();const n=Object.fromEntries(new FormData(e.target).entries());new URLSearchParams(n).toString();e.target.action,t.submit()}))}();

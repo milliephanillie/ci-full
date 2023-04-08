@@ -1,0 +1,14 @@
+form.main-contact-form input[type=text],
+form.main-contact-form input[type=email],
+form.main-contact-form input[type=phone] {
+    border: 1px solid var(--borderGrey);
+}
+
+
+form.main-contact-form input[type=submit] {
+    background: var(--black);
+    padding: 10px 5px;
+    color: var(--brandPrimary);
+    text-transform: uppercase;
+    border-radius: 0;
+}

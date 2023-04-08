@@ -1,0 +1,17 @@
+.ci-widget-subtitle h2 {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 48px;
+    line-height: 120%;
+    /* or 36px */
+
+    margin-top: 0 !important;
+    margin-bottom: 30px !important;
+
+    color: var(--textHeader);
+}
+
+.ci-widget-subtitle h2 span {
+    color: var(--brandPrimary);
+}

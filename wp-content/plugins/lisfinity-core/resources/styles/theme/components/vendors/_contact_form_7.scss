@@ -1,0 +1,77 @@
+.wpcf7-form {
+  p {
+    padding: 5px 0;
+    margin: 10px 0;
+
+    label {
+      font-weight: 600;
+      font-size: 14px;
+      color: rgba(0, 0, 0, 1);
+    }
+
+    .wpcf7-form-control {
+      padding: 10px 24px;
+      border-radius: 3px;
+      background-color: rgba(255, 255, 255, 1);
+      width: 100%;
+
+      &:focus {
+        outline: none;
+      }
+
+      &.wpcf7-checkbox {
+        padding: 0 9px;
+        border: 1px solid rgba(215, 215, 215, 1);
+      }
+
+      &.wpcf7-radio {
+        padding: 0 9px;
+        border-radius: 50%;
+        border: 1px solid rgba(215, 215, 215, 1);
+      }
+
+      &.wpcf7-acceptance {
+        background: transparent;
+        padding: 12px 0;
+
+        input {
+          border: 1px solid rgba(215, 215, 215, 1);
+        }
+
+        .wpcf7-list-item {
+          margin: 0;
+        }
+      }
+
+      &.wpcf7-file {
+        background-color: transparent;
+      }
+
+      &.wpcf7-select {
+        option {
+          background-color: rgba(255, 255, 255, 1);
+
+          &:hover {
+            background-color: rgba(254, 254, 254, 1);
+          }
+        }
+      }
+    }
+
+    .wpcf7-submit {
+      background-color: rgba(9, 103, 210, 1);
+      color: rgba(255, 255, 255, 1);
+      padding: 12px 30px;
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 3px;
+      border: 1px solid rgba(9, 103, 210, 1);
+
+      &:hover {
+        background-color: #03449E;
+        border-color: #03449E;
+        cursor: pointer;
+      }
+    }
+  }
+}

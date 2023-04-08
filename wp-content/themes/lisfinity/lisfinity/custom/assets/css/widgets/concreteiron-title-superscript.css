@@ -1,0 +1,23 @@
+.ci-widget-title-superscript h1,
+.ci-widget-title-superscript h2,
+.ci-widget-title-superscript h3,
+.ci-widget-title-superscript h4,
+.ci-widget-title-superscript p {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 25px;
+    /* identical to box height */
+
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--brandPrimary);
+
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+.ci-widget-title-superscript-inner {
+
+}
