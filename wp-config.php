@@ -18,18 +18,32 @@
  * @package WordPress
  */
 
+$dev_host = $_SERVER['HTTP_HOST'];
+
+if($dev_host === 'dev.concreteiron') {
+    $db_name = 'concreteiron';
+    $db_user = 'root';
+    $db_password = 'root';
+    $db_host = 'localhost';
+} else {
+    $db_name = 'tukknskgzw';
+    $db_user = 'tukknskgzw';
+    $db_password = 'Ny5354Bmfu';
+    $db_host = 'localhost';
+}
+
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'concreteiron' );
+define( 'DB_NAME', $db_name );
 
 /** Database username */
-define( 'DB_USER', 'root' );
+define( 'DB_USER', $db_user );
 
 /** Database password */
-define( 'DB_PASSWORD', 'root' );
+define( 'DB_PASSWORD', $db_password );
 
 /** Database hostname */
-define( 'DB_HOST', 'localhost' );
+define( 'DB_HOST', $db_host );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
