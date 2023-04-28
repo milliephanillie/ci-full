@@ -1,2 +1,0 @@
-2023-03-17T17:55:59+00:00 CRITICAL Out of memory (allocated 85983232) (tried to allocate 32768 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\includes\rest-api\Controllers\Version2\class-wc-rest-settings-v2-controller.php on line 1
-

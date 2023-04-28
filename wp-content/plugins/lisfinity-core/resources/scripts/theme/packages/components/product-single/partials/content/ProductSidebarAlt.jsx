@@ -12,8 +12,8 @@ function ProductSidebarAlt(props) {
   const { product, currentUser, options } = props;
   return (
     <Fragment>
-        {!product?.is_expired &&
-            <div className="profile p-20 bg-white rounded shadow-theme">
+        {!product?.is_expired && product?.post_status != 'sold' &&
+            <div className="profile p-20 bg-white rounded shadow-theme product-sidebar-owner">
                 <OwnerAlt product={product} currentUser={currentUser} options={props.options}/>
             </div>
         }

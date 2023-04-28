@@ -18,7 +18,7 @@ const ProductStyle2 = (props) => {
   const { post_status } = product;
 
   useEffect(() => {
-    //storeStat(product.ID, 1);
+    storeStat(product.ID, 1);
   }, []);
 
   return (

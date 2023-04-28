@@ -67,7 +67,7 @@ function ProductPrice(props) {
 
   return (
     <Fragment>{product.post_status !== 'sold' ? loadPriceType() : <div
-      className="px-16 py-4 bg-grey-100 rounded font-bold">{lc_data.jst[694]}</div>}</Fragment>
+      className="listing-sold px-16 py-4 bg-grey-100 rounded font-bold">{lc_data.jst[694]}</div>}</Fragment>
   );
 }
 

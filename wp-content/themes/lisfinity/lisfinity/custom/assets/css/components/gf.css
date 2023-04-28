@@ -34,3 +34,8 @@ form.send-message button {
 form.send-message input::placeholder {
     font-size: 12px;
 }
+
+form.send-message abbr,
+form.send-message .form-description {
+    display:none;
+}

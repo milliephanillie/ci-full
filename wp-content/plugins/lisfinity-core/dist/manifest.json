@@ -132,7 +132,6 @@
   "scripts/dashboard.js.LICENSE.txt": "scripts/dashboard.js.LICENSE.txt",
   "scripts/taxonomies.js.LICENSE.txt": "scripts/taxonomies.js.LICENSE.txt",
   "scripts/theme.js.LICENSE.txt": "scripts/theme.js.LICENSE.txt",
-  "statics/.DS_Store": "statics/.DS_Store",
   "statics/images/default-skin.png": "statics/images/default-skin.png",
   "statics/images/default-skin.svg": "statics/images/default-skin.svg",
   "statics/options/Lifinity_Thumbnail.jpg": "statics/options/Lifinity_Thumbnail.jpg",

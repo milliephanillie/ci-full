@@ -19,9 +19,12 @@ function ProductSidebar(props) {
   return (
     <Fragment>
 
-      <div className="profile p-20 bg-white rounded shadow-theme">
-        <Owner product={product} currentUser={currentUser} options={props.options}/>
-      </div>
+        {product?.post_status != 'sold' &&
+            <div className="profile p-20 bg-white rounded shadow-theme product-sidebar-owner">
+                <Owner product={product} currentUser={currentUser} options={props.options}/>
+            </div>
+        }
+
 
       {options.calculator_position !== 'content' && product.product_meta.price > 0 && product.calculator && product.calculator.display &&
       <div className="profile--calculator mt-20 py-20 px-20 bg-white rounded shadow-theme">

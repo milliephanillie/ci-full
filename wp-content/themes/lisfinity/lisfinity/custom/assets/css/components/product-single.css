@@ -109,4 +109,35 @@ section.product--title {
     }
 }
 
+.grid-me > div {
+    grid-template-columns: [col-start] 25% [col-start] 75% !important;
+    display: grid;
+    padding: 0;
+    margin-bottom: 5px;
+    background: transparent;
+}
+
+.grid-me > div > span {
+    padding: 10px;
+    font-weight: normal !important;
+}
+
+.grid-me > div > span:first-child {
+    background: #f6f6f6 !important;
+    margin-right: 4px;
+}
+
+.grid-me > div > span:last-child {
+    background: #fff !important;
+    text-align: left;
+    border-bottom: 1px #f6f6f6 solid;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.listing-sold {
+    background: rgba(250,0,0, 0.13) !important;
+    color: red !important;
+}
+
 

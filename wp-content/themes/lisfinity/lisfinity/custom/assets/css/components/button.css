@@ -12,7 +12,17 @@ div.send-message {
     margin: 10px 0;
 }
 
-li.sell-equipment > a.mega-menu-link {
+.sell-equipment > a.mega-menu-link {
+    background: var(--textAlt) !important;
+    border-radius: 5px !important;
+    color: #FFFFFF !important;
+    padding: 0px 20px 0px 20px !important;
+    height: 50px !important;
+    display: flex !important;
+    line-height: 50px !important;
+}
+
+li.mega-button > a.mega-menu-link {
     background: #E4AD52;
     border-radius: 5px;
     color: #FFFFFF;

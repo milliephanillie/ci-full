@@ -18,5 +18,6 @@ require plugin_dir_path( CONCRETEIRON ) . 'class-custom-import.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-listings-import.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-single-subcategory-update.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-product-images.php';
-require plugin_dir_path( CONCRETEIRON ) . 'class-update-package.php';
+//require plugin_dir_path( CONCRETEIRON ) . 'class-update-package.php';
+require plugin_dir_path( CONCRETEIRON ) . 'class-update-product.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-gf-forms.php';

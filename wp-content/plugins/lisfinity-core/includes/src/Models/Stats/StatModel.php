@@ -126,7 +126,7 @@ class StatModel extends Model {
 	public function get_product_views( $id ) {
 		$views = $this->where( [ [ 'product_id', $id ], [ 'type', 1 ] ] )->get( '', '', 'SUM(count)', 'col' );
 
-		return array_shift( $views ) ?? 0;
+		return array_shift( $views ) ?? 1;
 	}
 
 }

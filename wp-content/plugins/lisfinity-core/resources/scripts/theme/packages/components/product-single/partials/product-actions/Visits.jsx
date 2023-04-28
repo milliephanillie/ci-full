@@ -24,41 +24,14 @@ const Visits = (props) => {
   }
 
   return (
-    <div className={`product--action text-base elementor-repeater-item-${props.elementId}`}
+    <div className={`product--action text-base`}
          style={{
            display: 'flex',
            justifyContent: 'center',
            alignItems: 'center'
          }}
     >
-      {
-        settings?.actions[actionVisitsIndex].remove_icon_action === '' &&
-        <Fragment>
-          {(icon === null && svg === null || '' == icon) &&
-          <ReactSVG
-            src={`${lc_data.dir}dist/${UsersIcon}`}
-            className="mr-4 product-icon w-16 h-16 fill-field-icon"
-          />
-          }
-
-          {
-            svg && settings?.actions[actionVisitsIndex].place_icon_action !== '' &&
-            <img src={svg} alt="visits-icon"
-                 className="w-20 h-20 mr-8 product-icon fill-icon-reset pointer-events-none"/>
-          }
-          {
-            settings?.actions[actionVisitsIndex].place_icon_action !== '' && icon &&
-            <i className={`${icon} product-icon`}
-               aria-hidden="true"
-            ></i>
-          }
-        </Fragment>
-      }
-
-      {visits}
-      {settings?.actions[actionVisitsIndex].action_text !== '' &&
-      <span className="ml-3">{settings?.actions[actionVisitsIndex].action_text}</span>
-      }
+      {'Views ' + visits}
     </div>
   );
 };

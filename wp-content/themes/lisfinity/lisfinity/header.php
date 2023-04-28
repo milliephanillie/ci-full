@@ -4,7 +4,7 @@
 	<meta charset="<?php bloginfo( 'charset' ); ?>"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="profile" href="https://gmpg.org/xfn/11"/>
-    <link rel="shortcut icon" href="<?php echo trailingslashit(home_url()); ?>wp-content/themes/lisfinity/lisfinity/custom/images/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="<?php echo trailingslashit(home_url()); ?>wp-content/themes/lisfinity/lisfinity/custom/images/favicon.png" type="image/x-icon" />
 	<?php do_action( 'lisfinity__head_functions' ); ?>
 	<?php wp_head(); ?>
 </head>

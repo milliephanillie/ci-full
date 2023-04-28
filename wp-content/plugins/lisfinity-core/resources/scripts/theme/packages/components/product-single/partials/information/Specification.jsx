@@ -82,7 +82,7 @@ const Specification = (props) => {
           <div id={group.slug} key={group.slug} className="mt-20 sm:mt-48">
             <h5
               className="mb-20 font-bold text-grey-1000">{group.slug === '' ? lc_data.jts[505] : group.name}</h5>
-            <div className="flex flex-wrap justify-between">
+            <div className="flex flex-wrap justify-between grid-me">
               {map(groups, (taxonomyGroup, taxonomy) => {
                 const tax = get(product.taxonomies, taxonomy);
                 const prefix = get(product.taxonomy_options, [taxonomy, 'prefix']);
