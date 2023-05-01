@@ -150,19 +150,19 @@ function OwnerAlt(props) {
           }
         </div>}
 
-        {!isEmpty(product) && !props.businessPage &&
-            <OwnerContact product={product} currentUser={currentUser} options={props.options}/>}
+        {/*{!isEmpty(product) && !props.businessPage &&*/}
+        {/*    <OwnerContact product={product} currentUser={currentUser} options={props.options}/>}*/}
 
-        {/*{!isEmpty(product) && !product?.is_expired && !props.businessPage &&*/}
-        {/*    <div className='send-message send-message-gf'>*/}
-        {/*      <div className="or-send-message"><h4>Or send a message...</h4></div>*/}
-        {/*      <GravityForm*/}
-        {/*          backendUrl={`${lc_data.url}wp-json/ci/v1/gf/forms`}*/}
-        {/*          formID="1"*/}
-        {/*          submitComponent={<LoaderGlobal title={"Sending Message"} />}*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*}*/}
+        {!isEmpty(product) && !product?.is_expired && !props.businessPage &&
+            <div className='send-message send-message-gf'>
+              <div className="or-send-message"><h4>Or send a message...</h4></div>
+              <GravityForm
+                  backendUrl={`${lc_data.url}wp-json/ci/v1/gf/forms`}
+                  formID="1"
+                  submitComponent={<LoaderGlobal title={"Sending Message"} />}
+              />
+            </div>
+        }
 
         {/*{props.businessPage &&*/}
         {/*<BusinessTestimonial product={product} options={props.options} type="default"/>*/}
