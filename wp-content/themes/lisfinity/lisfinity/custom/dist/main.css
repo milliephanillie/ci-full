@@ -619,6 +619,11 @@ section.product--title {
 
 
 
+.or-send-message h4 {
+    font-size: 14px;
+    text-align: center;
+}
+
 form.send-message .form-title {
     display: none;
 }
@@ -636,7 +641,7 @@ form.send-message textarea {
 }
 
 form.send-message textarea {
-    height: 7em;
+    height: 6em;
 }
 
 form.send-message h4 {
@@ -662,9 +667,6 @@ form.send-message .form-description {
 }
 #_sale_price {
     display: none;
-}
-ul.mega-sub-menu > li > div > ul > li {
-    margin-top: 5px;
 }
 .custom-search-wrapper {
     display: flex;
