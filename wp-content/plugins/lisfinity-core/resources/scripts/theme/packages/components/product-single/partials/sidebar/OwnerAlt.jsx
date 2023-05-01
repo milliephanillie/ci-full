@@ -158,7 +158,7 @@ function OwnerAlt(props) {
               <div className="or-send-message"><h4>Or send a message...</h4></div>
               <GravityForm
                   backendUrl={`${lc_data.url}wp-json/ci/v1/gf/forms`}
-                  formID="1"
+                  formID="3"
                   submitComponent={<LoaderGlobal title={"Sending Message"} />}
               />
             </div>
