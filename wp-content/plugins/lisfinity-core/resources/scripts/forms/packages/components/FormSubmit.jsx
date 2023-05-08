@@ -22,6 +22,7 @@ import Complex from '../form-fields/complex';
 import jsonForm from '../../utils/build-form-data';
 import Location from '../form-fields/Location';
 import PaymentPackage from '../form-fields/payment-packages';
+import ChoosePackage from '../form-fields/payment-packages/choosepackage';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import ReactSVG from 'react-svg';
@@ -37,6 +38,7 @@ import QRForm from '../form-fields/QRForm';
 import MediaSingleImage from '../form-fields/MediaSingleImage';
 import { addProps } from '../../../theme/vendor/functions';
 import Gallery from '../form-fields/Gallery';
+import Packages from "../../../dashboard/packages/components/content/packages/Packages";
 
 class FormSubmit extends Component {
   constructor(props) {
@@ -64,6 +66,7 @@ class FormSubmit extends Component {
   }
 
   componentWillMount() {
+    this.getPackages();
     this.fetchGroups();
   }
 
@@ -75,7 +78,7 @@ class FormSubmit extends Component {
     const { dispatch } = this.props;
     // clear data before populating.
     dispatch(actions.updateFormData({}));
-    this.getPackage();
+    //this.getPackage();
     this.getProductEditInfo();
   }
 
@@ -125,6 +128,36 @@ class FormSubmit extends Component {
       this.fetchFormFields();
     });
   };
+
+  getPackages = () => {
+    if (this.props.edit) {
+      this.setState({ loading: false });
+      return false;
+    }
+
+    const headers = {
+      'X-WP-Nonce': lc_data.nonce,
+    };
+
+    const url = lc_data.packages + '/payment_package';
+
+    const response = axios({
+      credentials: 'same-origin',
+      headers,
+      method: 'get',
+      url,
+    });
+
+    response.then(data => {
+      if(data.data) {
+        console.log(data);
+        this.setState({packages: data.data})
+        this.setState({ loading: false });
+        this.setState({ waiting: false });
+      }
+      this.fetchFormFields();
+    });
+  }
 
   getPackage = () => {
     if (this.props.edit) {
@@ -414,6 +447,11 @@ class FormSubmit extends Component {
    * @returns {*}
    */
   showField = (field, name, group) => {
+
+    console.log("amazon payment package")
+    console.log(field)
+    console.log(group)
+    console.log(name)
     const { errors } = this.state;
     const data = this.props.formData;
     let display = true;
@@ -424,8 +462,23 @@ class FormSubmit extends Component {
         display = undefined !== data[field.conditional[0]] ? field.conditional[1].includes(data[field.conditional[0]]) : true;
       }
     }
+    console.log("we in the packages")
+    console.log(this.state.packages);
 
+    const allpacks = this.state.packages.map((item) => {
+      console.log("we in the items")
+      console.log(item.post_title)
+    })
     switch (field.type) {
+      case 'packages' :
+        return <ChoosePackage
+            key={field.key}
+            field={field}
+            name={name}
+            id={name}
+            packages={this.state.packages}
+            value={isEmpty(data[name]) ? [] : data[name]}
+        />;
       case 'promotions':
         return <PaymentPackage
           key={field.key}
@@ -815,6 +868,7 @@ class FormSubmit extends Component {
       loading,
       fieldGroups,
       notice,
+      packages,
       payment_package,
       doneSteps,
       productEditInfo,
@@ -843,27 +897,29 @@ class FormSubmit extends Component {
           </div>
         }
 
-        {!waiting && !loading && isEmpty(notice) && (isEmpty(payment_package) || !payment_package) && !this.props.edit &&
-          <div key={1} className="p-30 bg-white rounded shadow-theme">
-            <p
-              className="font-bold text-xl">{lc_data.jst[317]}</p>
-            <NavLink to={`${lc_data.site_url}${lc_data.myaccount}packages/`}
-                     className="flex justify-between items-center mt-20 px-20 h-60 bg-orange-600 rounded shadow-theme font-bold text-white hover:bg-orange-700"
-                     style={{ width: '225px' }}
-            >
-              <div className="flex flex-col text-left">
-                <span className="text-sm">{lc_data.jst[318]}</span>
-                <span className="font-bold text-xl">{lc_data.jst[319]}</span>
-              </div>
-              <ReactSVG
-                src={`${lc_data.dir}dist/${ReplyIcon}`}
-                className="w-20 h-20 fill-white"
-              />
-            </NavLink>
-          </div>
-        }
+        {/*{!waiting && !loading && isEmpty(notice) && !this.props.edit &&*/}
+        {/*  <div key={1} className="p-30 bg-white rounded shadow-theme">*/}
+        {/*    <p*/}
+        {/*      className="font-bold text-xl">{lc_data.jst[317]}</p>*/}
+        {/*    <NavLink to={`${lc_data.site_url}${lc_data.myaccount}packages/`}*/}
+        {/*             className="flex justify-between items-center mt-20 px-20 h-60 bg-orange-600 rounded shadow-theme font-bold text-white hover:bg-orange-700"*/}
+        {/*             style={{ width: '225px' }}*/}
+        {/*    >*/}
+        {/*      <div className="flex flex-col text-left">*/}
+        {/*        <span className="text-sm">{lc_data.jst[318]}</span>*/}
+        {/*        <span className="font-bold text-xl">{lc_data.jst[319]}</span>*/}
+        {/*      </div>*/}
+        {/*      <ReactSVG*/}
+        {/*        src={`${lc_data.dir}dist/${ReplyIcon}`}*/}
+        {/*        className="w-20 h-20 fill-white"*/}
+        {/*      />*/}
+        {/*    </NavLink>*/}
+        {/*  </div>*/}
+        {/*}*/}
 
-        {!loading && (payment_package || this.props.edit) && !isEmpty(fieldGroups) &&
+        { console.log (fieldGroups)}
+
+        {!loading && !isEmpty(fieldGroups) &&
           <div key={1} className="form--wrapper flex flex-wrap flex-wrapper">
 
             <div className="w-full xl:w-11/16">
@@ -952,6 +1008,9 @@ class FormSubmit extends Component {
                                 >
                                   <h3
                                     className="flex w-full mb-20 capitalize font-bold text-grey-1000">{stepTitles[group] || group}</h3>
+
+                                  { console.log("fields")}{console.log(fields)}{console.log(fields[group])}
+
 
                                   <div className="steps--wrapper flex flex-wrap w-full">
                                     {!isEmpty(this.props.formData) && map(fields[group], (field, name) => (

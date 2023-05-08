@@ -18,6 +18,11 @@ const PaymentPackages = (props) => {
   const { field, name } = props;
   const { product } = field;
 
+  console.log("what the fuuuuck")
+  console.log(props)
+  console.log(field)
+  console.log(product)
+
 
   const loadProducts = () => {
     if (product) {

@@ -160,12 +160,20 @@ class FormSubmitModel
             ],
             // 2. fields | details
             'package'  => [
-                'taxonomies' => [
+                'packages' => [
                     'key'         => $count++,
-                    'label'       => __('Specifics', 'lisfinity-core'),
+                    'label'       => __('Packages', 'lisfinity-core'),
                     'value'       => '',
-                    'description' => __('Select the details for the listings based on the category', 'lisfinity-core'),
-                    'type'        => 'taxonomies',
+                    'description' => __('Select a package for your listing.', 'lisfinity-core'),
+                    'type'        => 'packages',
+                    'product' => 'payment_package',
+                ],
+                'total_calculation' => [
+                    'key'         => $count++,
+                    'label'       => __('Total Costs', 'lisfinity-core'),
+                    'type'        => 'costs',
+                    'field_type'  => 'promo',
+                    'calculation' => 'full',
                 ],
             ],
             // 2. fields | details

@@ -100,17 +100,20 @@ class FormSubmitRoute extends Route {
 
 		$form_fields = $form_model->get_fields();
 
+        $titles = [
+            'general'  => esc_html__( 'General', 'lisfinity-core' ),
+            'packages'  => esc_html__( 'Packages', 'lisfinity-core' ),
+            'details'  => esc_html__( 'Details', 'lisfinity-core' ),
+            'price'    => esc_html__( 'Price', 'lisfinity-core' ),
+            'address'  => esc_html__( 'Address', 'lisfinity-core' ),
+            'media'    => esc_html__( 'Media', 'lisfinity-core' ),
+            'payments' => esc_html__( 'Payments', 'lisfinity-core' ),
+        ];
+
 		return [
 			'fields' => $form_fields,
 			//todo create dynamic options for this one instead of using .po files.
-			'titles' => [
-				'general'  => esc_html__( 'General', 'lisfinity-core' ),
-				'details'  => esc_html__( 'Details', 'lisfinity-core' ),
-				'price'    => esc_html__( 'Price', 'lisfinity-core' ),
-				'address'  => esc_html__( 'Address', 'lisfinity-core' ),
-				'media'    => esc_html__( 'Media', 'lisfinity-core' ),
-				'payments' => esc_html__( 'Payments', 'lisfinity-core' ),
-			],
+			'titles' => $titles,
 		];
 	}
 

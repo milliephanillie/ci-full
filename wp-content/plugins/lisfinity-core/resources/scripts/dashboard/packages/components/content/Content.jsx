@@ -400,12 +400,18 @@ const Content = (props) => {
               path={`${lc_data.site_url}${lc_data.myaccount}notifications`}
               render={() => <Notifications/>}
             />
-            {data.options.vendor_approved && !business.options.enable_packages && 'buyer' !== data.options?.account_type &&
-            <Route
-              path={`${lc_data.site_url}${lc_data.myaccount}submit/`}
-              render={props => <FormSubmit {...props} options={data.options}/>}
-            />
+            {data.options.vendor_approved && 'buyer' !== data.options?.account_type &&
+                <Route
+                    path={`${lc_data.site_url}${lc_data.myaccount}submit/`}
+                    render={props => <FormSubmit {...props} options={data.options}/>}
+                />
             }
+            {/*{data.options.vendor_approved && !business.options.enable_packages && 'buyer' !== data.options?.account_type &&*/}
+            {/*<Route*/}
+            {/*  path={`${lc_data.site_url}${lc_data.myaccount}submit/`}*/}
+            {/*  render={props => <FormSubmit {...props} options={data.options}/>}*/}
+            {/*/>*/}
+            {/*}*/}
             {data.options.vendor_approved && business.options.enable_packages && 'buyer' !== data.options?.account_type &&
             <Route
               path={`${lc_data.site_url}${lc_data.myaccount}submit/:package`}
