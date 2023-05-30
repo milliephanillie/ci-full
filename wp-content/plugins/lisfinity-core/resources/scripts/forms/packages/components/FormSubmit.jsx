@@ -78,7 +78,10 @@ class FormSubmit extends Component {
     const { dispatch } = this.props;
     // clear data before populating.
     dispatch(actions.updateFormData({}));
-    //this.getPackage();
+    this.setPackages();
+    console.log("props.test: this is compoponentDidMount")
+    console.log(this.props.test)
+    console.log(this.props)
     this.getProductEditInfo();
   }
 
@@ -113,6 +116,7 @@ class FormSubmit extends Component {
 
   getProductEditInfo = () => {
     if (!this.props.edit) {
+      console.log("This is not an edit")
       this.setState({ loading: false });
       return false;
     }
@@ -150,11 +154,63 @@ class FormSubmit extends Component {
 
     response.then(data => {
       if(data.data) {
-        console.log(data);
         this.setState({packages: data.data})
         this.setState({ loading: false });
         this.setState({ waiting: false });
       }
+      this.fetchFormFields();
+    });
+  }
+
+  getAllPackages = () => {
+    const headers = {
+      'X-WP-Nonce': lc_data.nonce,
+    };
+    const url = ci_data.ci_payment_package;
+    let data = {
+      id: this.props.match.params.id,
+      user_id: lc_data.current_user_id,
+    };
+
+    return axios({
+      credentials: 'same-origin',
+      headers,
+      method: 'post',
+      url,
+      data,
+    });
+  }
+
+  setPackages = () => {
+    if (this.props.edit) {
+      this.setState({ loading: false });
+      return false;
+    }
+    const { dispatch } = this.props;
+    const response = this.getAllPackages();
+
+    response.then(data => {
+      console.log("after no limit reaeeeeeeeeeeeeeeeeached")
+      console.log(data)
+
+      if (data.data) {
+        this.setState({ packages: data.data });
+        // dispatch(actions.setupPackage(data.data));
+
+        console.log("no limit reaeeeeeeeeeeeeeeeeached")
+        console.log(data)
+        // if (data.data?.limit_reached) {
+        //
+        //
+        //   const costs = {};
+        //   costs.total = {};
+        //   costs.total.commission = parseFloat(data.data?.commission.price);
+        //   dispatch(actions.updateCosts(costs));
+        // }
+      }
+
+      console.log("This is the damn state")
+      console.log(this.state)
       this.fetchFormFields();
     });
   }
@@ -443,17 +499,13 @@ class FormSubmit extends Component {
    * -------------------------------
    *
    * @param field
-   * @param name
+   * @param name -
    * @returns {*}
    */
   showField = (field, name, group) => {
-
-    console.log("amazon payment package")
-    console.log(field)
-    console.log(group)
-    console.log(name)
     const { errors } = this.state;
     const data = this.props.formData;
+
     let display = true;
     if (field.conditional) {
       if (isString[data[field.conditional[1]]]) {
@@ -462,13 +514,7 @@ class FormSubmit extends Component {
         display = undefined !== data[field.conditional[0]] ? field.conditional[1].includes(data[field.conditional[0]]) : true;
       }
     }
-    console.log("we in the packages")
-    console.log(this.state.packages);
 
-    const allpacks = this.state.packages.map((item) => {
-      console.log("we in the items")
-      console.log(item.post_title)
-    })
     switch (field.type) {
       case 'packages' :
         return <ChoosePackage
@@ -477,6 +523,7 @@ class FormSubmit extends Component {
             name={name}
             id={name}
             packages={this.state.packages}
+            payment_package={this.state.payment_package}
             value={isEmpty(data[name]) ? [] : data[name]}
         />;
       case 'promotions':
@@ -917,8 +964,6 @@ class FormSubmit extends Component {
         {/*  </div>*/}
         {/*}*/}
 
-        { console.log (fieldGroups)}
-
         {!loading && !isEmpty(fieldGroups) &&
           <div key={1} className="form--wrapper flex flex-wrap flex-wrapper">
 
@@ -1008,9 +1053,6 @@ class FormSubmit extends Component {
                                 >
                                   <h3
                                     className="flex w-full mb-20 capitalize font-bold text-grey-1000">{stepTitles[group] || group}</h3>
-
-                                  { console.log("fields")}{console.log(fields)}{console.log(fields[group])}
-
 
                                   <div className="steps--wrapper flex flex-wrap w-full">
                                     {!isEmpty(this.props.formData) && map(fields[group], (field, name) => (

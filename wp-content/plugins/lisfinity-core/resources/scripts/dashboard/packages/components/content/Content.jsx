@@ -393,7 +393,7 @@ const Content = (props) => {
             {data.options.vendor_approved && 'buyer' !== data.options?.account_type &&
             <Route
               path={`${lc_data.site_url}${lc_data.myaccount}edit/:id`}
-              render={props => <FormSubmit {...props} edit={true} options={data.options}/>}
+              render={props => <FormSubmit {...props} test={"three"} edit={true} options={data.options}/>}
             />
             }
             <Route
@@ -403,7 +403,7 @@ const Content = (props) => {
             {data.options.vendor_approved && 'buyer' !== data.options?.account_type &&
                 <Route
                     path={`${lc_data.site_url}${lc_data.myaccount}submit/`}
-                    render={props => <FormSubmit {...props} options={data.options}/>}
+                    render={props => <FormSubmit {...props} test={"one"} options={data.options}/>}
                 />
             }
             {/*{data.options.vendor_approved && !business.options.enable_packages && 'buyer' !== data.options?.account_type &&*/}
@@ -415,7 +415,7 @@ const Content = (props) => {
             {data.options.vendor_approved && business.options.enable_packages && 'buyer' !== data.options?.account_type &&
             <Route
               path={`${lc_data.site_url}${lc_data.myaccount}submit/:package`}
-              render={props => <FormSubmit {...props} options={data.options}/>}
+              render={props => <FormSubmit {...props} test={"two"} options={data.options}/>}
             />
             }
             {data.options.vendor_approved && business.options.enable_packages && 'buyer' !== data.options?.account_type &&

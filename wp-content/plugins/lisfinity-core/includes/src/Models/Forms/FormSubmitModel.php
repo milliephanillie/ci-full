@@ -167,14 +167,15 @@ class FormSubmitModel
                     'description' => __('Select a package for your listing.', 'lisfinity-core'),
                     'type'        => 'packages',
                     'product' => 'payment_package',
+                    'required'    => true,
                 ],
-                'total_calculation' => [
-                    'key'         => $count++,
-                    'label'       => __('Total Costs', 'lisfinity-core'),
-                    'type'        => 'costs',
-                    'field_type'  => 'promo',
-                    'calculation' => 'full',
-                ],
+//                'total_calculation' => [
+//                    'key'         => $count++,
+//                    'label'       => __('Total Costs', 'lisfinity-core'),
+//                    'type'        => 'costs',
+//                    'field_type'  => 'promo',
+//                    'calculation' => 'full',
+//                ],
             ],
             // 2. fields | details
             'details'  => [
@@ -458,30 +459,30 @@ class FormSubmitModel
                     'field_type'  => 'media',
                     'calculation' => 'simple',
                 ],
-                'total_calculation'      => [
-                    'key'        => $count++,
-                    'label'      => __('Total Costs', 'lisfinity-core'),
-                    'type'       => 'costs_additional',
-                    'field_type' => 'promo',
-                ],
+//                'total_calculation'      => [
+//                    'key'        => $count++,
+//                    'label'      => __('Total Costs', 'lisfinity-core'),
+//                    'type'       => 'costs_additional',
+//                    'field_type' => 'promo',
+//                ],
             ],
-            // 6. fields | promotion.
-            'promotions' => [
-                'promotions'        => [ // has to be called promotions
-                    'key'         => $count++,
-                    'label'       => __('Promotions', 'lisfinity-core'),
-                    'value'       => '',
-                    'type'        => 'promotions',
-                    'product'     => 'promotion'
-                ],
-                'total_calculation' => [
-                    'key'         => $count++,
-                    'label'       => __('Total Costs', 'lisfinity-core'),
-                    'type'        => 'costs',
-                    'field_type'  => 'promo',
-                    'calculation' => 'full',
-                ],
-            ],
+//            // 6. fields | promotion.
+//            'promotions' => [
+//                'promotions'        => [ // has to be called promotions
+//                    'key'         => $count++,
+//                    'label'       => __('Promotions', 'lisfinity-core'),
+//                    'value'       => '',
+//                    'type'        => 'promotions',
+//                    'product'     => 'promotion'
+//                ],
+//                'total_calculation' => [
+//                    'key'         => $count++,
+//                    'label'       => __('Total Costs', 'lisfinity-core'),
+//                    'type'        => 'costs',
+//                    'field_type'  => 'promo',
+//                    'calculation' => 'full',
+//                ],
+//            ],
         ];
 
         if ( ! $sell_on_site) {

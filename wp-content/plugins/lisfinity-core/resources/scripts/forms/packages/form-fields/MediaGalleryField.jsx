@@ -457,6 +457,9 @@ function handler(props) {
         const { dispatch, formData, field, payment_package, value, setState, media, name } = props;
         let { costs } = props;
 
+          console.log("here are inside of the media gallery checking for the payment package")
+          console.log(payment_package)
+
         if (payment_package) {
           let promotion = {};
           let addonsToPay = 0;

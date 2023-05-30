@@ -1,6 +1,0 @@
-2023-04-27T17:22:35+00:00 CRITICAL Cannot redeclare lisfinity_core() (previously declared in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core-2\lisfinity-core.php:842) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\lisfinity-core.php on line 841
-
-2023-04-27T17:22:43+00:00 CRITICAL Cannot redeclare lisfinity_core() (previously declared in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core-2\lisfinity-core.php:842) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\lisfinity-core.php on line 841
-
-2023-04-27T17:22:43+00:00 CRITICAL Cannot redeclare lisfinity_core() (previously declared in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core-2\lisfinity-core.php:842) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\lisfinity-core.php on line 841
-
