@@ -52,21 +52,22 @@ class FormSubmit extends Component {
       data: {},
       notice: '',
       errors: {},
-      payment_package: false,
       doneSteps: [],
       productEditInfo: false,
       cf_groups: {},
       modalOpen: false,
+      payment_package: false,
       stepTitles: {},
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handlePaymentPackage = this.handlePaymentPackage.bind(this);
     this.selectFields = [];
   }
 
   componentWillMount() {
-    this.getPackages();
+    this.setPackages();
     this.fetchGroups();
   }
 
@@ -78,10 +79,6 @@ class FormSubmit extends Component {
     const { dispatch } = this.props;
     // clear data before populating.
     dispatch(actions.updateFormData({}));
-    this.setPackages();
-    console.log("props.test: this is compoponentDidMount")
-    console.log(this.props.test)
-    console.log(this.props)
     this.getProductEditInfo();
   }
 
@@ -94,6 +91,51 @@ class FormSubmit extends Component {
     }
     return false;
   };
+
+  handlePaymentPackage = async (pkg)  => {
+    console.log("here i go again on my own")
+    console.log(pkg)
+    console.log("here i go again on my own 2")
+
+    this.setState({ payment_package: pkg });
+
+    console.log("the package in handlePaymentPackage")
+    console.log(this.state)
+    console.log("the package in handlePaymentPackage State")
+    //
+    // if(enabled && !isEmpty(packages)) {
+    //   packages['chosen_package'] = [
+    //     pkg.package_id,
+    //     pkg.duration,
+    //     pkg.meta.price,
+    //     input_id
+    //   ];
+    //
+    //   const val = {...value, ...packages};
+    //   setValue(val)
+    //   data[props.name] = val;
+    //
+    //   const url = ci_data.ci_single_package;
+    //
+    //   let post_data = {
+    //     package_id: pkg.package_id || pkg.ID,
+    //     id: lc_data.current_user_id,
+    //   };
+    //
+    //   const response = actions.fetchData(url, post_data)
+    //
+    //   console.log("Is this response even working")
+    //   console.log(response)
+    //
+    //   response.then(result => {
+    //     data['payment_package'] = result.data;
+    //     dispatch(actions.updateFormData(data))
+    //
+    //     console.log(data)
+    //     console.log("are we even in the tehn statement")
+    //   })
+    // }
+  }
 
   getProductInfo = () => {
     this.setState({ loading: true });
@@ -116,7 +158,6 @@ class FormSubmit extends Component {
 
   getProductEditInfo = () => {
     if (!this.props.edit) {
-      console.log("This is not an edit")
       this.setState({ loading: false });
       return false;
     }
@@ -154,7 +195,7 @@ class FormSubmit extends Component {
 
     response.then(data => {
       if(data.data) {
-        this.setState({packages: data.data})
+        this.setState({ packages: data.data})
         this.setState({ loading: false });
         this.setState({ waiting: false });
       }
@@ -167,6 +208,7 @@ class FormSubmit extends Component {
       'X-WP-Nonce': lc_data.nonce,
     };
     const url = ci_data.ci_payment_package;
+
     let data = {
       id: this.props.match.params.id,
       user_id: lc_data.current_user_id,
@@ -190,27 +232,10 @@ class FormSubmit extends Component {
     const response = this.getAllPackages();
 
     response.then(data => {
-      console.log("after no limit reaeeeeeeeeeeeeeeeeached")
-      console.log(data)
-
       if (data.data) {
         this.setState({ packages: data.data });
-        // dispatch(actions.setupPackage(data.data));
-
-        console.log("no limit reaeeeeeeeeeeeeeeeeached")
-        console.log(data)
-        // if (data.data?.limit_reached) {
-        //
-        //
-        //   const costs = {};
-        //   costs.total = {};
-        //   costs.total.commission = parseFloat(data.data?.commission.price);
-        //   dispatch(actions.updateCosts(costs));
-        // }
       }
 
-      console.log("This is the damn state")
-      console.log(this.state)
       this.fetchFormFields();
     });
   }
@@ -268,6 +293,7 @@ class FormSubmit extends Component {
     const { productEditInfo } = this.state;
     let data = this.props.formData;
     const fields = [];
+
     map(formFields, (allFields, group) => {
       map(formFields[group], (field, name) => {
         if (field.type === 'location') {
@@ -358,6 +384,7 @@ class FormSubmit extends Component {
     const { dispatch } = this.props;
     const data = this.props.formData;
     let elValue = isString(e) ? e : e.target.value;
+
     if (type === 'checkbox' || type === 'radio') {
       elValue = e.target.checked;
     }
@@ -522,6 +549,7 @@ class FormSubmit extends Component {
             field={field}
             name={name}
             id={name}
+            handlePaymentPackage={this.handlePaymentPackage}
             packages={this.state.packages}
             payment_package={this.state.payment_package}
             value={isEmpty(data[name]) ? [] : data[name]}
@@ -807,6 +835,9 @@ class FormSubmit extends Component {
       formData.append('toPay', true);
     }
 
+    console.log("formdata before it's sent")
+    console.log(formData)
+
     fetch(url, {
       method: 'POST',
       credentials: 'same-origin',
@@ -842,6 +873,9 @@ class FormSubmit extends Component {
     const data = this.props.formData;
     const errors = validation(step, this.props, dispatch);
     this.setState({ errors });
+
+    console.log("HandleStepsNextState");
+    console.log(this.state);
 
     let proceed = true;
     let categoryIndex = 999;

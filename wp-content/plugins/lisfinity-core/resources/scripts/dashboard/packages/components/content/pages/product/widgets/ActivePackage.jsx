@@ -48,9 +48,11 @@ const ActivePackage = (props) => {
   if (isEmpty(product)) {
     product = props.product;
   }
+
   if (product.payment_package) {
     product = product.payment_package;
   }
+
   const timelineClass = cx({
     'bg-green-700': product.percentage < 35,
     'bg-yellow-700': product.percentage >= 35 && product.percentage < 75,

@@ -27,6 +27,7 @@ require plugin_dir_path( CONCRETEIRON ) . 'class-package-products.php';
 
 $localized_vars = [
     "all_packages" => 'ci/v1/get_packages',
+    "single_package" => 'ci/v1/get_single_package',
 ];
 
 
@@ -36,6 +37,7 @@ add_action( 'wp_enqueue_scripts', 'ci_scripts' );
 function ci_scripts() {
     $localized_vars = [
         "ci_payment_package" => get_site_url() . '/wp-json/ci/v1/get_packages',
+        "ci_single_package" => get_site_url() . '/wp-json/ci/v1/get_single_package',
     ];
 
     wp_enqueue_script( 'ci-localize', plugin_dir_path( CONCRETEIRON ) . 'assets/scripts/localize.js', [

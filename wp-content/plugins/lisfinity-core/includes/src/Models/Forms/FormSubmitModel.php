@@ -363,7 +363,6 @@ class FormSubmitModel
                     ],
                 ],
             ],
-
             // 4. fields | address.
             'address'  => [
                 '_product-location' => [

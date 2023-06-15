@@ -8,7 +8,7 @@ import axios from "axios";
 
 const ChoosePackage  = (props) => {
     const [value, setValue] = useState(props.value);
-    const {packages, payment_package} = props;
+    const {packages, handlePaymentPackage} = props;
     const allData = useSelector(state => state);
     const data = allData.formData;
     const dispatch = useDispatch();
@@ -34,51 +34,89 @@ const ChoosePackage  = (props) => {
         }
     }, []);
 
-    const checkPackage = (pkg) => {
+    const handleChosenPackage = (pkg, index, fieldId) => (e) => {
+        console.log("on to handle package payment")
+        console.log("the package first tho")
+        console.log(pkg)
+
+        const enabled = e.target.checked;
+
+        if(enabled && !isEmpty(packages)) {
+          packages['chosen_package'] = [
+            pkg.package_id,
+            pkg.duration,
+            pkg.meta.price
+          ];
+
+          const val = {...value, ...packages};
+          setValue(val)
+          data[props.name] = val;
+
+          const url = ci_data.ci_single_package;
+
+          let post_data = {
+            package_id: pkg.package_id || pkg.ID,
+            id: lc_data.current_user_id,
+          };
+
+          console.log("post_data")
+            console.log(post_data)
+
+          const response = actions.fetchData(url, post_data)
+
+          console.log("Is this response even working")
+          console.log(response)
+
+          response.then(result => {
+            data['payment_package'] = result.data;
+            dispatch(actions.updateFormData(data))
+
+            console.log(data)
+            console.log("are we even in the tehn statement")
+          })
+        }
+
+        handlePaymentPackage(pkg);
+
+        console.log("after handlePaymentPackage")
+
+    }
+
+    const checkPackage = async (pkg) => {
         const headers = {
             'X-WP-Nonce': lc_data.nonce,
         };
-        const url = lc_data.package_and_promotions;
+        const url = ci_data.ci_single_package;
+
         let data = {
-            id: pkg.ID,
-            user_id: lc_data.current_user_id,
+            package_id: pkg.package_id || pkg.ID,
+            id: lc_data.current_user_id,
         };
 
-        console.log("the data for the post request")
-        console.log(pkg)
-        console.log(data)
+        try {
+            const response = await axios({
+                credentials: 'same-origin',
+                headers,
+                method: 'post',
+                url,
+                data,
+            })
 
-        return axios({
-            credentials: 'same-origin',
-            headers,
-            method: 'post',
-            url,
-            data,
-        });
-    };
+            console.log("response.data")
+            console.log(response.data)
 
-    const getPackage = (pkg) => {
-        const response = checkPackage(pkg);
-        let temp = {};
+            if(response.data) {
+                data['payment_package'] = response.data;
 
-        response.then(data => {
-            if (data.data) {
-                dispatch(actions.setupPackage(data.data));
-                if (data.data?.limit_reached) {
-                    const costs = {};
-                    costs.total = {};
-                    costs.total.commission = parseFloat(data.data?.commission.price);
-                    dispatch(actions.updateCosts(costs));
-                }
+
+                console.log("response.data")
+                console.log(data)
             }
 
-            temp.data = data.data;
-
-            console.log("inside getpackage")
-            console.log(temp)
-        });
-
-        return temp;
+            return response.data
+        } catch(error) {
+            return alert(error)
+        }
     };
 
     /**
@@ -91,53 +129,35 @@ const ChoosePackage  = (props) => {
      * @param index
      * @param fieldId
      */
-    const handleInput = (e, pkg, index, fieldId) => {
-        const enabled = e.target.checked;
-        const input_id = e.target.id
-        const name = e.target.name;
-
-        console.log("how bout the package in the handler")
-        console.log(pkg)
-
-        if(enabled && !isEmpty(packages)) {
-            packages['payment_package'] = [
-                pkg.package_id,
-                pkg.duration,
-                pkg.meta.price,
-                input_id
-            ];
-
-            const val = {...value, ...packages};
-            setValue(val)
-            data[props.name] = val;
-            let newP = getPackage(pkg)
-            data['payment_package'] = newP.data;
-
-            console.log("outside newp getpackage")
-            console.log(newP)
-            console.log("what is the props and props.name? bue value first, but actually enabled first")
-            console.log(enabled)
-            console.log(val)
-            console.log(value)
-            console.log(packages)
-            console.log(props)
-            console.log(props.name)
-            dispatch(actions.updateFormData(data));
-
-            console.log("lets see what the data is after the fact")
-            console.log(data)
-        }
-    }
 
     return [
         <div style={{
             width: '100%',
         }} className={"packages-wrapper"}>
             {map(packages, (pkg, index) => {
-                const val = get(data['packages'], 'payment_package');
+                const val = get(packages, 'chosen_package');
                 const fieldId = "fieldID_Index" + `-${index}`;
-                const chosen_package_id = val && get(value['payment_package'], ['3'] );
-                const checked = (fieldId === chosen_package_id) ? true  : false;
+                const chosen_package_id = val && get(value['chosen_package'], ['0'] );
+                const checked = (pkg.package_id === chosen_package_id) ? true  : false;
+
+                // console.log("chosen_package_id")
+                // console.log(chosen_package_id)
+                // console.log("pkg.package_id")
+                // console.log(pkg.package_id)
+                // console.log("fieldId")
+                // console.log(fieldId)
+                // console.log("checked")
+                // console.log(checked)
+                // console.log("pkg")
+                // console.log(pkg)
+                // console.log("data")
+                // console.log(data)
+                // console.log("val")
+                // console.log(val)
+                // console.log("packages")
+                // console.log(packages)
+                // console.log("value")
+                // console.log(value)
 
                 return (!isEmpty(pkg) &&
                         <div key={index} style={{
@@ -212,8 +232,8 @@ const ChoosePackage  = (props) => {
                                     }}
                                     id={fieldId}
                                    type={"radio"}
-                                   name={"payment_package"}
-                                    onChange={e => handleInput(e, pkg, index, fieldId)}
+                                   name={"chosen_package"}
+                                    onChange={handleChosenPackage(pkg, index, fieldId)}
                                     checked={checked}
 
                                 />

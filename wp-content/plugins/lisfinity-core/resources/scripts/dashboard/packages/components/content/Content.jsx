@@ -393,7 +393,7 @@ const Content = (props) => {
             {data.options.vendor_approved && 'buyer' !== data.options?.account_type &&
             <Route
               path={`${lc_data.site_url}${lc_data.myaccount}edit/:id`}
-              render={props => <FormSubmit {...props} test={"three"} edit={true} options={data.options}/>}
+              render={props => <FormSubmit {...props} edit={true} options={data.options}/>}
             />
             }
             <Route

@@ -1166,7 +1166,7 @@ class ProductsRoute extends Route {
 		// return false if the package is empty.
 		if ( empty( $package ) ) {
             return [
-                'yo 2',
+                'empty package on Products Route line 1169ish',
                 $data['id'],
                 $package,
             ];
@@ -1206,7 +1206,6 @@ class ProductsRoute extends Route {
 
 		foreach ( carbon_get_post_meta( $wc_product->get_id(), "{$prefix}package-categories" ) as $category ) {
 			$category['price']    = $category['price'] * lisfinity_get_chosen_currency_rate();
-			$category['currency'] = lisfinity_get_chosen_currency();
 			$category['currency'] = lisfinity_get_chosen_currency();
 			$currency             = lisfinity_get_chosen_currency();
 			$categories[]         = $category;
@@ -1260,6 +1259,49 @@ class ProductsRoute extends Route {
 
 		return $package;
 	}
+
+    /**
+     * Format the title of the promotions.
+     * -----------------------------------
+     *
+     * @param $promotion
+     *
+     * @return mixed|string|void
+     */
+    protected function format_promotion_title( $promotion ) {
+        $title = $promotion->position;
+        switch ( $promotion->position ) {
+            case 'addon-image':
+                $title = _n( 'Image', 'Images', $promotion->value, 'lisfinity-core' );
+                break;
+            case 'addon-video':
+                $title = _n( 'Video', 'Videos', $promotion->value, 'lisfinity-core' );
+                break;
+            case 'addon-docs':
+                $title = _n( 'Doc', 'Docs', $promotion->value, 'lisfinity-core' );
+                break;
+            case 'addon-qr':
+                $title = __( 'QR Code', 'lisfinity-core' );
+                break;
+            case 'home-banner':
+                $title = __( 'Home Banner', 'lisfinity-core' );
+                break;
+            case 'home-ads':
+                $title = __( 'Home Ads', 'lisfinity-core' );
+                break;
+            case 'bump-pin':
+                $title = __( 'Bump Pin', 'lisfinity-core' );
+                break;
+            case 'bump-color':
+                $title = __( 'Bump Color', 'lisfinity-core' );
+                break;
+            case 'category-featured':
+                $title = __( 'Category Featured', 'lisfinity-core' );
+                break;
+        }
+
+        return $title;
+    }
 
 	public function get_promotion_qr() {
 		return lisfinity_get_qr_promotion();
