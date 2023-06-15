@@ -415,7 +415,7 @@ const Content = (props) => {
             {data.options.vendor_approved && business.options.enable_packages && 'buyer' !== data.options?.account_type &&
             <Route
               path={`${lc_data.site_url}${lc_data.myaccount}submit/:package`}
-              render={props => <FormSubmit {...props} test={"two"} options={data.options}/>}
+              render={props => <FormSubmit {...props} options={data.options}/>}
             />
             }
             {data.options.vendor_approved && business.options.enable_packages && 'buyer' !== data.options?.account_type &&
