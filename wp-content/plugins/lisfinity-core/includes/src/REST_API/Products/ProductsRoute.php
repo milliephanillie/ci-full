@@ -1124,7 +1124,7 @@ class ProductsRoute extends Route {
 		return $product;
 	}
 
-	protected function get_package_and_promotions_data( $data, $exact_package = false ) {
+	protected function get_package_and_promotions_data( $data, $exact_package = false, $post_type = false ) {
 		$is_subscription = false;
 		$agent           = lisfinity_get_agent( get_current_user_id() );
 		if ( ! lisfinity_packages_enabled( $agent->owner_id ?? get_current_user_id() ) ) {
@@ -1132,12 +1132,20 @@ class ProductsRoute extends Route {
 		}
 		$data['user_id'] = $agent->owner_id ?? get_current_user_id();
 		$model           = new PackageModel();
-		if ( $exact_package ) {
+		if ( $exact_package && ! $post_type) {
 			$package_id = get_post_meta( $data['id'], '_payment-package', true );
 			$package    = $model->where( [
 				[ 'id', $package_id ],
 			] )->get( '1', '', 'id, product_id, created_at, products_limit, products_count, products_duration', '' );
-		} else {
+		} elseif ($exact_package && $post_type === 'package') {
+            //TODO: this whole method is highly customized, check back for original method
+            $package    = get_post($data['id']);
+            return [
+                $data['id'],
+                $package,
+                get_post_meta($data['id'])
+            ];
+        } else {
 			$package = $model->where( [
 				[ 'id', $data['id'] ],
 				[ 'user_id', $data['user_id'] ],
@@ -1157,7 +1165,11 @@ class ProductsRoute extends Route {
 
 		// return false if the package is empty.
 		if ( empty( $package ) ) {
-			return false;
+            return [
+                'yo 2',
+                $data['id'],
+                $package,
+            ];
 		}
 
 		$package = array_shift( $package );
@@ -1263,13 +1275,17 @@ class ProductsRoute extends Route {
 	 */
 	public function get_package_and_promotions( WP_REST_Request $request_data ) {
 		$data = $request_data->get_params();
+        //TODO: I added the exact package and post_type
+        $exact_package = $data['exact_package'] ?? false;
+        $post_type = $data['post_type'] ?? false;
 
 		$packages_enabled = lisfinity_packages_enabled( get_current_user_id() );
 		if ( ! $packages_enabled ) {
 			return $this->get_package_and_promotions_without_packages();
 		}
 
-		return $this->get_package_and_promotions_data( $data );
+        //TODO: I added the exact package for second param and post_type for the third
+		return $this->get_package_and_promotions_data( $data, $exact_package, $post_type);
 	}
 
 	protected function get_package_and_promotions_without_packages() {

@@ -1,0 +1,46 @@
+2023-05-25T11:36:33+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\blocks\blocks-json.php on line 1
+
+2023-05-25T12:48:01+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\advanced-custom-fields-pro\includes\fields\class-acf-field-wysiwyg.php on line 100
+
+2023-05-25T12:49:40+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\src\Admin\Features\PaymentGatewaySuggestions\Init.php on line 1
+
+2023-05-25T12:50:43+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 4096 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\includes\rest-api\Controllers\Version2\class-wc-rest-system-status-v2-controller.php on line 1105
+
+2023-05-25T15:14:26+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\blocks\blocks-json.php on line 1
+
+2023-05-25T15:14:32+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\includes\class-wc-regenerate-images-request.php on line 1
+
+2023-05-25T15:14:32+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\blocks\blocks-json.php on line 1
+
+2023-05-25T16:08:24+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\includes\rest-api\Controllers\Version2\class-wc-rest-system-status-v2-controller.php on line 299
+
+2023-05-25T16:09:38+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 4096 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\includes\rest-api\Controllers\Version2\class-wc-rest-system-status-v2-controller.php on line 1105
+
+2023-05-25T16:18:46+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\src\Admin\RemoteInboxNotifications\RemoteInboxNotificationsEngine.php on line 1
+
+2023-05-25T16:18:46+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\src\Admin\RemoteInboxNotifications\RemoteInboxNotificationsEngine.php on line 1
+
+2023-05-25T16:18:49+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\blocks\blocks-json.php on line 1
+
+2023-05-25T18:07:45+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\templates\shortcodes\products\product-styles\product-style-1.php on line 13
+
+2023-05-25T19:25:51+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\themes\lisfinity\lisfinity\includes\functions\functions-posts.php on line 10
+
+2023-05-25T19:25:53+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\vendor\htmlburger\carbon-fields\core\Service\Meta_Query_Service.php on line 160
+
+2023-05-25T19:29:42+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\Shortcodes\Controls\ProductSingle\Group_Control_Single_Product_Owner_Button_Typography.php on line 9
+
+2023-05-25T19:30:07+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\elementor\includes\heartbeat.php on line 4
+
+2023-05-25T21:07:18+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\class-wp-theme.php on line 1271
+
+2023-05-25T21:57:57+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\themes\lisfinity\lisfinity\vendor\autoload.php on line 5
+
+2023-05-25T21:57:59+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\carbon-fields\products\meta-product-listing-ad.php on line 17
+
+2023-05-25T22:10:41+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\blocks\file\view.min.asset.php on line 1
+
+2023-05-25T22:10:46+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 4550
+
+2023-05-25T22:11:26+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\includes\rest-api\Controllers\Version2\class-wc-rest-system-status-v2-controller.php on line 299
+
