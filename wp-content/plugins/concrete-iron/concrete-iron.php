@@ -13,6 +13,7 @@ define( 'CONCRETEIRON', __FILE__ );
 /**
  * Include the CONCRETEIRON class.
  */
+
 require plugin_dir_path( CONCRETEIRON ) . 'class-concreteiron.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-custom-import.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-listings-import.php';
@@ -21,3 +22,24 @@ require plugin_dir_path( CONCRETEIRON ) . 'class-product-images.php';
 //require plugin_dir_path( CONCRETEIRON ) . 'class-update-package.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-update-product.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-gf-forms.php';
+require plugin_dir_path( CONCRETEIRON ) . 'class-package-products.php';
+require plugin_dir_path( CONCRETEIRON ) . 'class-purchase-package.php';
+
+
+add_action( 'wp_enqueue_scripts', 'ci_scripts' );
+
+function ci_scripts() {
+    $localized_vars = [
+        "ci_payment_package" => get_site_url() . '/wp-json/ci/v1/get_packages',
+        "ci_single_package" => get_site_url() . '/wp-json/ci/v1/get_single_package',
+        "ci_purchase_package" => get_site_url() . '/wp-json/ci/v1/purchase-package',
+    ];
+
+    wp_enqueue_script( 'ci-localize', plugin_dir_path( CONCRETEIRON ) . 'assets/scripts/localize.js', [
+        'jquery',
+        'wp-i18n'
+    ], '1.0.0', true );
+
+    wp_localize_script( 'ci-localize', 'ci_data', $localized_vars );
+}
+

@@ -22,6 +22,7 @@ import Complex from '../form-fields/complex';
 import jsonForm from '../../utils/build-form-data';
 import Location from '../form-fields/Location';
 import PaymentPackage from '../form-fields/payment-packages';
+import ChoosePackage from '../form-fields/payment-packages/choosepackage';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import ReactSVG from 'react-svg';
@@ -37,6 +38,8 @@ import QRForm from '../form-fields/QRForm';
 import MediaSingleImage from '../form-fields/MediaSingleImage';
 import { addProps } from '../../../theme/vendor/functions';
 import Gallery from '../form-fields/Gallery';
+import Packages from "../../../dashboard/packages/components/content/packages/Packages";
+import {toast} from "react-toastify";
 
 class FormSubmit extends Component {
   constructor(props) {
@@ -50,20 +53,22 @@ class FormSubmit extends Component {
       data: {},
       notice: '',
       errors: {},
-      payment_package: false,
       doneSteps: [],
       productEditInfo: false,
       cf_groups: {},
       modalOpen: false,
+      payment_package: false,
       stepTitles: {},
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handlePaymentPackage = this.handlePaymentPackage.bind(this);
     this.selectFields = [];
   }
 
   componentWillMount() {
+    this.setPackages();
     this.fetchGroups();
   }
 
@@ -75,7 +80,6 @@ class FormSubmit extends Component {
     const { dispatch } = this.props;
     // clear data before populating.
     dispatch(actions.updateFormData({}));
-    this.getPackage();
     this.getProductEditInfo();
   }
 
@@ -88,6 +92,44 @@ class FormSubmit extends Component {
     }
     return false;
   };
+
+  handlePaymentPackage = async (pkg)  => {
+    this.setState({ payment_package: pkg });
+
+    //
+    // if(enabled && !isEmpty(packages)) {
+    //   packages['chosen_package'] = [
+    //     pkg.package_id,
+    //     pkg.duration,
+    //     pkg.meta.price,
+    //     input_id
+    //   ];
+    //
+    //   const val = {...value, ...packages};
+    //   setValue(val)
+    //   data[props.name] = val;
+    //
+    //   const url = ci_data.ci_single_package;
+    //
+    //   let post_data = {
+    //     package_id: pkg.package_id || pkg.ID,
+    //     id: lc_data.current_user_id,
+    //   };
+    //
+    //   const response = actions.fetchData(url, post_data)
+    //
+    //   console.log("Is this response even working")
+    //   console.log(response)
+    //
+    //   response.then(result => {
+    //     data['payment_package'] = result.data;
+    //     dispatch(actions.updateFormData(data))
+    //
+    //     console.log(data)
+    //     console.log("are we even in the tehn statement")
+    //   })
+    // }
+  }
 
   getProductInfo = () => {
     this.setState({ loading: true });
@@ -125,6 +167,72 @@ class FormSubmit extends Component {
       this.fetchFormFields();
     });
   };
+
+  getPackages = () => {
+    if (this.props.edit) {
+      this.setState({ loading: false });
+      return false;
+    }
+
+    const headers = {
+      'X-WP-Nonce': lc_data.nonce,
+    };
+
+    const url = lc_data.packages + '/payment_package';
+
+    const response = axios({
+      credentials: 'same-origin',
+      headers,
+      method: 'get',
+      url,
+    });
+
+    response.then(data => {
+      if(data.data) {
+        this.setState({ packages: data.data})
+        this.setState({ loading: false });
+        this.setState({ waiting: false });
+      }
+      this.fetchFormFields();
+    });
+  }
+
+  getAllPackages = () => {
+    const headers = {
+      'X-WP-Nonce': lc_data.nonce,
+    };
+    const url = ci_data.ci_payment_package;
+
+    let data = {
+      id: this.props.match.params.id,
+      user_id: lc_data.current_user_id,
+    };
+
+    return axios({
+      credentials: 'same-origin',
+      headers,
+      method: 'post',
+      url,
+      data,
+    });
+  }
+
+  setPackages = () => {
+    if (this.props.edit) {
+      this.setState({ loading: false });
+      return false;
+    }
+    const { dispatch } = this.props;
+    const response = this.getAllPackages();
+
+    response.then(data => {
+      if (data.data) {
+        this.setState({ packages: data.data });
+      }
+
+      this.fetchFormFields();
+    });
+  }
 
   getPackage = () => {
     if (this.props.edit) {
@@ -179,6 +287,7 @@ class FormSubmit extends Component {
     const { productEditInfo } = this.state;
     let data = this.props.formData;
     const fields = [];
+
     map(formFields, (allFields, group) => {
       map(formFields[group], (field, name) => {
         if (field.type === 'location') {
@@ -269,6 +378,7 @@ class FormSubmit extends Component {
     const { dispatch } = this.props;
     const data = this.props.formData;
     let elValue = isString(e) ? e : e.target.value;
+
     if (type === 'checkbox' || type === 'radio') {
       elValue = e.target.checked;
     }
@@ -410,12 +520,13 @@ class FormSubmit extends Component {
    * -------------------------------
    *
    * @param field
-   * @param name
+   * @param name -
    * @returns {*}
    */
   showField = (field, name, group) => {
     const { errors } = this.state;
     const data = this.props.formData;
+
     let display = true;
     if (field.conditional) {
       if (isString[data[field.conditional[1]]]) {
@@ -426,6 +537,17 @@ class FormSubmit extends Component {
     }
 
     switch (field.type) {
+      case 'packages' :
+        return <ChoosePackage
+            key={field.key}
+            field={field}
+            name={name}
+            id={name}
+            handlePaymentPackage={this.handlePaymentPackage}
+            packages={this.state.packages}
+            payment_package={this.state.payment_package}
+            value={isEmpty(data[name]) ? [] : data[name]}
+        />;
       case 'promotions':
         return <PaymentPackage
           key={field.key}
@@ -644,6 +766,29 @@ class FormSubmit extends Component {
     }
   };
 
+  ciBuyPackage = async (id, formData) => {
+    const url = ci_data.ci_purchase_package;
+
+    const headers = new Headers();
+    headers.append('X-WP-Nonce', lc_data.nonce);
+
+    formData.append('wc_product', id);
+    formData.append('id', lc_data.current_user_id);
+
+    // if (discount > 0) {
+    //   data.discount = discount;
+    // }
+    // if (days > 1) {
+    //   data.quantity = days;
+    // }
+    return fetch(url,{
+      method: 'POST',
+      credentials: 'same-origin',
+      headers,
+      body: formData,
+    })
+  };
+
   /**
    * Handle Product Submission
    * -------------------------
@@ -653,14 +798,69 @@ class FormSubmit extends Component {
    */
   handleSubmit(e, step) {
     e.preventDefault();
+
+    // submit form
+    const data = this.props.formData;
+    const formData = jsonForm(data);
+
+    console.log("why isn't formdata showing here")
+    console.log(formData)
+
+    const buyPackage = this.ciBuyPackage(this.state.payment_package.package_id, formData);
+
+    const submitProduct = this.submitProduct(e, step);
+    console.log("submitproduct const")
+    console.log(submitProduct)
+
+    submitProduct.then((res) => {
+      console.log(res.json())
+      buyPackage.then((response) => response.json())
+          .then((data) => {
+            console.log("data after buy package")
+            console.log(data)
+            if (data.success) {
+              if(data.permalink) {
+                window.location.href = data.permalink;
+              } else {
+                window.location.reload(false);
+              }
+            }
+            if (data.error) {
+              if (!isEmpty(errors)) {
+                this.setState({ errors });
+                dispatch(actions.updateFormErrors(errors));
+                return false;
+              }
+            }
+          });
+    })
+  }
+
+  submitProduct = async (e, step) => {
+    e.preventDefault();
     if (lc_data.is_demo) {
       this.setState({ modalOpen: true });
       return false;
     }
+
+    // submit form
+    const data = this.props.formData;
+
+    data['package'] = "testing";
+
+    const formData = jsonForm(data);
+    formData.append('toPay', true);
+
+
+
+    console.log("but is showing here")
+    console.log(this.props)
+    console.log(formData)
+
     const { dispatch, costs } = this.props;
     const { payment_package } = this.state;
-    const finalCost = costs.final || 0;
-    const package_id = this.state.payment_package.id;
+    const finalCost = payment_package.meta.price || 0;
+    const package_id = payment_package.id;
     // validate form
     const errors = validation(step, this.props, dispatch);
     this.setState({ errors });
@@ -671,8 +871,7 @@ class FormSubmit extends Component {
       return false;
     }
 
-    // submit form
-    const data = this.props.formData;
+
     if (package_id) {
       data['package'] = package_id;
       if (payment_package?.is_subscription) {
@@ -686,7 +885,6 @@ class FormSubmit extends Component {
     }
 
     const headers = new Headers();
-    const formData = jsonForm(data);
     let url = lc_data.product_submit;
     headers.append('X-WP-Nonce', lc_data.nonce);
 
@@ -707,23 +905,15 @@ class FormSubmit extends Component {
       formData.append('toPay', true);
     }
 
-    fetch(url, {
+    console.log("formdata right before the request")
+    console.log(formData)
+
+    return fetch(url, {
       method: 'POST',
       credentials: 'same-origin',
       headers,
       body: formData,
-    }).then(response => response.json().then(json => {
-      this.setState({ loading: false });
-
-      if (json.success) {
-        this.props.info.refresh_products = true;
-        dispatch(actions.setInfo(this.props.info));
-        if (json.permalink) {
-          window.location = json.permalink;
-        }
-        this.setState({ notice: json.message });
-      }
-    }));
+    });
   }
 
   /**
@@ -742,6 +932,9 @@ class FormSubmit extends Component {
     const data = this.props.formData;
     const errors = validation(step, this.props, dispatch);
     this.setState({ errors });
+
+    console.log("HandleStepsNextState");
+    console.log(this.state);
 
     let proceed = true;
     let categoryIndex = 999;
@@ -815,6 +1008,7 @@ class FormSubmit extends Component {
       loading,
       fieldGroups,
       notice,
+      packages,
       payment_package,
       doneSteps,
       productEditInfo,
@@ -843,27 +1037,27 @@ class FormSubmit extends Component {
           </div>
         }
 
-        {!waiting && !loading && isEmpty(notice) && (isEmpty(payment_package) || !payment_package) && !this.props.edit &&
-          <div key={1} className="p-30 bg-white rounded shadow-theme">
-            <p
-              className="font-bold text-xl">{lc_data.jst[317]}</p>
-            <NavLink to={`${lc_data.site_url}${lc_data.myaccount}packages/`}
-                     className="flex justify-between items-center mt-20 px-20 h-60 bg-orange-600 rounded shadow-theme font-bold text-white hover:bg-orange-700"
-                     style={{ width: '225px' }}
-            >
-              <div className="flex flex-col text-left">
-                <span className="text-sm">{lc_data.jst[318]}</span>
-                <span className="font-bold text-xl">{lc_data.jst[319]}</span>
-              </div>
-              <ReactSVG
-                src={`${lc_data.dir}dist/${ReplyIcon}`}
-                className="w-20 h-20 fill-white"
-              />
-            </NavLink>
-          </div>
-        }
+        {/*{!waiting && !loading && isEmpty(notice) && !this.props.edit &&*/}
+        {/*  <div key={1} className="p-30 bg-white rounded shadow-theme">*/}
+        {/*    <p*/}
+        {/*      className="font-bold text-xl">{lc_data.jst[317]}</p>*/}
+        {/*    <NavLink to={`${lc_data.site_url}${lc_data.myaccount}packages/`}*/}
+        {/*             className="flex justify-between items-center mt-20 px-20 h-60 bg-orange-600 rounded shadow-theme font-bold text-white hover:bg-orange-700"*/}
+        {/*             style={{ width: '225px' }}*/}
+        {/*    >*/}
+        {/*      <div className="flex flex-col text-left">*/}
+        {/*        <span className="text-sm">{lc_data.jst[318]}</span>*/}
+        {/*        <span className="font-bold text-xl">{lc_data.jst[319]}</span>*/}
+        {/*      </div>*/}
+        {/*      <ReactSVG*/}
+        {/*        src={`${lc_data.dir}dist/${ReplyIcon}`}*/}
+        {/*        className="w-20 h-20 fill-white"*/}
+        {/*      />*/}
+        {/*    </NavLink>*/}
+        {/*  </div>*/}
+        {/*}*/}
 
-        {!loading && (payment_package || this.props.edit) && !isEmpty(fieldGroups) &&
+        {!loading && !isEmpty(fieldGroups) &&
           <div key={1} className="form--wrapper flex flex-wrap flex-wrapper">
 
             <div className="w-full xl:w-11/16">

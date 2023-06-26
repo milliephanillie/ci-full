@@ -1124,7 +1124,7 @@ class ProductsRoute extends Route {
 		return $product;
 	}
 
-	protected function get_package_and_promotions_data( $data, $exact_package = false ) {
+	protected function get_package_and_promotions_data( $data, $exact_package = false, $post_type = false ) {
 		$is_subscription = false;
 		$agent           = lisfinity_get_agent( get_current_user_id() );
 		if ( ! lisfinity_packages_enabled( $agent->owner_id ?? get_current_user_id() ) ) {
@@ -1132,12 +1132,20 @@ class ProductsRoute extends Route {
 		}
 		$data['user_id'] = $agent->owner_id ?? get_current_user_id();
 		$model           = new PackageModel();
-		if ( $exact_package ) {
+		if ( $exact_package && ! $post_type) {
 			$package_id = get_post_meta( $data['id'], '_payment-package', true );
 			$package    = $model->where( [
 				[ 'id', $package_id ],
 			] )->get( '1', '', 'id, product_id, created_at, products_limit, products_count, products_duration', '' );
-		} else {
+		} elseif ($exact_package && $post_type === 'package') {
+            //TODO: this whole method is highly customized, check back for original method
+            $package    = get_post($data['id']);
+            return [
+                $data['id'],
+                $package,
+                get_post_meta($data['id'])
+            ];
+        } else {
 			$package = $model->where( [
 				[ 'id', $data['id'] ],
 				[ 'user_id', $data['user_id'] ],
@@ -1157,7 +1165,11 @@ class ProductsRoute extends Route {
 
 		// return false if the package is empty.
 		if ( empty( $package ) ) {
-			return false;
+            return [
+                'empty package on Products Route line 1169ish',
+                $data['id'],
+                $package,
+            ];
 		}
 
 		$package = array_shift( $package );
@@ -1194,7 +1206,6 @@ class ProductsRoute extends Route {
 
 		foreach ( carbon_get_post_meta( $wc_product->get_id(), "{$prefix}package-categories" ) as $category ) {
 			$category['price']    = $category['price'] * lisfinity_get_chosen_currency_rate();
-			$category['currency'] = lisfinity_get_chosen_currency();
 			$category['currency'] = lisfinity_get_chosen_currency();
 			$currency             = lisfinity_get_chosen_currency();
 			$categories[]         = $category;
@@ -1249,6 +1260,49 @@ class ProductsRoute extends Route {
 		return $package;
 	}
 
+    /**
+     * Format the title of the promotions.
+     * -----------------------------------
+     *
+     * @param $promotion
+     *
+     * @return mixed|string|void
+     */
+    protected function format_promotion_title( $promotion ) {
+        $title = $promotion->position;
+        switch ( $promotion->position ) {
+            case 'addon-image':
+                $title = _n( 'Image', 'Images', $promotion->value, 'lisfinity-core' );
+                break;
+            case 'addon-video':
+                $title = _n( 'Video', 'Videos', $promotion->value, 'lisfinity-core' );
+                break;
+            case 'addon-docs':
+                $title = _n( 'Doc', 'Docs', $promotion->value, 'lisfinity-core' );
+                break;
+            case 'addon-qr':
+                $title = __( 'QR Code', 'lisfinity-core' );
+                break;
+            case 'home-banner':
+                $title = __( 'Home Banner', 'lisfinity-core' );
+                break;
+            case 'home-ads':
+                $title = __( 'Home Ads', 'lisfinity-core' );
+                break;
+            case 'bump-pin':
+                $title = __( 'Bump Pin', 'lisfinity-core' );
+                break;
+            case 'bump-color':
+                $title = __( 'Bump Color', 'lisfinity-core' );
+                break;
+            case 'category-featured':
+                $title = __( 'Category Featured', 'lisfinity-core' );
+                break;
+        }
+
+        return $title;
+    }
+
 	public function get_promotion_qr() {
 		return lisfinity_get_qr_promotion();
 	}
@@ -1263,13 +1317,17 @@ class ProductsRoute extends Route {
 	 */
 	public function get_package_and_promotions( WP_REST_Request $request_data ) {
 		$data = $request_data->get_params();
+        //TODO: I added the exact package and post_type
+        $exact_package = $data['exact_package'] ?? false;
+        $post_type = $data['post_type'] ?? false;
 
 		$packages_enabled = lisfinity_packages_enabled( get_current_user_id() );
 		if ( ! $packages_enabled ) {
 			return $this->get_package_and_promotions_without_packages();
 		}
 
-		return $this->get_package_and_promotions_data( $data );
+        //TODO: I added the exact package for second param and post_type for the third
+		return $this->get_package_and_promotions_data( $data, $exact_package, $post_type);
 	}
 
 	protected function get_package_and_promotions_without_packages() {

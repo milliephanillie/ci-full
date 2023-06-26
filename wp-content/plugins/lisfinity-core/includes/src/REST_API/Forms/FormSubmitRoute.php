@@ -100,17 +100,20 @@ class FormSubmitRoute extends Route {
 
 		$form_fields = $form_model->get_fields();
 
+        $titles = [
+            'general'  => esc_html__( 'General', 'lisfinity-core' ),
+            'packages'  => esc_html__( 'Packages', 'lisfinity-core' ),
+            'details'  => esc_html__( 'Details', 'lisfinity-core' ),
+            'price'    => esc_html__( 'Price', 'lisfinity-core' ),
+            'address'  => esc_html__( 'Address', 'lisfinity-core' ),
+            'media'    => esc_html__( 'Media', 'lisfinity-core' ),
+            'payments' => esc_html__( 'Payments', 'lisfinity-core' ),
+        ];
+
 		return [
 			'fields' => $form_fields,
 			//todo create dynamic options for this one instead of using .po files.
-			'titles' => [
-				'general'  => esc_html__( 'General', 'lisfinity-core' ),
-				'details'  => esc_html__( 'Details', 'lisfinity-core' ),
-				'price'    => esc_html__( 'Price', 'lisfinity-core' ),
-				'address'  => esc_html__( 'Address', 'lisfinity-core' ),
-				'media'    => esc_html__( 'Media', 'lisfinity-core' ),
-				'payments' => esc_html__( 'Payments', 'lisfinity-core' ),
-			],
+			'titles' => $titles,
 		];
 	}
 
@@ -169,6 +172,9 @@ class FormSubmitRoute extends Route {
 	public function submit_product( WP_REST_Request $request_data ) {
 		$data       = $request_data->get_params();
 		$this->data = $data;
+
+//        var_dump($data);
+//        die();
 
 		$is_edit = isset( $data['action'] ) && 'edit' === $data['action'];
 
@@ -256,15 +262,15 @@ class FormSubmitRoute extends Route {
 			$id = wp_insert_post( $args );
 
 			// add free promotions to the product.
-			if ( ! empty( $data['package'] ) ) {
-				$wc_package_id = $package_model->where( [ [ 'id', '=', $data['package'] ] ] )->get();
-				if ( ! empty( $wc_package_id ) ) {
-					$promotions = carbon_get_post_meta( $wc_package_id[0]->product_id, 'package-free-promotions' );
-					if ( ! empty( $promotions ) ) {
-						$this->insert_promotions( $data['package'], $wc_package_id[0]->product_id, $id, $user_id, $promotions );
-					}
-				}
-			}
+//			if ( ! empty( $data['package'] ) ) {
+//				$wc_package_id = $package_model->where( [ [ 'id', '=', $data['package'] ] ] )->get();
+//				if ( ! empty( $wc_package_id ) ) {
+//					$promotions = carbon_get_post_meta( $wc_package_id[0]->product_id, 'package-free-promotions' );
+//					if ( ! empty( $promotions ) ) {
+//						$this->insert_promotions( $data['package'], $wc_package_id[0]->product_id, $id, $user_id, $promotions );
+//					}
+//				}
+//			}
 		}
 
 		if ( ! $is_edit && ! isset( $data['post_type'] ) && isset( $data['promotions'] ) && ! empty( $data['promotions'] ) ) {
@@ -351,7 +357,7 @@ class FormSubmitRoute extends Route {
 		}
 
 		// store fields data from the form.
-		$duration = $this->packages_enabled && isset( $data['package'] ) && ! $this->is_edit ? $package->products_duration : '';
+//		$duration = $this->packages_enabled && isset( $data['package'] ) && ! $this->is_edit ? $package->products_duration : '';
 		if ( ! $this->packages_enabled && ! $this->is_edit ) {
 			$duration = lisfinity_get_option( 'product-duration' );
 		}
@@ -359,6 +365,8 @@ class FormSubmitRoute extends Route {
 
 		$is_business = ! empty( $data['post_type'] ) && ProfilesModel::$post_type_name === $data['post_type'];
 
+        //TODO: fix
+        $duration = 1;
 		$result['store'] = $this->store_data( $id, $fields, $data, $user_id, $duration, $is_business );
 
 		// store agent.
@@ -369,11 +377,11 @@ class FormSubmitRoute extends Route {
 		}
 
 		// set expiration date.
-		if ( ( isset( $data['package'] ) || ! $this->packages_enabled ) && ! $this->is_edit ) {
-			$expiration_date = lisfinity_get_product_expiration_date( $duration );
-			carbon_set_post_meta( $id, 'product-expiration', $expiration_date );
-			carbon_set_post_meta( $id, 'product-listed', current_time( 'timestamp' ) );
-		}
+//		if ( ( isset( $data['package'] ) || ! $this->packages_enabled ) && ! $this->is_edit ) {
+//			$expiration_date = lisfinity_get_product_expiration_date( $duration );
+//			carbon_set_post_meta( $id, 'product-expiration', $expiration_date );
+//			carbon_set_post_meta( $id, 'product-listed', current_time( 'timestamp' ) );
+//		}
 
 		$result['success'] = true;
 

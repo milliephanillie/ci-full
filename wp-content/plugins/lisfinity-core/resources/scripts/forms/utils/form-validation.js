@@ -45,6 +45,11 @@ export default (step, props, dispatch) => {
           errors[name] = sprintf(lc_data.jst[383], name);
         }
       }
+      if (field.type === 'packages') {
+        if (isEmpty(data[name])) {
+          errors[name] = sprintf(lc_data.jst[383], name);
+        }
+      }
       // if location is not set.
       if (field.type === 'location') {
         map(customFields, (customField, fieldName) => {

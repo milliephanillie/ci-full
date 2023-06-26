@@ -18,7 +18,6 @@ const PaymentPackages = (props) => {
   const { field, name } = props;
   const { product } = field;
 
-
   const loadProducts = () => {
     if (product) {
       switch (product) {
