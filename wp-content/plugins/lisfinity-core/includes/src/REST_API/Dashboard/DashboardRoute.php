@@ -544,6 +544,7 @@ class DashboardRoute extends Route {
 					'billing_email'     => get_user_meta( $user_id, 'billing_email', true ) ?? '',
 					'billing_country'   => get_user_meta( $user_id, 'billing_country', true ) ?? '',
 				];
+
 				$order->set_address( $address );
 				$order->update_status( 'completed', '', true );
 

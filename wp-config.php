@@ -20,6 +20,11 @@
 
 $dev_host = $_SERVER['HTTP_HOST'];
 
+$db_name = 'concreteiron';
+$db_user = 'root';
+$db_password = 'root';
+$db_host = 'localhost';
+
 if($dev_host === 'dev.concreteiron') {
     $db_name = 'concreteiron';
     $db_user = 'root';

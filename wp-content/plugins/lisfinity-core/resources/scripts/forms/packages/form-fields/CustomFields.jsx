@@ -74,6 +74,8 @@ class CustomFields extends Component {
     const fieldsByGroup = this.props.customFields;
     const data = this.props.formData;
 
+    console.log("let's populate the cf data")
+
     // populate taxonomies
     let taxonomies = {};
     if (this.props.options.common_first) {
@@ -90,6 +92,9 @@ class CustomFields extends Component {
       }
     }
     this.setState({ cf_taxonomies: taxonomies });
+
+    console.log(taxonomies)
+    console.log("taxonomies")
 
     // populate terms
     let terms = [];
