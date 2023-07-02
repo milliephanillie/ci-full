@@ -173,9 +173,6 @@ class FormSubmitRoute extends Route {
 		$data       = $request_data->get_params();
 		$this->data = $data;
 
-//        var_dump($data);
-//        die();
-
 		$is_edit = isset( $data['action'] ) && 'edit' === $data['action'];
 
 		$agent                  = lisfinity_get_agent( get_current_user_id() );

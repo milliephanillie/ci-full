@@ -30,11 +30,15 @@ if($dev_host === 'dev.concreteiron') {
     $db_user = 'root';
     $db_password = 'root';
     $db_host = 'localhost';
+    define( 'WP_DEBUG', true );
+    define( 'WP_DEBUG_DISPLAY', true );
 } else {
     $db_name = 'tukknskgzw';
     $db_user = 'tukknskgzw';
     $db_password = 'Ny5354Bmfu';
     $db_host = 'localhost';
+    define( 'WP_DEBUG', false );
+    define( 'WP_DEBUG_DISPLAY', false );
 }
 
 // ** Database settings - You can get this info from your web host ** //
@@ -98,8 +102,8 @@ $table_prefix = 'wp_';
  *
  * @link https://wordpress.org/support/article/debugging-in-wordpress/
  */
-define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_DISPLAY', true );
+//define( 'WP_DEBUG', true );
+//define( 'WP_DEBUG_DISPLAY', true );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
