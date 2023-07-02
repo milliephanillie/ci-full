@@ -769,6 +769,13 @@ class FormSubmit extends Component {
   ciBuyPackage = async (id, formData) => {
     const url = ci_data.ci_purchase_package;
 
+    console.log("inside ciBuyPackage and we are figuring out what's going on")
+    console.log("inside ciBuyPackage and we are figuring out what's going on")
+    console.log(id)
+
+    console.log("inside ciBuyPackage and we are figuring out the formData")
+    console.log(formData)
+
     const headers = new Headers();
     headers.append('X-WP-Nonce', lc_data.nonce);
 
@@ -800,6 +807,8 @@ class FormSubmit extends Component {
     e.preventDefault();
 
     // submit form
+    const { dispatch, costs } = this.props;
+    const { payment_package } = this.state;
     const data = this.props.formData;
     const formData = jsonForm(data);
 
@@ -816,9 +825,13 @@ class FormSubmit extends Component {
       console.log(res.json())
       buyPackage.then((response) => response.json())
           .then((data) => {
-            console.log("data after buy package")
+            console.log("data after buy  and props.info")
             console.log(data)
+            console.log(this.props.info)
             if (data.success) {
+              this.props.info.refresh_products = true;
+              dispatch(actions.setInfo(this.props.info));
+
               if(data.permalink) {
                 window.location.href = data.permalink;
               } else {

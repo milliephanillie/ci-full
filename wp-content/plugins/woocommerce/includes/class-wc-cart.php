@@ -1254,7 +1254,6 @@ class WC_Cart extends WC_Legacy_Cart {
 				$this->set_quantity( $cart_item_key, $new_quantity, false );
 			} else {
 				$cart_item_key = $cart_id;
-
 				// Add item after merging with $cart_item_data - hook to allow plugins to modify cart item.
 				$this->cart_contents[ $cart_item_key ] = apply_filters(
 					'woocommerce_add_cart_item',
