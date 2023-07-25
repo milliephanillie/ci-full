@@ -766,7 +766,7 @@ class FormSubmit extends Component {
     }
   };
 
-  ciBuyPackage = async (id, formData) => {
+  ciBuyPackage = async (id, formData, product_id) => {
     const url = ci_data.ci_purchase_package;
 
     console.log("inside ciBuyPackage and we are figuring out what's going on")
@@ -781,6 +781,7 @@ class FormSubmit extends Component {
 
     formData.append('wc_product', id);
     formData.append('id', lc_data.current_user_id);
+    formData.append('product_id', product_id);
 
     // if (discount > 0) {
     //   data.discount = discount;
@@ -821,32 +822,43 @@ class FormSubmit extends Component {
     console.log("submitproduct const")
     console.log(submitProduct)
 
-    submitProduct.then((res) => {
-      console.log(res.json())
-      buyPackage.then((response) => response.json())
-          .then((data) => {
-            console.log("data after buy  and props.info")
-            console.log(data)
-            console.log(this.props.info)
-            if (data.success) {
-              this.props.info.refresh_products = true;
-              dispatch(actions.setInfo(this.props.info));
+    submitProduct
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("this is where the data should be my friend");
+          console.log(data);
+          return data; // data from submitProduct
+        })
+        .then((dataFromSubmitProduct) => {
+          // alert(JSON.stringify(dataFromSubmitProduct))
+          return this.ciBuyPackage(this.state.payment_package.package_id, formData, dataFromSubmitProduct.product_id)
+              .then((response) => response.json())
+              .then((data) => {
+                this.props.info.refresh_products = true;
+                dispatch(actions.setInfo(this.props.info));
+                if (data.success) {
+                  this.props.info.refresh_products = true;
+                  dispatch(actions.setInfo(this.props.info));
+                  //
+                  // alert(JSON.stringify(data))
+                  // alert(data.permalink)
 
-              if(data.permalink) {
-                window.location.href = data.permalink;
-              } else {
-                window.location.reload(false);
-              }
-            }
-            if (data.error) {
-              if (!isEmpty(errors)) {
-                this.setState({ errors });
-                dispatch(actions.updateFormErrors(errors));
-                return false;
-              }
-            }
-          });
-    })
+                  if(data.permalink) {
+                    window.location.href = data.permalink;
+                  } else {
+                    window.location.reload(false);
+                  }
+                }
+                if (data.error) {
+                  if (!isEmpty(errors)) {
+                    this.setState({ errors });
+                    dispatch(actions.updateFormErrors(errors));
+                    return false;
+                  }
+                }
+              });
+        });
+
   }
 
   submitProduct = async (e, step) => {
@@ -858,8 +870,6 @@ class FormSubmit extends Component {
 
     // submit form
     const data = this.props.formData;
-
-    data['package'] = "testing";
 
     const formData = jsonForm(data);
     formData.append('toPay', true);
@@ -898,7 +908,7 @@ class FormSubmit extends Component {
     }
 
     const headers = new Headers();
-    let url = lc_data.product_submit;
+    let url = ci_data.ci_product_store;
     headers.append('X-WP-Nonce', lc_data.nonce);
 
     formData.append('business', this.props.business.business.ID);
