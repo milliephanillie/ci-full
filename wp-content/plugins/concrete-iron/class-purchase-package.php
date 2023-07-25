@@ -109,10 +109,12 @@ class PurchasePackage {
                     }
                 }
 
+                $cart_args['_listing_id'] = $data['product_id'];
+
                 WC()->cart->empty_cart();
                 WC()->cart->add_to_cart( $data['wc_product'], (int) $data['quantity'] ?? 1, '', '', $cart_args );
 
-                $result['permalink'] = get_permalink( wc_get_page_id( 'checkout' ) );
+                $result['permalink'] = get_permalink( wc_get_page_id( 'checkout' ) ) . '?product_id=' . $data['product_id'];
             } else {
                 $order = wc_create_order( [
                     'customer_id' => $user_id,
@@ -143,6 +145,7 @@ class PurchasePackage {
                 $result['message'] = esc_html__( 'Free trial package successfully added!', 'lisfinity-core' );
             }
 
+            $result['product_id'] = $data['product_id'];
             $result['success'] = true;
         }
 
