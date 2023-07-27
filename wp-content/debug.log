@@ -1,0 +1,448 @@
+[26-Jul-2023 23:31:24 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:31:24 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:31:24 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:31:24 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:31:24 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:32:53 UTC] package free promotions
+[26-Jul-2023 23:32:53 UTC] Array
+(
+)
+
+[26-Jul-2023 23:32:53 UTC] 1690414373
+[26-Jul-2023 23:32:53 UTC] activation
+[26-Jul-2023 23:32:53 UTC] PHP Notice:  A non well formed numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 169
+[26-Jul-2023 23:32:53 UTC] expiration
+[26-Jul-2023 23:32:53 UTC] PHP Fatal error:  Uncaught TypeError: Argument 1 passed to ConcreteIron\Includes\RapidProductSubmit::update_lisfinity_packages() must be of the type int, string given, called in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 175 and defined in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php:195
+Stack trace:
+#0 C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php(175): ConcreteIron\Includes\RapidProductSubmit->update_lisfinity_packages()
+#1 C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\class-wp-hook.php(308): ConcreteIron\Includes\RapidProductSubmit->update_product()
+#2 C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\class-wp-hook.php(332): WP_Hook->apply_filters()
+#3 C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\plugin.php(517): WP_Hook->do_action()
+#4 C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\includes\class-wc-c in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 195
+[26-Jul-2023 23:35:05 UTC] package free promotions
+[26-Jul-2023 23:35:05 UTC] Array
+(
+)
+
+[26-Jul-2023 23:35:05 UTC] 1690414505
+[26-Jul-2023 23:35:05 UTC] activation
+[26-Jul-2023 23:35:05 UTC] PHP Notice:  A non well formed numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 169
+[26-Jul-2023 23:35:05 UTC] expiration
+[26-Jul-2023 23:35:05 UTC] lisfinty package id
+[26-Jul-2023 23:35:05 UTC] 66
+[26-Jul-2023 23:35:05 UTC] lisfinty promotions id
+[26-Jul-2023 23:35:05 UTC] PHP Notice:  Undefined variable: lisfinity_promotions_id in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 232
+[26-Jul-2023 23:35:05 UTC] 
+[26-Jul-2023 23:38:52 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:38:52 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:38:52 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:38:52 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:38:52 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:40:01 UTC] the actual product id in the cart
+[26-Jul-2023 23:40:01 UTC] 
+[26-Jul-2023 23:40:01 UTC] package free promotions
+[26-Jul-2023 23:40:01 UTC] Array
+(
+)
+
+[26-Jul-2023 23:40:01 UTC] 1690414801
+[26-Jul-2023 23:40:01 UTC] activation
+[26-Jul-2023 23:40:01 UTC] PHP Notice:  A non well formed numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 172
+[26-Jul-2023 23:40:01 UTC] expiration
+[26-Jul-2023 23:40:01 UTC] The promotions
+[26-Jul-2023 23:40:01 UTC] PHP Warning:  error_log() expects parameter 1 to be string, array given in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 228
+[26-Jul-2023 23:40:01 UTC] lisfinty package id
+[26-Jul-2023 23:40:01 UTC] 68
+[26-Jul-2023 23:40:01 UTC] lisfinty promotions id
+[26-Jul-2023 23:47:00 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:47:00 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:47:00 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:47:00 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:47:00 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:48:33 UTC] the actual product id in the cart
+[26-Jul-2023 23:48:33 UTC] 3556
+[26-Jul-2023 23:48:33 UTC] package free promotions
+[26-Jul-2023 23:48:33 UTC] Array
+(
+    [0] => home-ads
+    [1] => search-keyword
+    [2] => single-ad
+    [3] => bump-color
+    [4] => bump-up
+)
+
+[26-Jul-2023 23:48:33 UTC] 1690415313
+[26-Jul-2023 23:48:33 UTC] activation
+[26-Jul-2023 23:48:33 UTC] PHP Notice:  A non well formed numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 172
+[26-Jul-2023 23:48:33 UTC] expiration
+[26-Jul-2023 23:48:33 UTC] The promotions
+[26-Jul-2023 23:48:33 UTC] Array
+(
+    [0] => home-ads
+    [1] => search-keyword
+    [2] => single-ad
+    [3] => bump-color
+    [4] => bump-up
+)
+
+[26-Jul-2023 23:48:33 UTC] The promotions two
+[26-Jul-2023 23:48:33 UTC] PHP Warning:  error_log() expects parameter 1 to be string, array given in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 231
+[26-Jul-2023 23:48:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method ConcreteIron\Includes\RapidProductSubmit::insert_promotions() in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php:232
+Stack trace:
+#0 C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php(178): ConcreteIron\Includes\RapidProductSubmit->update_lisfinity_packages()
+#1 C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\class-wp-hook.php(308): ConcreteIron\Includes\RapidProductSubmit->update_product()
+#2 C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\class-wp-hook.php(332): WP_Hook->apply_filters()
+#3 C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\plugin.php(517): WP_Hook->do_action()
+#4 C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\includes\class-wc-checkout.php(1194): do_action()
+#5 C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\includes\class-wc-ajax.php(478): WC_Checkout->process_checkout()
+#6 C:\MAMP\htdocs\co in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 232
+[26-Jul-2023 23:54:10 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:54:10 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:54:10 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:54:10 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:54:10 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[26-Jul-2023 23:55:20 UTC] the actual product id in the cart
+[26-Jul-2023 23:55:20 UTC] 3556
+[26-Jul-2023 23:55:20 UTC] package free promotions
+[26-Jul-2023 23:55:20 UTC] Array
+(
+    [0] => home-ads
+    [1] => search-keyword
+    [2] => single-ad
+    [3] => bump-color
+    [4] => bump-up
+)
+
+[26-Jul-2023 23:55:20 UTC] 1690415720
+[26-Jul-2023 23:55:20 UTC] activation
+[26-Jul-2023 23:55:20 UTC] PHP Notice:  A non well formed numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 172
+[26-Jul-2023 23:55:20 UTC] expiration
+[26-Jul-2023 23:55:20 UTC] The promotions
+[26-Jul-2023 23:55:20 UTC] Array
+(
+    [0] => home-ads
+    [1] => search-keyword
+    [2] => single-ad
+    [3] => bump-color
+    [4] => bump-up
+)
+
+[26-Jul-2023 23:55:20 UTC] The promotions two
+[26-Jul-2023 23:55:20 UTC] PHP Warning:  error_log() expects parameter 1 to be string, array given in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 231
+[26-Jul-2023 23:55:20 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[26-Jul-2023 23:55:20 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[26-Jul-2023 23:55:20 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[26-Jul-2023 23:55:20 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[26-Jul-2023 23:55:20 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[26-Jul-2023 23:55:20 UTC] lisfinty package id
+[26-Jul-2023 23:55:20 UTC] 71
+[26-Jul-2023 23:55:20 UTC] lisfinty promotions id
+[27-Jul-2023 00:35:11 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[27-Jul-2023 00:36:39 UTC] the actual product id in the cart
+[27-Jul-2023 00:36:39 UTC] 3556
+[27-Jul-2023 00:36:39 UTC] package free promotions
+[27-Jul-2023 00:36:39 UTC] Array
+(
+    [0] => home-ads
+    [1] => search-keyword
+    [2] => single-ad
+    [3] => bump-color
+    [4] => bump-up
+)
+
+[27-Jul-2023 00:36:39 UTC] 1690418199
+[27-Jul-2023 00:36:39 UTC] activation
+[27-Jul-2023 00:36:39 UTC] PHP Notice:  A non well formed numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 172
+[27-Jul-2023 00:36:39 UTC] expiration
+[27-Jul-2023 00:36:39 UTC] The promotions
+[27-Jul-2023 00:36:39 UTC] Array
+(
+    [0] => home-ads
+    [1] => search-keyword
+    [2] => single-ad
+    [3] => bump-color
+    [4] => bump-up
+)
+
+[27-Jul-2023 00:36:39 UTC] The promotions two
+[27-Jul-2023 00:36:39 UTC] PHP Warning:  error_log() expects parameter 1 to be string, array given in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 231
+[27-Jul-2023 00:36:39 UTC] what the fuck is promotion_product_id
+[27-Jul-2023 00:36:39 UTC] Array
+(
+    [0] => WP_Post Object
+        (
+            [ID] => 507
+            [post_author] => 1
+            [post_date] => 2020-03-12 11:48:40
+            [post_date_gmt] => 2020-03-12 11:48:40
+            [post_content] => Promote your ad on the homepage feed
+            [post_title] => In Home - Promo Ads
+            [post_excerpt] => 
+            [post_status] => publish
+            [comment_status] => open
+            [ping_status] => closed
+            [post_password] => 
+            [post_name] => in-home-promo-ads
+            [to_ping] => 
+            [pinged] => 
+            [post_modified] => 2020-03-12 11:48:40
+            [post_modified_gmt] => 2020-03-12 11:48:40
+            [post_content_filtered] => 
+            [post_parent] => 0
+            [guid] => https://classic.lisfinity.com/?post_type=product&amp;p=507
+            [menu_order] => 0
+            [post_type] => product
+            [post_mime_type] => 
+            [comment_count] => 0
+            [filter] => raw
+        )
+
+)
+
+[27-Jul-2023 00:36:39 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:36:39 UTC] what the fuck is promotion_product_id
+[27-Jul-2023 00:36:39 UTC] Array
+(
+    [0] => WP_Post Object
+        (
+            [ID] => 518
+            [post_author] => 1
+            [post_date] => 2020-03-16 12:29:11
+            [post_date_gmt] => 2020-03-16 12:29:11
+            [post_content] => Display your ad within the first results on the keyword search
+            [post_title] => Home - Keyword Search
+            [post_excerpt] => 
+            [post_status] => publish
+            [comment_status] => open
+            [ping_status] => closed
+            [post_password] => 
+            [post_name] => home-keyword-search
+            [to_ping] => 
+            [pinged] => 
+            [post_modified] => 2020-03-16 12:29:11
+            [post_modified_gmt] => 2020-03-16 12:29:11
+            [post_content_filtered] => 
+            [post_parent] => 0
+            [guid] => https://classic.lisfinity.com/?post_type=product&amp;p=518
+            [menu_order] => 0
+            [post_type] => product
+            [post_mime_type] => 
+            [comment_count] => 0
+            [filter] => raw
+        )
+
+)
+
+[27-Jul-2023 00:36:39 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:36:39 UTC] what the fuck is promotion_product_id
+[27-Jul-2023 00:36:39 UTC] Array
+(
+    [0] => WP_Post Object
+        (
+            [ID] => 520
+            [post_author] => 1
+            [post_date] => 2020-03-16 12:31:33
+            [post_date_gmt] => 2020-03-16 12:31:33
+            [post_content] => Suggest your ad on the single ad pages from the same category
+            [post_title] => Single Ad - Advertise
+            [post_excerpt] => 
+            [post_status] => publish
+            [comment_status] => open
+            [ping_status] => closed
+            [post_password] => 
+            [post_name] => single-ad-advertise
+            [to_ping] => 
+            [pinged] => 
+            [post_modified] => 2020-03-16 12:31:33
+            [post_modified_gmt] => 2020-03-16 12:31:33
+            [post_content_filtered] => 
+            [post_parent] => 0
+            [guid] => https://classic.lisfinity.com/?post_type=product&amp;p=520
+            [menu_order] => 0
+            [post_type] => product
+            [post_mime_type] => 
+            [comment_count] => 0
+            [filter] => raw
+        )
+
+)
+
+[27-Jul-2023 00:36:39 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:36:39 UTC] what the fuck is promotion_product_id
+[27-Jul-2023 00:36:39 UTC] Array
+(
+    [0] => WP_Post Object
+        (
+            [ID] => 505
+            [post_author] => 1
+            [post_date] => 2020-03-12 11:30:13
+            [post_date_gmt] => 2020-03-12 11:30:13
+            [post_content] => Make the color of your ad more prominent to separate it from the others
+            [post_title] => Anywhere - Color Bump
+            [post_excerpt] => 
+            [post_status] => publish
+            [comment_status] => open
+            [ping_status] => closed
+            [post_password] => 
+            [post_name] => anywhere-color-bump
+            [to_ping] => 
+            [pinged] => 
+            [post_modified] => 2020-03-12 11:30:13
+            [post_modified_gmt] => 2020-03-12 11:30:13
+            [post_content_filtered] => 
+            [post_parent] => 0
+            [guid] => https://classic.lisfinity.com/?post_type=product&amp;p=505
+            [menu_order] => 0
+            [post_type] => product
+            [post_mime_type] => 
+            [comment_count] => 0
+            [filter] => raw
+        )
+
+)
+
+[27-Jul-2023 00:36:39 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:36:39 UTC] what the fuck is promotion_product_id
+[27-Jul-2023 00:36:39 UTC] Array
+(
+    [0] => WP_Post Object
+        (
+            [ID] => 40
+            [post_author] => 1
+            [post_date] => 2019-10-08 13:10:15
+            [post_date_gmt] => 2019-10-08 13:10:15
+            [post_content] => 
+            [post_title] => Promotion - Bump Up
+            [post_excerpt] => 
+            [post_status] => publish
+            [comment_status] => open
+            [ping_status] => closed
+            [post_password] => 
+            [post_name] => promotion-bump-up
+            [to_ping] => 
+            [pinged] => 
+            [post_modified] => 2019-10-08 13:10:15
+            [post_modified_gmt] => 2019-10-08 13:10:15
+            [post_content_filtered] => 
+            [post_parent] => 0
+            [guid] => https://classic.lisfinity.com/?post_type=product&amp;p=40
+            [menu_order] => 0
+            [post_type] => product
+            [post_mime_type] => 
+            [comment_count] => 0
+            [filter] => raw
+        )
+
+)
+
+[27-Jul-2023 00:36:39 UTC] PHP Notice:  Function wpdb::prepare was called <strong>incorrectly</strong>. Unsupported value type (array). Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 4.8.2.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:36:39 UTC] lisfinty package id
+[27-Jul-2023 00:36:39 UTC] 73
+[27-Jul-2023 00:36:39 UTC] lisfinty promotions id
+[27-Jul-2023 00:37:28 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:37:43 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:37:43 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:37:43 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:38:43 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:39:44 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:39:48 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:40:43 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:41:44 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:43:44 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:45:02 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:46:02 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:46:07 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:46:13 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[27-Jul-2023 00:46:13 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[27-Jul-2023 00:46:13 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[27-Jul-2023 00:46:13 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[27-Jul-2023 00:46:13 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[27-Jul-2023 00:47:41 UTC] the actual product id in the cart
+[27-Jul-2023 00:47:41 UTC] 3556
+[27-Jul-2023 00:47:41 UTC] package free promotions
+[27-Jul-2023 00:47:41 UTC] Array
+(
+    [0] => home-ads
+    [1] => search-keyword
+    [2] => single-ad
+    [3] => bump-color
+    [4] => bump-up
+)
+
+[27-Jul-2023 00:47:41 UTC] 1690418861
+[27-Jul-2023 00:47:41 UTC] activation
+[27-Jul-2023 00:47:41 UTC] PHP Notice:  A non well formed numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 173
+[27-Jul-2023 00:47:41 UTC] expiration
+[27-Jul-2023 00:47:41 UTC] The promotions
+[27-Jul-2023 00:47:41 UTC] Array
+(
+    [0] => home-ads
+    [1] => search-keyword
+    [2] => single-ad
+    [3] => bump-color
+    [4] => bump-up
+)
+
+[27-Jul-2023 00:47:41 UTC] The promotions two
+[27-Jul-2023 00:47:41 UTC] PHP Warning:  error_log() expects parameter 1 to be string, array given in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\concrete-iron\src\Includes\RapidProductSubmit.php on line 232
+[27-Jul-2023 00:47:41 UTC] lisfinty package id
+[27-Jul-2023 00:47:41 UTC] 75
+[27-Jul-2023 00:47:41 UTC] lisfinty promotions id
+[27-Jul-2023 00:47:55 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:47:59 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:48:56 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:49:00 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:49:30 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:49:38 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/single_subcategory_update</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:49:38 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/product_images</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:49:38 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/update_product</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:49:38 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/gf/forms/(?P<form_id>[\d]+)</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:49:38 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/get_packages</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:49:38 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/get_single_package</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:49:38 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/purchase-package</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:49:38 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/product/store</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:49:46 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:50:00 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:50:03 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:50:04 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:50:09 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:50:11 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/single_subcategory_update</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:11 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/product_images</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:11 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/update_product</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:11 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/gf/forms/(?P<form_id>[\d]+)</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:11 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/get_packages</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:11 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/get_single_package</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:11 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/purchase-package</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:11 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/product/store</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:15 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:50:20 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:50:26 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/single_subcategory_update</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:26 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/product_images</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:26 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/update_product</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:26 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/gf/forms/(?P<form_id>[\d]+)</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:26 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/get_packages</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:26 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/get_single_package</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:26 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/purchase-package</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:26 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/product/store</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:50:47 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:50:51 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:50:55 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:51:01 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:51:02 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:51:04 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/single_subcategory_update</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:51:04 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/product_images</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:51:04 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/update_product</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:51:04 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/gf/forms/(?P<form_id>[\d]+)</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:51:04 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/get_packages</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:51:04 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/get_single_package</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:51:04 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/purchase-package</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:51:04 UTC] PHP Notice:  Function register_rest_route was called <strong>incorrectly</strong>. The REST API route definition for <code>ci/v1/product/store</code> is missing the required <code>permission_callback</code> argument. For REST API routes that are intended to be public, use <code>__return_true</code> as the permission callback. Please see <a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 5.5.0.) in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5865
+[27-Jul-2023 00:51:05 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:51:12 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:51:14 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:51:30 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:51:40 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[27-Jul-2023 00:53:17 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[27-Jul-2023 00:53:31 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:53:35 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[27-Jul-2023 00:55:32 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171

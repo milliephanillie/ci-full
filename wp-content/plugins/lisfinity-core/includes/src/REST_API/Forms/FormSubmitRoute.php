@@ -915,6 +915,8 @@ class FormSubmitRoute extends Route {
 		if ( ! empty( $promotions ) ) {
 			foreach ( $promotions as $promotion ) {
 				$promotion_product_id = $model->get_promotion_product( $promotion );
+                error_log("what the fuck is promotion_product_id");
+                error_log(print_r($promotion_product_id, true));
 				$promotions_values    = [
 					// payment package id.
 					$promotion_product_id ?? $package_id,
