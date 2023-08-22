@@ -1,0 +1,266 @@
+[21-Aug-2023 21:56:19 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 21:56:19 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 21:56:27 UTC] why is is_edit broken
+[21-Aug-2023 21:56:27 UTC] why is is_edit broken
+[21-Aug-2023 21:56:27 UTC] is the edit value passing, well is it?
+[21-Aug-2023 21:56:27 UTC] my bool value:true
+[21-Aug-2023 21:56:27 UTC] why is is_edit broken
+[21-Aug-2023 21:56:27 UTC] why is is_edit broken
+[21-Aug-2023 21:56:27 UTC] is the edit value passing, well is it?
+[21-Aug-2023 21:56:27 UTC] my bool value:true
+[21-Aug-2023 21:58:08 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 21:58:28 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 21:58:39 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 21:59:01 UTC] why is is_edit broken
+[21-Aug-2023 21:59:01 UTC] why is is_edit broken
+[21-Aug-2023 21:59:01 UTC] is the edit value passing, well is it?
+[21-Aug-2023 21:59:01 UTC] my bool value:true
+[21-Aug-2023 21:59:11 UTC] why is is_edit broken
+[21-Aug-2023 21:59:11 UTC] why is is_edit broken
+[21-Aug-2023 21:59:11 UTC] is the edit value passing, well is it?
+[21-Aug-2023 21:59:11 UTC] my bool value:true
+[21-Aug-2023 21:59:12 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 21:59:27 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 21:59:27 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 21:59:43 UTC] why is is_edit broken
+[21-Aug-2023 21:59:43 UTC] why is is_edit broken
+[21-Aug-2023 21:59:43 UTC] is the edit value passing, well is it?
+[21-Aug-2023 21:59:43 UTC] my bool value:true
+[21-Aug-2023 21:59:44 UTC] why is is_edit broken
+[21-Aug-2023 21:59:44 UTC] why is is_edit broken
+[21-Aug-2023 21:59:44 UTC] is the edit value passing, well is it?
+[21-Aug-2023 21:59:44 UTC] my bool value:true
+[21-Aug-2023 22:00:43 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:00:58 UTC] why is is_edit broken
+[21-Aug-2023 22:00:58 UTC] why is is_edit broken
+[21-Aug-2023 22:00:58 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:00:58 UTC] my bool value:true
+[21-Aug-2023 22:02:33 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:02:59 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:03:05 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:03:33 UTC] why is is_edit broken
+[21-Aug-2023 22:03:33 UTC] why is is_edit broken
+[21-Aug-2023 22:03:33 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:03:33 UTC] my bool value:true
+[21-Aug-2023 22:03:47 UTC] why is is_edit broken
+[21-Aug-2023 22:03:47 UTC] why is is_edit broken
+[21-Aug-2023 22:03:47 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:03:47 UTC] my bool value:true
+[21-Aug-2023 22:03:47 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:04:03 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:04:12 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:04:21 UTC] why is is_edit broken
+[21-Aug-2023 22:04:21 UTC] why is is_edit broken
+[21-Aug-2023 22:04:21 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:04:21 UTC] my bool value:true
+[21-Aug-2023 22:05:37 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:06:40 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:09:15 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:09:55 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:10:30 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:12:32 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:14:02 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:14:20 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:14:23 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:14:39 UTC] why is is_edit broken
+[21-Aug-2023 22:14:39 UTC] why is is_edit broken
+[21-Aug-2023 22:14:39 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:14:39 UTC] my bool value:true
+[21-Aug-2023 22:14:43 UTC] why is is_edit broken
+[21-Aug-2023 22:14:43 UTC] why is is_edit broken
+[21-Aug-2023 22:14:43 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:14:43 UTC] my bool value:true
+[21-Aug-2023 22:14:46 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:14:54 UTC] PHP Notice:  Undefined index: concrete-placing-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:14:54 UTC] PHP Notice:  Undefined index: concrete-batching-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:14:54 UTC] PHP Notice:  Undefined index: concrete-pumping-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:14:54 UTC] PHP Notice:  Undefined index: concrete-cutting-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:14:54 UTC] PHP Notice:  Undefined index: other-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:14:54 UTC] PHP Notice:  Undefined index: general-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:15:16 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:15:23 UTC] why is is_edit broken
+[21-Aug-2023 22:15:23 UTC] why is is_edit broken
+[21-Aug-2023 22:15:23 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:15:23 UTC] my bool value:true
+[21-Aug-2023 22:16:55 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:16:57 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:16:58 UTC] PHP Notice:  Undefined index: concrete-placing-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:16:58 UTC] PHP Notice:  Undefined index: concrete-batching-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:16:58 UTC] PHP Notice:  Undefined index: concrete-pumping-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:16:58 UTC] PHP Notice:  Undefined index: concrete-cutting-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:16:58 UTC] PHP Notice:  Undefined index: other-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:16:58 UTC] PHP Notice:  Undefined index: general-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:17:02 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:17:03 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:17:16 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:17:19 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:17:40 UTC] string value
+[21-Aug-2023 22:17:40 UTC] why is is_edit broken
+[21-Aug-2023 22:17:40 UTC] why is is_edit broken
+[21-Aug-2023 22:17:40 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:17:40 UTC] my bool value:true
+[21-Aug-2023 22:17:43 UTC] string value
+[21-Aug-2023 22:17:43 UTC] why is is_edit broken
+[21-Aug-2023 22:17:43 UTC] why is is_edit broken
+[21-Aug-2023 22:17:43 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:17:43 UTC] my bool value:true
+[21-Aug-2023 22:19:00 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:19:02 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:19:03 UTC] PHP Notice:  Undefined index: concrete-placing-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:19:03 UTC] PHP Notice:  Undefined index: concrete-batching-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:19:03 UTC] PHP Notice:  Undefined index: concrete-pumping-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:19:03 UTC] PHP Notice:  Undefined index: concrete-cutting-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:19:03 UTC] PHP Notice:  Undefined index: other-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:19:03 UTC] PHP Notice:  Undefined index: general-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:19:09 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:19:17 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:19:19 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:19:33 UTC] string value
+[21-Aug-2023 22:19:33 UTC] PHP Notice:  Undefined variable: is_Edit in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Forms\FormSubmitRoute.php on line 106
+[21-Aug-2023 22:19:33 UTC] 
+[21-Aug-2023 22:19:33 UTC] why is is_edit broken
+[21-Aug-2023 22:19:33 UTC] why is is_edit broken
+[21-Aug-2023 22:19:33 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:19:33 UTC] my bool value:true
+[21-Aug-2023 22:19:35 UTC] string value
+[21-Aug-2023 22:19:35 UTC] PHP Notice:  Undefined variable: is_Edit in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Forms\FormSubmitRoute.php on line 106
+[21-Aug-2023 22:19:35 UTC] 
+[21-Aug-2023 22:19:35 UTC] why is is_edit broken
+[21-Aug-2023 22:19:35 UTC] why is is_edit broken
+[21-Aug-2023 22:19:35 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:19:35 UTC] my bool value:true
+[21-Aug-2023 22:20:51 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:20:52 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:20:54 UTC] PHP Notice:  Undefined index: concrete-placing-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:20:54 UTC] PHP Notice:  Undefined index: concrete-batching-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:20:54 UTC] PHP Notice:  Undefined index: concrete-pumping-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:20:54 UTC] PHP Notice:  Undefined index: concrete-cutting-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:20:54 UTC] PHP Notice:  Undefined index: other-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:20:54 UTC] PHP Notice:  Undefined index: general-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:21:08 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:21:14 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:21:26 UTC] string value
+[21-Aug-2023 22:21:26 UTC] false
+[21-Aug-2023 22:21:26 UTC] why is is_edit broken
+[21-Aug-2023 22:21:26 UTC] why is is_edit broken
+[21-Aug-2023 22:21:26 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:21:26 UTC] my bool value:true
+[21-Aug-2023 22:21:31 UTC] string value
+[21-Aug-2023 22:21:31 UTC] false
+[21-Aug-2023 22:21:31 UTC] why is is_edit broken
+[21-Aug-2023 22:21:31 UTC] why is is_edit broken
+[21-Aug-2023 22:21:31 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:21:31 UTC] my bool value:true
+[21-Aug-2023 22:22:29 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:22:31 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:22:42 UTC] string value
+[21-Aug-2023 22:22:42 UTC] false
+[21-Aug-2023 22:22:42 UTC] why is is_edit broken
+[21-Aug-2023 22:22:42 UTC] why is is_edit broken
+[21-Aug-2023 22:22:42 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:22:42 UTC] my bool value:true
+[21-Aug-2023 22:24:28 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:24:32 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:26:29 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:28:30 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:28:33 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:30:32 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:30:33 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:30:34 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:30:35 UTC] PHP Notice:  Undefined index: concrete-placing-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:30:35 UTC] PHP Notice:  Undefined index: concrete-batching-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:30:35 UTC] PHP Notice:  Undefined index: concrete-pumping-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:30:35 UTC] PHP Notice:  Undefined index: concrete-cutting-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:30:35 UTC] PHP Notice:  Undefined index: other-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:30:35 UTC] PHP Notice:  Undefined index: general-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[21-Aug-2023 22:30:38 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:30:40 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:30:54 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:31:01 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:31:05 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:31:09 UTC] string value
+[21-Aug-2023 22:31:09 UTC] 
+[21-Aug-2023 22:31:09 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:31:09 UTC] my bool value:false
+[21-Aug-2023 22:31:15 UTC] string value
+[21-Aug-2023 22:31:15 UTC] 
+[21-Aug-2023 22:31:15 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:31:15 UTC] my bool value:false
+[21-Aug-2023 22:31:41 UTC] string value
+[21-Aug-2023 22:31:41 UTC] 1
+[21-Aug-2023 22:31:41 UTC] why is is_edit broken
+[21-Aug-2023 22:31:41 UTC] why is is_edit broken
+[21-Aug-2023 22:31:41 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:31:41 UTC] my bool value:true
+[21-Aug-2023 22:32:07 UTC] string value
+[21-Aug-2023 22:32:07 UTC] 1
+[21-Aug-2023 22:32:07 UTC] why is is_edit broken
+[21-Aug-2023 22:32:07 UTC] why is is_edit broken
+[21-Aug-2023 22:32:07 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:32:07 UTC] my bool value:true
+[21-Aug-2023 22:32:37 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:32:40 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:33:37 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:34:38 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:34:41 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[21-Aug-2023 22:36:25 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:39:01 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:39:07 UTC] string value
+[21-Aug-2023 22:39:07 UTC] 
+[21-Aug-2023 22:39:07 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:39:07 UTC] my bool value:false
+[21-Aug-2023 22:42:57 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:43:09 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:43:15 UTC] string value
+[21-Aug-2023 22:43:15 UTC] 
+[21-Aug-2023 22:43:15 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:43:15 UTC] my bool value:false
+[21-Aug-2023 22:49:09 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:49:19 UTC] string value
+[21-Aug-2023 22:49:19 UTC] 
+[21-Aug-2023 22:49:19 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:49:19 UTC] my bool value:false
+[21-Aug-2023 22:51:14 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[21-Aug-2023 22:51:20 UTC] string value
+[21-Aug-2023 22:51:20 UTC] 
+[21-Aug-2023 22:51:20 UTC] is the edit value passing, well is it?
+[21-Aug-2023 22:51:20 UTC] my bool value:false
+[21-Aug-2023 22:54:13 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:54:23 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[21-Aug-2023 22:54:23 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[22-Aug-2023 14:13:31 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[22-Aug-2023 14:13:31 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[22-Aug-2023 14:13:35 UTC] PHP Fatal error:  Uncaught Error: Call to a member function getTimestamp() on null in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\src\Internal\Admin\Notes\CustomizingProductCatalog.php:55
+Stack trace:
+#0 C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\src\Admin\Notes\NoteTraits.php(83): Automattic\WooCommerce\Internal\Admin\Notes\CustomizingProductCatalog::get_note()
+#1 C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\src\Internal\Admin\Events.php(207): Automattic\WooCommerce\Internal\Admin\Notes\CustomizingProductCatalog::possibly_add_note()
+#2 C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\src\Internal\Admin\Events.php(155): Automattic\WooCommerce\Internal\Admin\Events->possibly_add_notes()
+#3 C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\class-wp-hook.php(308): Automattic\WooCommerce\Internal\Admin\Events->do_wc_admin_daily()
+#4 C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\class-wp-hook.php(332): WP_Hook->apply_filters()
+#5 C:\M in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\woocommerce\src\Internal\Admin\Notes\CustomizingProductCatalog.php on line 55
+[22-Aug-2023 14:21:10 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[22-Aug-2023 14:28:33 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[22-Aug-2023 14:39:18 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[22-Aug-2023 14:48:29 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[22-Aug-2023 14:48:46 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[22-Aug-2023 14:51:17 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[22-Aug-2023 14:51:21 UTC] PHP Notice:  Undefined index: concrete-placing-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:51:21 UTC] PHP Notice:  Undefined index: concrete-batching-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:51:21 UTC] PHP Notice:  Undefined index: concrete-pumping-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:51:21 UTC] PHP Notice:  Undefined index: concrete-cutting-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:51:21 UTC] PHP Notice:  Undefined index: other-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:51:21 UTC] PHP Notice:  Undefined index: general-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:52:30 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[22-Aug-2023 14:53:13 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[22-Aug-2023 14:53:15 UTC] PHP Deprecated:  Function get_page_by_title is <strong>deprecated</strong> since version 6.2.0! Use WP_Query instead. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\functions.php on line 5413
+[22-Aug-2023 14:53:17 UTC] PHP Notice:  Undefined index: concrete-placing-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:53:17 UTC] PHP Notice:  Undefined index: concrete-batching-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:53:17 UTC] PHP Notice:  Undefined index: concrete-pumping-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:53:17 UTC] PHP Notice:  Undefined index: concrete-cutting-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:53:17 UTC] PHP Notice:  Undefined index: other-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:53:17 UTC] PHP Notice:  Undefined index: general-concrete-equipment in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\redux-framework\redux-core\inc\fields\select\class-redux-select.php on line 141
+[22-Aug-2023 14:53:40 UTC] PHP Warning:  A non-numeric value encountered in C:\MAMP\htdocs\concreteiron\wordpress\wp-content\plugins\lisfinity-core\includes\src\REST_API\Dashboard\DashboardRoute.php on line 928
+[22-Aug-2023 14:54:21 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[22-Aug-2023 14:55:21 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[22-Aug-2023 14:56:22 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
+[22-Aug-2023 14:56:26 UTC] PHP Deprecated:  The PSR-0 `Requests_...` class names in the Request library are deprecated. Switch to the PSR-4 `WpOrg\Requests\...` class names at your earliest convenience. in C:\MAMP\htdocs\concreteiron\wordpress\wp-includes\Requests\src\Autoload.php on line 171
