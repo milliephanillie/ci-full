@@ -342,8 +342,14 @@ class FormSubmit extends Component {
     const { productEditInfo } = this.state;
     return new Promise((resolve, reject) => {
       const form = document.getElementById('form-fields');
-      const url = form ? lc_data[form.value] : lc_data.product_fields;
-      const request = apiFetch({ path: url });
+      const url = new URL(form ? lc_data[form.value] : lc_data.product_fields);
+      console.log("is this really an edit?")
+      console.log(this.props.edit)
+      const is_edit =  (this.props.edit != undefined) ? this.props.edit : false;
+      url.searchParams.append('is_edit', is_edit);
+      const request = apiFetch({
+        path: url.toString()
+      });
 
       request.then(response => {
         resolve(response);
@@ -813,14 +819,9 @@ class FormSubmit extends Component {
     const data = this.props.formData;
     const formData = jsonForm(data);
 
-    console.log("why isn't formdata showing here")
-    console.log(formData)
-
     const buyPackage = this.ciBuyPackage(this.state.payment_package.package_id, formData);
 
     const submitProduct = this.submitProduct(e, step);
-    console.log("submitproduct const")
-    console.log(submitProduct)
 
     submitProduct
         .then((res) => res.json())
@@ -873,12 +874,7 @@ class FormSubmit extends Component {
 
     const formData = jsonForm(data);
     formData.append('toPay', true);
-
-
-
-    console.log("but is showing here")
-    console.log(this.props)
-    console.log(formData)
+    formData.append('postStatus', 'draft');
 
     const { dispatch, costs } = this.props;
     const { payment_package } = this.state;

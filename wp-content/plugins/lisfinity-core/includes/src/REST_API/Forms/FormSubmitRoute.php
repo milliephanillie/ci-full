@@ -95,10 +95,22 @@ class FormSubmitRoute extends Route {
 	 *
 	 * @return mixed
 	 */
-	public function product_fields() {
+	public function product_fields(\WP_REST_Request $request) {
+        $is_edit = $request->get_param('is_edit');
+        $is_edit = ($is_edit) ? ($is_edit === 'true') : false;
+
 		$form_model = new FormModel();
 
 		$form_fields = $form_model->get_fields();
+
+        error_log(print_r("string value", true));
+        error_log(print_r(strval($is_edit), true));
+
+        if( ! empty($is_edit) && boolval($is_edit) === true ) {
+            error_log(print_r('why is is_edit broken', true));
+            error_log(print_r('why is is_edit broken', true));
+            unset($form_fields['package']);
+        }
 
         $titles = [
             'general'  => esc_html__( 'General', 'lisfinity-core' ),
@@ -110,10 +122,17 @@ class FormSubmitRoute extends Route {
             'payments' => esc_html__( 'Payments', 'lisfinity-core' ),
         ];
 
+        error_log(print_r("is the edit value passing, well is it?", true));
+        $bool_string = $is_edit ? 'true' : 'false';
+        error_log(print_r("my bool value:".$bool_string, true));
+
+        //$titles = apply_filters('lisfinity__product_fields', $titles, $is_edit);
+
 		return [
 			'fields' => $form_fields,
 			//todo create dynamic options for this one instead of using .po files.
 			'titles' => $titles,
+            'is_edit' => $is_edit
 		];
 	}
 
@@ -915,8 +934,6 @@ class FormSubmitRoute extends Route {
 		if ( ! empty( $promotions ) ) {
 			foreach ( $promotions as $promotion ) {
 				$promotion_product_id = $model->get_promotion_product( $promotion );
-                error_log("what the fuck is promotion_product_id");
-                error_log(print_r($promotion_product_id, true));
 				$promotions_values    = [
 					// payment package id.
 					$promotion_product_id ?? $package_id,

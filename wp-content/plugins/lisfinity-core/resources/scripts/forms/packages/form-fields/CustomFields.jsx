@@ -323,7 +323,8 @@ class CustomFields extends Component {
                   {taxonomy.type === 'select' && !isEmpty(choices) &&
                     <SelectCF
                       display
-                      id={taxonomy.slug}
+                      id="shit-head"
+                      dataTest="testingg"
                       name={taxonomy.slug}
                       label={sprintf(lc_data.jst[334], taxonomy.single_name)}
                       options={sortBy(choices, ['name'])}

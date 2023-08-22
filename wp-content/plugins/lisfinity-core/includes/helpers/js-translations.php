@@ -245,7 +245,7 @@ $translations = [
     __('Listed date', 'lisfinity-core'),
     __('Expire date', 'lisfinity-core'),
     __('Negotiable', 'lisfinity-core'),
-    __('Price on call', 'lisfinity-core'),
+    __('Call for price', 'lisfinity-core'),
     __('0:00:00', 'lisfinity-core'),
     __('Auction Ended', 'lisfinity-core'),
     __('First name', 'lisfinity-core'),

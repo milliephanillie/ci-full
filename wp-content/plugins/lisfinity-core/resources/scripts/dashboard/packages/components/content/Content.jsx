@@ -299,8 +299,10 @@ const Content = (props) => {
               }
             </Fragment>
             }
+            {/* TODO: make sure to include the following link the the submit packages page in your scoped out vision of creating a plugin */}
             <NavLink
-              to={business.options.enable_packages ? `${lc_data.site_url}${lc_data.myaccount}packages` : `${lc_data.site_url}${lc_data.myaccount}submit`}
+              // to={business.options.enable_packages  ? `${lc_data.site_url}${lc_data.myaccount}packages` : `${lc_data.site_url}${lc_data.myaccount}submit`}
+              to={`${lc_data.site_url}${lc_data.myaccount}submit`}
               className={`flex justify-between items-center mt-10 sm:mt-0 px-20 w-full sm:w-225 ${data?.mainIcon?.title === lc_data.jst[133] || data?.mainIcon?.title === lc_data.jst[116] ? 'bg-grey-200 text-grey-300 hover:bg-grey-200 hover:text-grey-300 cursor-default' : 'bg-blue-700 text-white hover:bg-blue-800'} rounded shadow-theme font-bold ${lc_data.jst[106].length > 12 ? 'h-auto' : 'h-60'}`}
               onClick={() => {
                 if (business.options.enable_packages) {
@@ -403,7 +405,7 @@ const Content = (props) => {
             {data.options.vendor_approved && 'buyer' !== data.options?.account_type &&
                 <Route
                     path={`${lc_data.site_url}${lc_data.myaccount}submit/`}
-                    render={props => <FormSubmit {...props} test={"one"} options={data.options}/>}
+                    render={props => <FormSubmit {...props} options={data.options}/>}
                 />
             }
             {/*{data.options.vendor_approved && !business.options.enable_packages && 'buyer' !== data.options?.account_type &&*/}

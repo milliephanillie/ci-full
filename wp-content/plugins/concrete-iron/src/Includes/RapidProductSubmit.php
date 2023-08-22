@@ -148,13 +148,8 @@ class RapidProductSubmit
             $product_id = $item->get_meta('_listing_id', true);
             $payment_package_id = $item->get_product_id();
 
-            error_log("the actual product id in the cart");
-            error_log($payment_package_id);
             $user_id = $item->get_meta('_user_id', true);
         }
-
-        error_log('package free promotions');
-        error_log(print_r(carbon_get_post_meta($payment_package_id, 'package-free-promotions'), true));
 
         $site_timestamp = current_time('timestamp');
 //
@@ -167,10 +162,7 @@ class RapidProductSubmit
         } else {
             $utc_timestamp = $site_timestamp - $gmt_offset * 3600;
             $activation_date = $site_timestamp;
-            error_log($site_timestamp);
-            error_log("activation", print_r($activation_date, true));
-            $expiration_date = date('Y-m-d H:i:s', strtotime("+90 days", $utc_timestamp));
-            error_log("expiration", print_r($expiration_date, true));
+            $expiration_date = date('Y-m-d H:i:s', strtotime("+7 days", $utc_timestamp));
         }
 
         $updated_activation = update_post_meta($product_id, '_product-listed', $activation_date);
@@ -225,18 +217,11 @@ class RapidProductSubmit
 
         if ( ! empty( $lisfinity_package_id ) ) {
             $promotions = carbon_get_post_meta( $payment_package_id, 'package-free-promotions' );
-            error_log("The promotions");
-            error_log(print_r($promotions, true));
+
             if ( ! empty( $promotions ) ) {
-                error_log("The promotions two");
-                error_log($promotions);
                 $this->insert_promotions( $lisfinity_package_id, $payment_package_id, $listing_id, $customer_id, $promotions, $order_id );
             }
         }
-
-        error_log('lisfinty package id');
-        error_log($lisfinity_package_id);
-        error_log('lisfinty promotions id');
 
         return $lisfinity_package_id;
     }
@@ -497,9 +482,9 @@ class RapidProductSubmit
 
         //TODO: fix
         $duration = 1;
-//        $form_submit_model = new FormSubmitRoute();
-//
-//        $result['store'] = $form_submit_model->store_data($id, $fields, $data, $user_id, $duration, $is_business);
+        $form_submit_model = new FormSubmitRoute();
+
+        $result['store'] = $form_submit_model->store_data($id, $fields, $data, $user_id, $duration, $is_business);
 
         // store agent.
         carbon_set_post_meta($id, 'product-agent', $agent->user_id ?? get_current_user_id());
@@ -590,24 +575,26 @@ class RapidProductSubmit
     public function insert_promotions( $package_id, $product_id, $listing_id, $user_id, $promotions, $order_id ) {
         $promotion_model   = new PromotionsModel();
         $products_duration = carbon_get_post_meta( $product_id, 'package-products-duration' );
-        $duration          = $products_duration ?? 30;
+        $duration          = 7;
         $expiration_date   = date( 'Y-m-d H:i:s', strtotime( "+ {$duration} days", current_time( 'timestamp' ) ) );
         $model             = new PromotionsModel();
         if ( ! empty( $promotions ) ) {
             foreach ( $promotions as $promotion ) {
+                $promotion_object = $model->get_promotion_product( $promotion );
+                $promotion_product_id = $promotion_object[0]->ID;
                 $promotions_values    = [
                     // payment package id.
-                    $package_id,
+                    $package_id ?? 0,
                     // wc order id.
                     $order_id ?? 0,
                     // wc product id, id of this WooCommerce product.
-                    $product_id,
+                    $promotion_product_id,
                     // id of the user that made order.
                     $user_id,
                     // id of the product that this promotion has been activated.
                     $listing_id,
                     // limit or duration number depending on the type of the promotion.
-                    $products_duration ?? 30,
+                    7,
                     // count of addon promotions, this cannot be higher than value.
                     0,
                     // position of promotion on the site.
