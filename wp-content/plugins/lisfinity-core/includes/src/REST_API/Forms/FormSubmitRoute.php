@@ -635,9 +635,14 @@ class FormSubmitRoute extends Route {
 				} else { // update default fields.
 					if ( ! empty( $data[ $name ] ) ) {
 						if ( is_array( $data[ $name ] ) ) {
+                            error_log(print_r("the data name", true));
+                            error_log(print_r($data[ $name ], true));
+                            error_log(print_r($data, true));
 							$values = [];
 							foreach ( $data[ $name ] as $index => $repeatable_group ) {
 								foreach ( $repeatable_group as $key => $value ) {
+                                    error_log(print_r("the repeatable name", true));
+                                    error_log(print_r($repeatable_group, true));
 									if ( '_type' !== $key ) {
 										//todo should be sanitized properly.
 										$values[ $index ][ $key ] = $value;

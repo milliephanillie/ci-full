@@ -84,7 +84,7 @@ const ActivePackage = (props) => {
               <div className="font-light text-grey-900">
                 {lc_data.jst[210]}
                 <span className="ml-6 font-semibold text-grey-1000">
-                          {product.created_date}
+                          {product.submitted_human}
                         </span>
               </div>
             </div>

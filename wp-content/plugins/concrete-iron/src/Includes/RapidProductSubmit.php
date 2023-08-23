@@ -166,7 +166,7 @@ class RapidProductSubmit
         }
 
         $updated_activation = update_post_meta($product_id, '_product-listed', $activation_date);
-        $updated_expiration = update_post_meta($product_id, '_product-expiration', strtotime('+90 days', (int)current_time('timestamp')));
+        $updated_expiration = update_post_meta($product_id, '_product-expiration', strtotime('+2 days', (int)current_time('timestamp')));
 
         $this->update_lisfinity_packages((int) $payment_package_id, $product_id, $order_id, 90);
         // $this->update_lisfinity_promotions($payment_package_id,);

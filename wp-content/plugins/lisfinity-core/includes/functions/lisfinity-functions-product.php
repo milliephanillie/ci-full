@@ -263,7 +263,7 @@ if ( ! function_exists( 'lisfinity_available_price_types' ) ) {
 			'per_hour'     => __( 'Per Hour', 'lisfinity-core' ),
 			'negotiable'    => __( 'Negotiable', 'lisfinity-core' ),
 			'auction'       => __( 'Auction', 'lisfinity-core' ),
-			'price_on_call' => __( 'Price On Call', 'lisfinity-core' ),
+			'price_on_call' => __( 'Call for Price', 'lisfinity-core' ),
 			'free'          => __( 'Free', 'lisfinity-core' )
 		];
 
