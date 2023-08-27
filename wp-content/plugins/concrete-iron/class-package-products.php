@@ -39,14 +39,6 @@ class Package_Products
         //add_filter('lisfinity__submit_form_fields', [$this, 'alter_fields']);
     }
 
-    public function set_form_fields() {
-        if(class_exists('FormSubmitModel')) {
-            var_dump("it exists");
-            die();
-        }
-//        $formsubmitmodel = new \FormSubmitModel();
-    }
-
     /**
      * Register our WP REST API endpoints
      */

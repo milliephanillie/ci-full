@@ -163,7 +163,7 @@ class FormSubmitModel
                 'packages' => [
                     'key'         => $count++,
                     'label'       => __('Packages', 'lisfinity-core'),
-                    'value'       => 'concrete-equipment',
+                    'value'       => '',
                     'description' => __('Select a package for your listing.', 'lisfinity-core'),
                     'type'        => 'packages',
                     'product' => 'payment_package',

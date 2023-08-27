@@ -124,28 +124,28 @@ const Sidebar = (props) => {
             className={labelClass}>{notificationsCount}</span>}
         </NavLink>
       </li>
-      {business.options.enable_packages && 'buyer' !== data.options?.account_type && !lc_data.is_agent &&
-      <li className="list-none"
-          onClick={() => dispatch(setMainIcon({
-            icon: PackageIcon,
-            color: 'fill-yellow-700',
-            title: lc_data.jst[133]
-          }))}
-      >
-        <NavLink
-          to={`${lc_data.site_url}${lc_data.myaccount}packages`}
-          className="flex items-center py-14 px-20 border-t-2 border-transparent font-bold text-base text-grey-800 leading-none"
-          activeClassName="bg-grey-100 border-t-2 border-grey-200"
-          data-tip={lc_data.jst[133]}
-        >
-          <ReactSVG
-            src={`${lc_data.dir}dist/${PackageIcon}`}
-            className="mr-14 min-w-14 w-14 h-14 fill-yellow-700"
-          />
-          {menuOpen && lc_data.jst[133]}
-        </NavLink>
-      </li>
-      }
+      {/*{business.options.enable_packages && 'buyer' !== data.options?.account_type && !lc_data.is_agent &&*/}
+      {/*<li className="list-none"*/}
+      {/*    onClick={() => dispatch(setMainIcon({*/}
+      {/*      icon: PackageIcon,*/}
+      {/*      color: 'fill-yellow-700',*/}
+      {/*      title: lc_data.jst[133]*/}
+      {/*    }))}*/}
+      {/*>*/}
+      {/*  <NavLink*/}
+      {/*    to={`${lc_data.site_url}${lc_data.myaccount}packages`}*/}
+      {/*    className="flex items-center py-14 px-20 border-t-2 border-transparent font-bold text-base text-grey-800 leading-none"*/}
+      {/*    activeClassName="bg-grey-100 border-t-2 border-grey-200"*/}
+      {/*    data-tip={lc_data.jst[133]}*/}
+      {/*  >*/}
+      {/*    <ReactSVG*/}
+      {/*      src={`${lc_data.dir}dist/${PackageIcon}`}*/}
+      {/*      className="mr-14 min-w-14 w-14 h-14 fill-yellow-700"*/}
+      {/*    />*/}
+      {/*    {menuOpen && lc_data.jst[133]}*/}
+      {/*  </NavLink>*/}
+      {/*</li>*/}
+      {/*}*/}
       {business?.options?.is_business_account && 'buyer' !== data.options?.account_type && !lc_data.is_agent &&
       <li className="list-none"
           onClick={() => dispatch(setMainIcon({

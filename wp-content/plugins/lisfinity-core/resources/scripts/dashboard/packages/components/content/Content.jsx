@@ -305,11 +305,13 @@ const Content = (props) => {
               to={`${lc_data.site_url}${lc_data.myaccount}submit`}
               className={`flex justify-between items-center mt-10 sm:mt-0 px-20 w-full sm:w-225 ${data?.mainIcon?.title === lc_data.jst[133] || data?.mainIcon?.title === lc_data.jst[116] ? 'bg-grey-200 text-grey-300 hover:bg-grey-200 hover:text-grey-300 cursor-default' : 'bg-blue-700 text-white hover:bg-blue-800'} rounded shadow-theme font-bold ${lc_data.jst[106].length > 12 ? 'h-auto' : 'h-60'}`}
               onClick={() => {
-                if (business.options.enable_packages) {
-                  dispatch(setMainIcon({ icon: PackageIcon, color: 'fill-yellow-700', title: lc_data.jst[133] }));
-                } else {
-                  dispatch(setMainIcon({ icon: BoltIcon, color: 'fill-green-700', title: lc_data.jst[116] }));
-                }
+                {/* TODO: make sure that enable packages is updated */}
+                // if (business.options.enable_packages) {
+                //   dispatch(setMainIcon({ icon: PackageIcon, color: 'fill-yellow-700', title: lc_data.jst[133] }));
+                // } else {
+                //   dispatch(setMainIcon({ icon: BoltIcon, color: 'fill-green-700', title: lc_data.jst[116] }));
+                // }
+                dispatch(setMainIcon({ icon: BoltIcon, color: 'fill-green-700', title: lc_data.jst[116] }));
               }
               }
             >
