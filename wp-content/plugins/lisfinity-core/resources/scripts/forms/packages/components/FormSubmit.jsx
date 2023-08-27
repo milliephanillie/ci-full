@@ -157,12 +157,19 @@ class FormSubmit extends Component {
     }
     const { dispatch } = this.props;
     const response = this.getProductInfo();
+
+    console.log(this.props.edit)
+    console.log("this props edit")
     response.then(data => {
+      console.log("here is the data")
+      console.log(data)
       if (data.data) {
         this.setState({ payment_package: data.data.payment_package });
         this.setState({ productEditInfo: data.data.product });
         dispatch(actions.setupPackage(data.data));
       }
+      console.log("this.state")
+      console.log(this.state)
       this.setState({ loading: false });
       this.fetchFormFields();
     });
@@ -347,6 +354,7 @@ class FormSubmit extends Component {
       console.log(this.props.edit)
       const is_edit =  (this.props.edit != undefined) ? this.props.edit : false;
       url.searchParams.append('is_edit', is_edit);
+      url.searchParams.append('product_id', this.props.match.params.id);
       const request = apiFetch({
         path: url.toString()
       });
@@ -871,6 +879,11 @@ class FormSubmit extends Component {
 
     // submit form
     const data = this.props.formData;
+
+    console.log("lets see the data")
+    console.log(data)
+    console.log("lets see the state")
+    console.log(this.state)
 
     const formData = jsonForm(data);
     formData.append('toPay', true);

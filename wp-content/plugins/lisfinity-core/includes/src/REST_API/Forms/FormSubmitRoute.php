@@ -97,16 +97,26 @@ class FormSubmitRoute extends Route {
 	 */
 	public function product_fields(\WP_REST_Request $request) {
         $is_edit = $request->get_param('is_edit');
+        $product_id = $request->get_param('product_id');
+        $expires                 = carbon_get_post_meta( $product_id, 'product-expiration' );
+        $is_expired              = $expires < current_time( 'timestamp' );
+
         $is_edit = ($is_edit) ? ($is_edit === 'true') : false;
 
 		$form_model = new FormModel();
 
 		$form_fields = $form_model->get_fields();
+//
+//        error_log(print_r("string value test", true));
+//        error_log(print_r(strval($product_id), true));
+//        error_log(print_r(strval($is_edit), true));
+//        error_log(print_r("hope 1", true));
+//        error_log(print_r($expires, true));
+//        error_log(print_r("hope 2", true));
+//        error_log(print_r($is_expired, true));
+//        error_log(print_r("hope", true));
 
-        error_log(print_r("string value", true));
-        error_log(print_r(strval($is_edit), true));
-
-        if( ! empty($is_edit) && boolval($is_edit) === true ) {
+        if( ! empty($is_edit) && boolval($is_edit) === true && ! $is_expired ) {
             error_log(print_r('why is is_edit broken', true));
             error_log(print_r('why is is_edit broken', true));
             unset($form_fields['package']);
@@ -635,14 +645,9 @@ class FormSubmitRoute extends Route {
 				} else { // update default fields.
 					if ( ! empty( $data[ $name ] ) ) {
 						if ( is_array( $data[ $name ] ) ) {
-                            error_log(print_r("the data name", true));
-                            error_log(print_r($data[ $name ], true));
-                            error_log(print_r($data, true));
 							$values = [];
 							foreach ( $data[ $name ] as $index => $repeatable_group ) {
 								foreach ( $repeatable_group as $key => $value ) {
-                                    error_log(print_r("the repeatable name", true));
-                                    error_log(print_r($repeatable_group, true));
 									if ( '_type' !== $key ) {
 										//todo should be sanitized properly.
 										$values[ $index ][ $key ] = $value;

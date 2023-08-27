@@ -188,8 +188,10 @@ const ActivePackage = (props) => {
           </div>
 
           <div>
+            {console.log("and the product")}
+            {console.log(product)}
             <h5 className="mb-4 font-bold" dangerouslySetInnerHTML={{
-              __html: product?.package?.title,
+              __html: product?.title,
             }}/>
           </div>
 

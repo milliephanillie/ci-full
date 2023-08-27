@@ -27,6 +27,7 @@ require_once plugin_dir_path( CONCRETEIRON ) . 'src/Includes/RapidProductSubmit.
 use ConcreteIron\Includes\RapidFormSubmitModel;
 use ConcreteIron\Includes\RapidProductSubmit;
 use ConcreteIron\Includes\RapidEditModel;
+use ConcreteIron\Includes\RapidHooks;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -34,8 +35,10 @@ function load_my_plugin() {
     // Check if the class from the other plugin exists
     if(class_exists('Lisfinity\Models\Taxonomies\TaxonomiesAdminModel')) {
         // The other plugin is activated, and you can use its classes.
+        $rapidHooks = new RapidHooks();
         $rapidProductSubmit = new RapidProductSubmit();
         $rapidEditModel = new RapidEditModel();
+
         add_action('rest_api_init', [$rapidProductSubmit, 'register_routes']);
 
 //        add_action('plugins_loaded', 'load_ci_classes', 9);

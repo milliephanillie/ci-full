@@ -146,7 +146,7 @@ class RapidProductSubmit
 
         foreach ($order->get_items() as $item_id => $item) {
             $product_id = $item->get_meta('_listing_id', true);
-            $payment_package_id = $item->get_product_id();
+            $package_id = $item->get_product_id();
 
             $user_id = $item->get_meta('_user_id', true);
         }
@@ -168,7 +168,11 @@ class RapidProductSubmit
         $updated_activation = update_post_meta($product_id, '_product-listed', $activation_date);
         $updated_expiration = update_post_meta($product_id, '_product-expiration', strtotime('+2 days', (int)current_time('timestamp')));
 
-        $this->update_lisfinity_packages((int) $payment_package_id, $product_id, $order_id, 90);
+        $listing_id = $this->update_lisfinity_packages((int) $package_id, $product_id, $order_id, 90);
+
+        if ($listing_id) {
+            $updated_payment_package = update_post_meta($product_id, '_payment-package', $listing_id);
+        }
         // $this->update_lisfinity_promotions($payment_package_id,);
 
         $updated_post = wp_publish_post($product_id);
@@ -200,9 +204,9 @@ class RapidProductSubmit
             // wc order id for this item.
             $order_id,
             // limit amount of products in a package.
-            $products_limit,
-            // current amount of submitted products in this package.
-            0,
+            carbon_get_post_meta( $payment_package_id, 'package-products-limit' ) ?? 999,
+            // current amount of submitted products in this package. (this should be only 1 for each post for new setup
+            1,
             // duration of the submitted products.
             $products_duration,
             // type of the package.
