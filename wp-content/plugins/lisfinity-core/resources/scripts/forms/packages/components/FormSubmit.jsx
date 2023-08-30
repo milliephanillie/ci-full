@@ -840,32 +840,48 @@ class FormSubmit extends Component {
         })
         .then((dataFromSubmitProduct) => {
           // alert(JSON.stringify(dataFromSubmitProduct))
-          return this.ciBuyPackage(this.state.payment_package.package_id, formData, dataFromSubmitProduct.product_id)
-              .then((response) => response.json())
-              .then((data) => {
-                this.props.info.refresh_products = true;
-                dispatch(actions.setInfo(this.props.info));
-                if (data.success) {
+          // alert(JSON.stringify(dataFromSubmitProduct))
+          // if(data.permalink) {
+          //   window.location.href = data.permalink;
+          //
+          // } else {
+          //   window.location.reload(false);
+          // }
+          if (dataFromSubmitProduct.redirect === false) {
+            this.setState({ loading: false });
+            if(dataFromSubmitProduct.message) {
+              // this.setState({ notice: dataFromSubmitProduct.message + ': <a class="font-semibold text-blue-700" href="' + dataFromSubmitProduct.permalink + '">View changes</a>' });
+              this.setState({ notice: dataFromSubmitProduct.message });
+            }
+          } else {
+            return this.ciBuyPackage(this.state.payment_package.package_id, formData, dataFromSubmitProduct.product_id)
+                .then((response) => response.json())
+                .then((data) => {
                   this.props.info.refresh_products = true;
                   dispatch(actions.setInfo(this.props.info));
-                  //
-                  // alert(JSON.stringify(data))
-                  // alert(data.permalink)
+                  if (data.success) {
+                    this.props.info.refresh_products = true;
+                    dispatch(actions.setInfo(this.props.info));
+                    //
+                    // alert(JSON.stringify(data))
+                    // alert(data.permalink)
 
-                  if(data.permalink) {
-                    window.location.href = data.permalink;
-                  } else {
-                    window.location.reload(false);
+                    if(data.permalink) {
+                      window.location.href = data.permalink;
+                    } else {
+                      window.location.reload(false);
+                    }
                   }
-                }
-                if (data.error) {
-                  if (!isEmpty(errors)) {
-                    this.setState({ errors });
-                    dispatch(actions.updateFormErrors(errors));
-                    return false;
+                  if (data.error) {
+                    if (!isEmpty(errors)) {
+                      this.setState({ errors });
+                      dispatch(actions.updateFormErrors(errors));
+                      return false;
+                    }
                   }
-                }
-              });
+                });
+          }
+
         });
 
   }
@@ -891,7 +907,7 @@ class FormSubmit extends Component {
 
     const { dispatch, costs } = this.props;
     const { payment_package } = this.state;
-    const finalCost = payment_package.meta.price || 0;
+    const finalCost = (payment_package.meta && payment_package.meta.price) || (payment_package.price) || 0;
     const package_id = payment_package.id;
     // validate form
     const errors = validation(step, this.props, dispatch);
@@ -928,12 +944,18 @@ class FormSubmit extends Component {
       formData.append('commission_price', payment_package.commission.price);
       formData.append('toPay', true);
     }
-    if (this.props.edit) {
+    let dontPay = false;
+
+    if (this.props.edit &&  ! this.state.productEditInfo.is_expired) {
+      console.log("this.state.productEditInfo.is_expired")
+      console.log(this.state.productEditInfo.is_expired);
+      dontPay = true;
+      formData.append('toPay', false);
       formData.append('action', 'edit');
       formData.append('id', this.props.match.params.id);
     }
 
-    if (finalCost > 0) {
+    if ((finalCost > 0) && ! dontPay) {
       formData.append('toPay', true);
     }
 
@@ -1268,7 +1290,7 @@ class FormSubmit extends Component {
                                 <div className="notice">
                                   <h3
                                     className="flex w-full mb-20 capitalize font-bold text-grey-1000">{lc_data.jst[326]}</h3>
-                                  <span>{notice}</span>
+                                  <span> <div dangerouslySetInnerHTML={{ __html: notice }}></div></span>
                                 </div>
                               }
                             </Step>
