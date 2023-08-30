@@ -903,10 +903,14 @@ class FormSubmit extends Component {
 
     const formData = jsonForm(data);
     formData.append('toPay', true);
-    if( ! this.props.edit  ) {
+    if( ! this.props.edit || (this.props.edit && this.state.productEditInfo.is_expired)  ) {
       formData.append('postStatus', 'draft');
+      formData.append('toPay', true);
     } else {
       formData.append('postStatus', 'publish');
+      if (formData.has('toPay')) {
+        formData.delete('toPay');
+      }
     }
 
 

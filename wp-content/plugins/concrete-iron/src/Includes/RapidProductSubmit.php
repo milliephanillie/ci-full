@@ -29,6 +29,8 @@ class RapidProductSubmit
 
     protected $submission_commission = false;
 
+    protected $default_duration = 90;
+
     /**
      * CustomImport constructor
      */
@@ -168,7 +170,9 @@ class RapidProductSubmit
         $updated_activation = update_post_meta($product_id, '_product-listed', $activation_date);
         $updated_expiration = update_post_meta($product_id, '_product-expiration', strtotime('+90 days', (int)current_time('timestamp')));
 
-        $listing_id = $this->update_lisfinity_packages((int) $package_id, $product_id, $order_id, 90);
+
+
+        $listing_id = $this->update_lisfinity_packages((int)$package_id, $product_id, $order_id, 90);
 
         if ($listing_id) {
             $updated_payment_package = update_post_meta($product_id, '_payment-package', $listing_id);
@@ -176,6 +180,8 @@ class RapidProductSubmit
         // $this->update_lisfinity_promotions($payment_package_id,);
 
         $updated_post = wp_publish_post($product_id);
+
+        carbon_set_post_meta($product_id, 'product-status', 'active');
 //
 //        error_log("activation", print_r($activation_date, true));
 //        error_log("expiration", print_r($expiration_date, true));
@@ -204,7 +210,7 @@ class RapidProductSubmit
             // wc order id for this item.
             $order_id,
             // limit amount of products in a package.
-            carbon_get_post_meta( $payment_package_id, 'package-products-limit' ) ?? 999,
+            carbon_get_post_meta($payment_package_id, 'package-products-limit') ?? 999,
             // current amount of submitted products in this package. (this should be only 1 for each post for new setup
             1,
             // duration of the submitted products.
@@ -219,11 +225,11 @@ class RapidProductSubmit
 
         $lisfinity_package_id = $package_controller->store($values);
 
-        if ( ! empty( $lisfinity_package_id ) ) {
-            $promotions = carbon_get_post_meta( $payment_package_id, 'package-free-promotions' );
+        if (!empty($lisfinity_package_id)) {
+            $promotions = carbon_get_post_meta($payment_package_id, 'package-free-promotions');
 
-            if ( ! empty( $promotions ) ) {
-                $this->insert_promotions( $lisfinity_package_id, $payment_package_id, $listing_id, $customer_id, $promotions, $order_id, $products_duration );
+            if (!empty($promotions)) {
+                $this->insert_promotions($lisfinity_package_id, $payment_package_id, $listing_id, $customer_id, $promotions, $order_id, $products_duration);
             }
         }
 
@@ -285,6 +291,9 @@ class RapidProductSubmit
         $this->data = $data;
 
         $is_edit = isset($data['action']) && 'edit' === $data['action'];
+        if($data['toPay'] == false || $data['toPay'] == 'false') {
+            unset($data['toPay']);
+        }
 
         $agent = \lisfinity_get_agent(get_current_user_id());
         $this->is_edit = $is_edit;
@@ -302,24 +311,18 @@ class RapidProductSubmit
 
         $result = [];
 
-        //currently not using premium profiles
-        if (isset($data['post_type']) && $data['post_type'] === 'premium_profile') {
-//            $fields            = $this->business_fields();
-//            $user_id           = get_post_field( 'author', $data['id'] );
-//            $data['business']  = $data['id'];
-//            $this->is_business = true;
-        } else {
-            $fields = $this->product_fields()['fields'];
-            if (empty($data['business'])) {
-                return ['error' => __('Business is not set', 'lisfinity-core')];
-            }
-            $business = get_post($data['business']);
-            $user_id = $business->post_author;
 
-            $is_premium_business = \lisfinity_business_is_premium($business->ID);
-            $default_status = \lisfinity_format_ad_status('', $is_premium_business);
-            $edit_status = \lisfinity_format_ad_status('edit', $is_premium_business);
+        $fields = $this->product_fields()['fields'];
+        if (empty($data['business'])) {
+            return ['error' => __('Business is not set', 'lisfinity-core')];
         }
+        $business = get_post($data['business']);
+        $user_id = $business->post_author;
+
+        $is_premium_business = false;
+        $default_status = \lisfinity_format_ad_status('', $is_premium_business);
+        $edit_status = \lisfinity_format_ad_status('edit', $is_premium_business);
+
 
         if (empty($fields)) {
             return ['error' => __('The fields are not set', 'lisfinity-core')];
@@ -330,9 +333,9 @@ class RapidProductSubmit
         $post_title = wp_strip_all_tags($data['title'] ?? '');
         $formatted_title = '';
 
-//        if ( \lisfinity_is_enabled( \lisfinity_get_option( "enable-custom-listing-titles-$variable" ) ) ) {
-//            $formatted_title = $this->custom_titles( $variable, $post_title, $data );
-//        }
+        if (\lisfinity_is_enabled(\lisfinity_get_option("enable-custom-listing-titles-$variable"))) {
+            $formatted_title = $this->custom_titles($variable, $post_title, $data);
+        }
 
         // create basic product post and update package count.
         $args = [
@@ -341,67 +344,50 @@ class RapidProductSubmit
             'post_name' => sanitize_title(wp_strip_all_tags($data['title'])),
             'post_content' => $data['description'],
             'post_author' => $user_id,
+            'post_status' => 'draft',
         ];
 
-        if (isset($data['postStatus']) && 'draft' === $data['postStatus']) {
-            $args['post_status'] = 'draft';
-        } elseif ($this->is_business) {
-            $args['post_status'] = 'publish';
-        } else {
-            if(!$is_edit) {
-                $args['post_status'] = $this->has_promotions || $this->has_commission ? 'pending' : $default_status;
-            }
-        }
+        $account_page = get_permalink( lisfinity_get_page_id( 'page-account' ) );
 
         if ($is_edit) {
-            if (!isset($data['post_type'])) {
-                $args['post_status'] = $edit_status ?? 'publish';
-            }
+            $args['ID'] = $id = $data['id'];
+            $args['post_status'] = $edit_status ?? 'publish';
 
-            //currently not using premium_profiles which is what $post_type_name refers to
-//            if ( isset( $data['post_type'] ) && ProfilesModel::$post_type_name === $data['post_type'] ) {
-//                unset( $args['post_author'] );
-//            }
+            if ($id) {
+                $expires = carbon_get_post_meta($id, 'product-expiration');
+                $is_expired = $expires < current_time('timestamp');
+                $result['is_expired'] = $is_expired;
 
-            $args['ID'] = $data['id'];
-
-
-            if (isset($data['postStatus']) && 'draft' === $data['postStatus']) {
-                $args['post_status'] = 'draft';
+                if ($is_expired) {
+                    $args['post_status'] = 'draft';
+                }
             }
 
             $id = wp_update_post($args);
 
-//            // send notifications of the product changes.
-//            $this->send_edit_notifications( $data['id'], $user_id );
-//            if ( \lisfinity_is_enabled( \lisfinity_get_option( 'email-listing-edited' ) ) ) {
-//                $this->notify_admin( $data['id'], 'update' );
+
+            if (!isset($data['toPay'])) {
+                $result['permalink'] = $account_page . '/ad/' . $id;
+            }
+
+            if ((!isset($data['toPay']) || $data['toPay'] === 'false' || $data['toPay'] === false) && ($is_expired === 'false' || $is_expired === false)) {
+                $result['permalink'] = $account_page . '/ad/' . $id;
+                $result['redirect'] = false;
+                $result['toPay'] = $data['toPay'] ?? 'its null';
+                $result['post_status'] = $data['postStatus'];
+                $this->redirect = false;
+                $result['message'] = __( 'Your ad has been successfully edited', 'lisfinity-core' );
+            }
+
+
+            // send notifications of the product changes.
+//            $this->send_edit_notifications($data['id'], $user_id);
+//            if (\lisfinity_is_enabled(\lisfinity_get_option('email-listing-edited'))) {
+//                $this->notify_admin($data['id'], 'update');
 //            }
         } else {
             $id = wp_insert_post($args);
-
-            // add free promotions to the product.
-//			if ( ! empty( $data['package'] ) ) {
-//				$wc_package_id = $package_model->where( [ [ 'id', '=', $data['package'] ] ] )->get();
-//				if ( ! empty( $wc_package_id ) ) {
-//					$promotions = carbon_get_post_meta( $wc_package_id[0]->product_id, 'package-free-promotions' );
-//					if ( ! empty( $promotions ) ) {
-//						$this->insert_promotions( $data['package'], $wc_package_id[0]->product_id, $id, $user_id, $promotions );
-//					}
-//				}
-//			}
         }
-
-        if (!$is_edit && !isset($data['post_type']) && isset($data['promotions']) && !empty($data['promotions'])) {
-            update_post_meta($id, 'ad_promotions_payment_pending', current_time('mysql'));
-        }
-
-//        // if we're submitting package do its own handler.
-//        if ( isset( $data['package_submit'] ) ) {
-//            $package_result = $this->submit_package( $request_data );
-//
-//            return $package_result;
-//        }
 
         // assign a package id to the product.
         if (isset($data['package'])) {
@@ -409,27 +395,6 @@ class RapidProductSubmit
             update_post_meta($id, '_package-is-subscription', isset($data['is_subscription']));
         }
 
-
-        // update the payment package count.
-//        if ( $this->packages_enabled && isset( $data['package'] ) && ! $this->is_edit ) {
-//            $subscription_model = new SubscriptionModel();
-//            $package            = $package_model->where( 'id', $data['package'] )->get();
-//            if ( ! empty( $package ) && ! isset( $data['is_subscription'] ) ) {
-//                $package = array_shift( $package );
-//                if ( ! $this->has_promotions ) {
-//                    $package_model->update_wp( [ 'products_count' => $package->products_count += 1 ], [ 'id' => $data['package'] ], [ '%d' ], [ '%s' ] );
-//                }`
-//            }
-//            $subscription = $subscription_model->where( 'id', $data['package'] )->get();
-//            if ( ! empty( $subscription ) && isset( $data['is_subscription'] ) ) {
-//                if ( $subscription ) {
-//                    $subscription = array_shift( $subscription );
-//                    if ( ! $this->has_promotions ) {
-//                        $subscription_model->update_wp( [ 'products_count' => $subscription->products_count += 1 ], [ 'id' => $data['package'] ], [ '%d' ], [ '%s' ] );
-//                    }
-//                }
-//            }
-//        }
 
         if (!isset($id) || is_wp_error($id)) {
             $result['error'] = true;
@@ -439,59 +404,19 @@ class RapidProductSubmit
         $result['product_id'] = $id;
 
 
-        if (isset($data['toPay'])) {
+        if (isset($data['toPay']) && ($data['toPay'] != false && $data['toPay'] != 'false') ) {
             $wc_helper = new WC_Helper();
             $wc_helper->check_prerequisites();
-//            WC()->cart->empty_cart();
-
-//            if ( $this->has_commission ) {
-//                // if there's additional payment.
-//                if ( $this->additional_payment ) {
-//                    $special_package = carbon_get_post_meta( $package->product_id, 'package-categories' );
-//                    if ( empty( $special_package ) ) {
-//                        $special_package = carbon_get_post_meta( $subscription->product_id, 's-package-categories' );
-//                    }
-//                    $special_categories = array_column( $special_package, 'category' );
-//                    $special_key        = array_search( $data['cf_category'], $special_categories );
-//                    WC()->cart->add_to_cart( (int) $data['commission_id'], 1, '', '', [
-//                        'custom-price'    => (float) $special_package[ $special_key ]['price'],
-//                        'publish_product' => $id,
-//                    ] );
-//                } elseif ( $data['pay_commission'] ) {
-//                    WC()->cart->add_to_cart( (int) $data['commission_id'], 1, '', '', [
-//                        'type'            => 'commission',
-//                        'commission'      => (float) $data['commission_price'],
-//                        'publish_product' => $id,
-//                    ] );
-//                }
-//
-//                if ( $this->submission_commission ) {
-//                    WC()->cart->add_to_cart( (int) $data['commission_id'], 1, '', '', [
-//                        'type'            => 'commission',
-//                        'commission'      => (float) $data['submission_commission'],
-//                        'publish_product' => $id,
-//                    ] );
-//                }
-//            }
 
             $this->redirect = true;
             $checkout_page = get_permalink(wc_get_page_id('checkout'));
             $result['permalink'] = $checkout_page;
         }
 
-        // store fields data from the form.
-//		$duration = $this->packages_enabled && isset( $data['package'] ) && ! $this->is_edit ? $package->products_duration : '';
-        if (!$this->packages_enabled && !$this->is_edit) {
-            $duration = \lisfinity_get_option('product-duration');
-        }
-
-
-        $is_business = !empty($data['post_type']) && ProfilesModel::$post_type_name === $data['post_type'];
-
-        //TODO: fix
-        $duration = 1;
         $form_submit_model = new FormSubmitRoute();
 
+        $duration = 90;
+        $is_business = false;
         $result['store'] = $form_submit_model->store_data($id, $fields, $data, $user_id, $duration, $is_business);
 
         // store agent.
@@ -501,64 +426,14 @@ class RapidProductSubmit
             carbon_set_post_meta($id, 'product-price-sell-on-site', 1);
         }
 
-        // set expiration date.
-//		if ( ( isset( $data['package'] ) || ! $this->packages_enabled ) && ! $this->is_edit ) {
-//			$expiration_date = \lisfinity_get_product_expiration_date( $duration );
-//			carbon_set_post_meta( $id, 'product-expiration', $expiration_date );
-//			carbon_set_post_meta( $id, 'product-listed', current_time( 'timestamp' ) );
-//		}
-
         $result['success'] = true;
 
-        $account_page = get_permalink(\lisfinity_get_page_id('page-account'));
-        if (!isset($data['post_type'])) {
-            if ('pending' === $default_status) {
-                $result['message'] = __('Your ad has been successfully submitted and will become live after the review.', 'lisfinity-core');
-            } else {
-                $result['message'] = __('Your ad has been successfully submitted.', 'lisfinity-core');
-            }
-            if (isset($data['toPay'])) {
-                $result['message'] .= __(' You are now being redirected to checkout.', 'lisfinity-core');
-            }
-            // do not change redirect if user has to go to the checkout.
-            if (!isset($data['toPay'])) {
-                $result['permalink'] = $account_page . '/ads';
-                //todo it should become active only when it is finally approved by the admin.
-                carbon_set_post_meta($id, 'product-status', 'active');
-            }
-        }
-
-        if ($is_edit && $id) {
-            $expires    = carbon_get_post_meta( $id, 'product-expiration' );
-            $is_expired = $expires < current_time( 'timestamp' );
-            $result['is_expired'] = $is_expired;
-
-            if (isset($data['post_type']) && 'premium_profile' === $data['post_type']) {
-                $result['message'] = __('Your profile has been successfully edited', 'lisfinity-core');
-            } else {
-                $result['message'] = __('Your ad has been successfully edited and will become live after the review.', 'lisfinity-core');
-                if ('pending' === $edit_status) {
-                    $result['message'] = __('Your ad has been successfully edited and will become live after the review.', 'lisfinity-core');
-                } else {
-                    $result['message'] = __('Your ad has been successfully edited', 'lisfinity-core');
-                }
-                if (!isset($data['toPay'])) {
-                    $result['permalink'] = $account_page . '/ad/' . $id;
-                }
-
-                if( ( !isset($data['toPay']) || $data['toPay'] === 'false' || $data['toPay'] === false) && ($is_expired === 'false' || $is_expired === false) ) {
-                    $result['permalink'] = $account_page . '/ad/' . $id;
-                    $result['redirect'] = false;
-                    $this->redirect = false;
-                }
-            }
-        }
-
-        $result['toPay'] = $data['toPay'];
 
         if ($this->redirect) {
             $result['message'] = __('Ad will be active once the payment is made. Redirecting to checkout...', 'lisfinity-core');
         }
+
+        $result['redirect'] = $this->redirect;
 
         if (\lisfinity_is_enabled(\lisfinity_get_option('email-listing-submitted'))) {
             $this->notify_admin($id);
@@ -593,17 +468,18 @@ class RapidProductSubmit
         return $location_data;
     }
 
-    public function insert_promotions( $package_id, $product_id, $listing_id, $user_id, $promotions, $order_id, $products_duration ) {
-        $promotion_model   = new PromotionsModel();
-        $products_duration = carbon_get_post_meta( $product_id, 'package-products-duration' );
-        $duration          = 7;
-        $expiration_date   = date( 'Y-m-d H:i:s', strtotime( "+ {$duration} days", current_time( 'timestamp' ) ) );
-        $model             = new PromotionsModel();
-        if ( ! empty( $promotions ) ) {
-            foreach ( $promotions as $promotion ) {
-                $promotion_object = $model->get_promotion_product( $promotion );
+    public function insert_promotions($package_id, $product_id, $listing_id, $user_id, $promotions, $order_id, $products_duration)
+    {
+        $promotion_model = new PromotionsModel();
+        $products_duration = carbon_get_post_meta($product_id, 'package-products-duration');
+        $duration = 7;
+        $expiration_date = date('Y-m-d H:i:s', strtotime("+ {$duration} days", current_time('timestamp')));
+        $model = new PromotionsModel();
+        if (!empty($promotions)) {
+            foreach ($promotions as $promotion) {
+                $promotion_object = $model->get_promotion_product($promotion);
                 $promotion_product_id = $promotion_object[0]->ID;
-                $promotions_values    = [
+                $promotions_values = [
                     // payment package id.
                     $package_id ?? 0,
                     // wc order id.
@@ -625,13 +501,13 @@ class RapidProductSubmit
                     // status of the promotion
                     'active',
                     // activation date of the promotion
-                    current_time( 'mysql' ),
+                    current_time('mysql'),
                     // expiration date of the promotion if needed.
                     $expiration_date,
                 ];
 
                 // save promotion data in the database.
-                $promotion_model->store( $promotions_values );
+                $promotion_model->store($promotions_values);
             }
         }
     }
