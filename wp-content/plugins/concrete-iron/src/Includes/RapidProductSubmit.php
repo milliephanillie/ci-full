@@ -348,7 +348,9 @@ class RapidProductSubmit
         } elseif ($this->is_business) {
             $args['post_status'] = 'publish';
         } else {
-            $args['post_status'] = $this->has_promotions || $this->has_commission ? 'pending' : $default_status;
+            if(!$is_edit) {
+                $args['post_status'] = $this->has_promotions || $this->has_commission ? 'pending' : $default_status;
+            }
         }
 
         if ($is_edit) {
@@ -367,7 +369,7 @@ class RapidProductSubmit
             if (isset($data['postStatus']) && 'draft' === $data['postStatus']) {
                 $args['post_status'] = 'draft';
             }
-            
+
             $id = wp_update_post($args);
 
 //            // send notifications of the product changes.
