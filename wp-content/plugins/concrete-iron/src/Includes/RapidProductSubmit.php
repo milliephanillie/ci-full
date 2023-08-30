@@ -223,7 +223,7 @@ class RapidProductSubmit
             $promotions = carbon_get_post_meta( $payment_package_id, 'package-free-promotions' );
 
             if ( ! empty( $promotions ) ) {
-                $this->insert_promotions( $lisfinity_package_id, $payment_package_id, $listing_id, $customer_id, $promotions, $order_id );
+                $this->insert_promotions( $lisfinity_package_id, $payment_package_id, $listing_id, $customer_id, $promotions, $order_id, $products_duration );
             }
         }
 
@@ -291,6 +291,7 @@ class RapidProductSubmit
         $this->packages_enabled = \lisfinity_packages_enabled($agent->owner_id ?? get_current_user_id());
         $this->has_promotions = isset($data['promotions']) && !empty($data['promotions']);
         $this->has_commission = !empty($data['commission_id']);
+
         if (!empty($data['additional_payment'])) {
             $this->additional_payment = true;
         }
@@ -361,6 +362,8 @@ class RapidProductSubmit
 //            }
 
             $args['ID'] = $data['id'];
+
+
             if (isset($data['postStatus']) && 'draft' === $data['postStatus']) {
                 $args['post_status'] = 'draft';
             } elseif (isset($data['toPay'])) {
@@ -433,7 +436,7 @@ class RapidProductSubmit
         }
 
         $result['product_id'] = $id;
-        $result['product_id_test'] = "what";
+
 
         if (isset($data['toPay'])) {
             $wc_helper = new WC_Helper();
@@ -524,7 +527,11 @@ class RapidProductSubmit
             }
         }
 
-        if ($is_edit) {
+        if ($is_edit && $id) {
+            $expires    = carbon_get_post_meta( $id, 'product-expiration' );
+            $is_expired = $expires < current_time( 'timestamp' );
+            $result['is_expired'] = $is_expired;
+
             if (isset($data['post_type']) && 'premium_profile' === $data['post_type']) {
                 $result['message'] = __('Your profile has been successfully edited', 'lisfinity-core');
             } else {
@@ -537,8 +544,17 @@ class RapidProductSubmit
                 if (!isset($data['toPay'])) {
                     $result['permalink'] = $account_page . '/ad/' . $id;
                 }
+
+                if( ( !isset($data['toPay']) || $data['toPay'] === 'false' || $data['toPay'] === false) && ($is_expired === 'false' || $is_expired === false) ) {
+                    $result['permalink'] = $account_page . '/ad/' . $id;
+                    $result['redirect'] = false;
+                    $this->redirect = false;
+                }
             }
         }
+
+        $result['toPay'] = $data['toPay'];
+
         if ($this->redirect) {
             $result['message'] = __('Ad will be active once the payment is made. Redirecting to checkout...', 'lisfinity-core');
         }
@@ -576,7 +592,7 @@ class RapidProductSubmit
         return $location_data;
     }
 
-    public function insert_promotions( $package_id, $product_id, $listing_id, $user_id, $promotions, $order_id ) {
+    public function insert_promotions( $package_id, $product_id, $listing_id, $user_id, $promotions, $order_id, $products_duration ) {
         $promotion_model   = new PromotionsModel();
         $products_duration = carbon_get_post_meta( $product_id, 'package-products-duration' );
         $duration          = 7;
@@ -598,7 +614,7 @@ class RapidProductSubmit
                     // id of the product that this promotion has been activated.
                     $listing_id,
                     // limit or duration number depending on the type of the promotion.
-                    7,
+                    $products_duration,
                     // count of addon promotions, this cannot be higher than value.
                     0,
                     // position of promotion on the site.

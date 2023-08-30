@@ -490,6 +490,7 @@ class ProductsRoute extends Route {
 		$product->likes           = $likes;
 		$product_meta['category'] = carbon_get_post_meta( $product->ID, 'product-category' );
 
+        $product_meta['is_expired'] = $is_expired;
 		$product_meta['product_type']   = carbon_get_post_meta( $product->ID, 'product-type' );
         $product_meta['price_unfiltered_price'] = get_post_meta( $product->ID, '_price', true );
         $product_meta['price_unfiltered_price_int'] =  (int) get_post_meta( $product->ID, '_price', true );
@@ -961,6 +962,9 @@ class ProductsRoute extends Route {
 
 		$post = get_post( $data['id'] );
 
+        $expires    = carbon_get_post_meta( $data['id'], 'product-expiration' );
+        $is_expired = $expires < current_time( 'timestamp' );
+
 		if ( empty( $post ) ) {
 			return false;
 		}
@@ -1123,6 +1127,7 @@ class ProductsRoute extends Route {
 			}
 		}
 
+        $product['is_expired'] = $is_expired;
 
 		return $product;
 	}
