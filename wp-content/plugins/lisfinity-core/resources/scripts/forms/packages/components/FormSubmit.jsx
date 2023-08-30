@@ -903,7 +903,10 @@ class FormSubmit extends Component {
 
     const formData = jsonForm(data);
     formData.append('toPay', true);
-    formData.append('postStatus', 'draft');
+    if(! this.props.edit && ! this.state.productEditInfo.is_expired ) {
+      formData.append('postStatus', 'draft');
+    }
+
 
     const { dispatch, costs } = this.props;
     const { payment_package } = this.state;

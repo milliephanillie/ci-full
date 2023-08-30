@@ -162,11 +162,11 @@ class RapidProductSubmit
         } else {
             $utc_timestamp = $site_timestamp - $gmt_offset * 3600;
             $activation_date = $site_timestamp;
-            $expiration_date = date('Y-m-d H:i:s', strtotime("+7 days", $utc_timestamp));
+            $expiration_date = date('Y-m-d H:i:s', strtotime("+90 days", $utc_timestamp));
         }
 
         $updated_activation = update_post_meta($product_id, '_product-listed', $activation_date);
-        $updated_expiration = update_post_meta($product_id, '_product-expiration', strtotime('+2 days', (int)current_time('timestamp')));
+        $updated_expiration = update_post_meta($product_id, '_product-expiration', strtotime('+90 days', (int)current_time('timestamp')));
 
         $listing_id = $this->update_lisfinity_packages((int) $package_id, $product_id, $order_id, 90);
 

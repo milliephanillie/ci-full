@@ -39,6 +39,14 @@ class Update_Product {
             'callback' => [$this, 'force_expired'],
             'args' => [],
         ));
+
+        $route = 'force_post_status';
+
+        register_rest_route($namespace, $route, array(
+            'methods' => WP_REST_Server::CREATABLE,
+            'callback' => [$this, 'force_post_status'],
+            'args' => [],
+        ));
     }
 
     /**
@@ -59,6 +67,58 @@ class Update_Product {
             "updated_expiration" => $updated_expiration
         ]));
     }
+
+    /**
+     * @param WP_REST_Request $request
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
+     */
+    public function force_post_status(\WP_REST_Request $request) {
+        $params = $request->get_params();
+        $product_ids = isset($params['product_ids']) ? (array) $params['product_ids'] : [];
+        $status = $params['status'];
+
+        // Ensure that the necessary parameters are set
+        if (empty($product_ids) || !$status) {
+            return new WP_Error('missing_parameter', 'Required parameters are missing', array('status' => 400));
+        }
+
+        // If the status is not a valid post status
+        if (!in_array($status, get_post_stati())) {
+            return new WP_Error('invalid_status', 'Invalid status provided', array('status' => 400));
+        }
+
+        $results = [];
+
+        // Loop through each product ID and update its status
+        foreach ($product_ids as $product_id) {
+            $post = get_post($product_id);
+
+            // If the post doesn't exist
+            if (!$post) {
+                $results[$product_id] = 'Invalid product ID';
+                continue;
+            }
+
+            // Update the post status
+            $updated = wp_update_post(array(
+                'ID' => $product_id,
+                'post_status' => $status,
+            ), true);
+
+            // If there was an error in the update process
+            if (is_wp_error($updated)) {
+                $results[$product_id] = $updated->get_error_message();
+                continue;
+            }
+
+            $results[$product_id] = 'Updated';
+        }
+
+        // Return the results of the update
+        return rest_ensure_response(new WP_REST_Response($results));
+    }
+
+
 
 //    public function update_product(\WP_REST_Request $request) {
 //        $params = $request->get_params();
