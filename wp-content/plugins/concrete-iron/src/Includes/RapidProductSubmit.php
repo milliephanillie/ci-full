@@ -366,9 +366,8 @@ class RapidProductSubmit
 
             if (isset($data['postStatus']) && 'draft' === $data['postStatus']) {
                 $args['post_status'] = 'draft';
-            } elseif (isset($data['toPay'])) {
-                $args['post_status'] = 'pending';
             }
+            
             $id = wp_update_post($args);
 
 //            // send notifications of the product changes.
