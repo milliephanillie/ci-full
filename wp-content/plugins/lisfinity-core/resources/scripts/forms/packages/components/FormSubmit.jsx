@@ -225,10 +225,13 @@ class FormSubmit extends Component {
   }
 
   setPackages = () => {
-    if (this.props.edit) {
-      this.setState({ loading: false });
-      return false;
-    }
+    console.log("we are inside setPackages")
+    console.log(this.props.edit)
+    console.log(this.state.productEditInfo)
+    // if (this.props.edit) {
+    //   this.setState({ loading: false });
+    //   return false;
+    // }
     const { dispatch } = this.props;
     const response = this.getAllPackages();
 
