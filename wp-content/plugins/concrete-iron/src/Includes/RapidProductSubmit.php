@@ -373,7 +373,7 @@ class RapidProductSubmit
             if ((!isset($data['toPay']) || $data['toPay'] === 'false' || $data['toPay'] === false) && ($is_expired === 'false' || $is_expired === false)) {
                 $result['permalink'] = $account_page . '/ad/' . $id;
                 $result['redirect'] = false;
-                $result['toPay'] = $data['toPay'] ?? 'its null';
+                $result['toPay'] = $data['toPay'] ?? false;
                 $result['post_status'] = $data['postStatus'];
                 $this->redirect = false;
                 $result['message'] = __( 'Your ad has been successfully edited', 'lisfinity-core' );
