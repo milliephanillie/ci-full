@@ -39,6 +39,8 @@ if ( $show_downloads ) {
 	);
 }
 ?>
+
+
 <section class="woocommerce-order-details">
 	<?php do_action( 'woocommerce_order_details_before_order_table', $order ); ?>
 
