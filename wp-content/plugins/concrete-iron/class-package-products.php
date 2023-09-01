@@ -272,7 +272,6 @@ class Package_Products
         $package = [];
         $meta = [];
         $thumbnail = [];
-
         $product = wc_get_product($package_id);
 
         $meta['type'] = get_post_meta($package_id, '_promotion-type', true);
@@ -293,9 +292,6 @@ class Package_Products
         $thumbnail['meta'] = wp_get_attachment_metadata($thumbnail['id']);
         $thumbnail['thumb'] = wp_get_attachment_metadata($thumbnail['id']);
         $package['thumbnail'] = $thumbnail;
-
-
-
         $package['style'] = carbon_get_post_meta($package_id, "package-style");
         $package['features'] = [];
         $package_features = carbon_get_post_meta($package_id, "package-features");
@@ -304,8 +300,8 @@ class Package_Products
             $count++;
             array_push($package['features'], array_merge($feature, ["uniqueId" => "featureID-" . $count]));
         }
-        $package['promotions'] = carbon_get_post_meta($package_id, "package-promotions");
         $package['recommended_package'] = get_field('recommended_package', $package_id);
+        $package['promotions'] = carbon_get_post_meta($package_id, "package-promotions");
         $package['package-sold-once'] = carbon_get_post_meta($package_id, 'package-sold-once');
         $package['limit'] = carbon_get_post_meta($package_id, 'package-products-limit');
         $package['duration'] = carbon_get_post_meta($package_id, 'package-products-duration');

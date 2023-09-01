@@ -140,25 +140,6 @@ const ChoosePackage  = (props) => {
                 const chosen_package_id = val && get(value['chosen_package'], ['0'] );
                 const checked = (pkg.package_id === chosen_package_id) ? true  : false;
 
-                console.log("chosen_package_id")
-                console.log(chosen_package_id)
-                console.log("pkg.package_id")
-                console.log(pkg.package_id)
-                console.log("fieldId")
-                console.log(fieldId)
-                console.log("checked")
-                console.log(checked)
-                console.log("pkg")
-                console.log(pkg)
-                console.log("data")
-                console.log(data)
-                console.log("val")
-                console.log(val)
-                console.log("packages")
-                console.log(packages)
-                console.log("value")
-                console.log(value)
-
                 return (!isEmpty(pkg) &&
                         <div key={index} style={{
                             display: 'flex',
@@ -192,11 +173,13 @@ const ChoosePackage  = (props) => {
                                 padding: '20px',
                                 width: '55%',
                             }} className={"package--body"}>
-                                <div style={{
-                                    marginBottom: '20px',
-                                }} className={"package-description"}>
-                                    <p>{pkg.post_content}</p>
-                                </div>
+                                {pkg.post_content &&
+                                    <div style={{
+                                        marginBottom: '20px',
+                                    }} className={"package-description"}>
+                                        <p>{pkg.post_content}</p>
+                                    </div>
+                                }
                                 <div className={"package-meta"}>
                                     <div className={"packge-meta-features"}>
                                         <ul>
