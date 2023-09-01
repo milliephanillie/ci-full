@@ -39,7 +39,7 @@ class RapidEditModel
         add_filter('https_ssl_verify', '__return_false');
 //        add_filter('lisfinity__submit_form_fields', [$this, 'set_edit_fields']);
 //        add_filter('lisfinity__product_fields', [$this, 'edit_product_fields'], 10, 2);
-        add_filter('lisfinity__product_fields', [$this, 'remove_costs'], 10, 2);
+        add_filter('lisfinity__submit_form_fields', [$this, 'remove_costs'], 10, 2);
     }
 
     public function remove_costs($fields) {
