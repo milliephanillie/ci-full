@@ -43,12 +43,15 @@ class RapidEditModel
     }
 
     public function remove_costs($fields) {
-        if(array_key_exists($fields['media']['media_calculation'])) {
-            unset($fields['media']['media_calculation']);
+        if (isset($fields['media'])) {
+            if (array_key_exists('media_calculation', $fields['media'])) {
+                unset($fields['media']['media_calculation']);
+            }
+            if (array_key_exists('total_calculation', $fields['media'])) {
+                unset($fields['media']['total_calculation']);
+            }
         }
-        if(array_key_exists($fields['media']['total_calculation'])) {
-            unset($fields['media']['total_calculation']);
-        }
+
 
         error_log("here are the fields");
         error_log(print_r($fields, true));
