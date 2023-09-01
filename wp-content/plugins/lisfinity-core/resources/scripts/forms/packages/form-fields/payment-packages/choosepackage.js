@@ -140,24 +140,24 @@ const ChoosePackage  = (props) => {
                 const chosen_package_id = val && get(value['chosen_package'], ['0'] );
                 const checked = (pkg.package_id === chosen_package_id) ? true  : false;
 
-                // console.log("chosen_package_id")
-                // console.log(chosen_package_id)
-                // console.log("pkg.package_id")
-                // console.log(pkg.package_id)
-                // console.log("fieldId")
-                // console.log(fieldId)
-                // console.log("checked")
-                // console.log(checked)
-                // console.log("pkg")
-                // console.log(pkg)
-                // console.log("data")
-                // console.log(data)
-                // console.log("val")
-                // console.log(val)
-                // console.log("packages")
-                // console.log(packages)
-                // console.log("value")
-                // console.log(value)
+                console.log("chosen_package_id")
+                console.log(chosen_package_id)
+                console.log("pkg.package_id")
+                console.log(pkg.package_id)
+                console.log("fieldId")
+                console.log(fieldId)
+                console.log("checked")
+                console.log(checked)
+                console.log("pkg")
+                console.log(pkg)
+                console.log("data")
+                console.log(data)
+                console.log("val")
+                console.log(val)
+                console.log("packages")
+                console.log(packages)
+                console.log("value")
+                console.log(value)
 
                 return (!isEmpty(pkg) &&
                         <div key={index} style={{
@@ -165,12 +165,12 @@ const ChoosePackage  = (props) => {
                             border: '1px solid rgba(0,0,0,0.1)',
                             marginBottom: '20px',
                             justifyContent: 'space-between',
-                        }} className={"package--card"}>
-                            <div className={"package--header"} style={{
+                        }} className={`package--card ${pkg.class}`}>
+                            <div className={`package--header ${pkg.recommended_package ? 'font-bold bg-yellow-100' : 'bg-grey-100'}`} style={{
                                 display: 'grid',
                                 textAlign: 'center',
                                 padding: '20px',
-                                background: '#eee',
+                                borderRight: '1px solid rgba(0,0,0,0.1)',
                                 width: '25%',
                             }}>
                                 <div style={{

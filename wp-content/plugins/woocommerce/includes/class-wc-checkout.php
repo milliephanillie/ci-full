@@ -1142,6 +1142,7 @@ class WC_Checkout {
 			);
 
 			if ( empty( $nonce_value ) || ! wp_verify_nonce( $nonce_value, 'woocommerce-process_checkout' ) ) {
+                error_log(print_r("maybe is the verify nonce"));
 				// If the cart is empty, the nonce check failed because of session expiry.
 				if ( WC()->cart->is_empty() ) {
 					throw new Exception( $expiry_message );
