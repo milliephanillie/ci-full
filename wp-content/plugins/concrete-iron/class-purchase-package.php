@@ -1,5 +1,4 @@
 <?php
-require plugin_dir_path( CONCRETEIRON ) . 'Helpers/WCI_Helper.php';
 require plugin_dir_path( CONCRETEIRON ) . 'Models/PackageModel.php';
 
 
@@ -44,6 +43,8 @@ class PurchasePackage {
      */
     public function purchase_package( WP_REST_Request $request_data ) {
         global $woocommerce;
+
+        require plugin_dir_path( CONCRETEIRON ) . 'Helpers/WCI_Helper.php';
 
         $wc_helper = new WCI_Helper();
         $wc_helper->check_prerequisites();

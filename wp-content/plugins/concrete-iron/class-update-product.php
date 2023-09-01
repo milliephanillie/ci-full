@@ -40,6 +40,14 @@ class Update_Product {
             'args' => [],
         ));
 
+        $route = 'force_dates';
+
+        register_rest_route($namespace, $route, array(
+            'methods' => WP_REST_Server::CREATABLE,
+            'callback' => [$this, 'force_dates'],
+            'args' => [],
+        ));
+
         $route = 'force_post_status';
 
         register_rest_route($namespace, $route, array(
@@ -67,6 +75,32 @@ class Update_Product {
             "updated_expiration" => $updated_expiration
         ]));
     }
+
+    /**
+     * Force a certain date
+     *
+     * @param WP_REST_Request $request
+     * @return void
+     */
+    public function force_dates(\WP_REST_Request $request) {
+        $params = $request->get_params();
+        $product_id = $params['product_id'];
+        $days_expired = isset($params['days_expired']) ? (int) $params['days_expired'] : null;
+        $days_activated = isset($params['days_activated']) ? (int) $params['days_activated'] : null;
+
+        if(!$product_id || ! $days_expired || ! $days_activated ) {
+            return new WP_Error('missing_parameters', 'Required parameters are missing or invalid.');
+        }
+
+        $updated_activation = update_post_meta($product_id, '_product-listed', strtotime($days_activated.' days', (int)current_time('timestamp')));
+        $updated_expiration = update_post_meta($product_id, '_product-expiration', strtotime($days_expired.' days', (int)current_time('timestamp')));
+
+        return rest_ensure_response(new WP_REST_Response([
+            "updated_activation" => $updated_activation,
+            "updated_expiration" => $updated_expiration
+        ]));
+    }
+
 
     /**
      * @param WP_REST_Request $request

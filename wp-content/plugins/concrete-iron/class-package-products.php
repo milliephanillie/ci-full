@@ -294,6 +294,8 @@ class Package_Products
         $thumbnail['thumb'] = wp_get_attachment_metadata($thumbnail['id']);
         $package['thumbnail'] = $thumbnail;
 
+
+
         $package['style'] = carbon_get_post_meta($package_id, "package-style");
         $package['features'] = [];
         $package_features = carbon_get_post_meta($package_id, "package-features");
@@ -303,10 +305,13 @@ class Package_Products
             array_push($package['features'], array_merge($feature, ["uniqueId" => "featureID-" . $count]));
         }
         $package['promotions'] = carbon_get_post_meta($package_id, "package-promotions");
+        $package['recommended_package'] = get_field('recommended_package', $package_id);
         $package['package-sold-once'] = carbon_get_post_meta($package_id, 'package-sold-once');
         $package['limit'] = carbon_get_post_meta($package_id, 'package-products-limit');
         $package['duration'] = carbon_get_post_meta($package_id, 'package-products-duration');
-        $package['post_title'] = get_the_title($package_id);
+        $title = get_the_title($package_id);
+        $package['class'] = sanitize_title($title);
+        $package['post_title'] = $title;
         $package['post_content'] = get_the_content($package_id);
 
         return $package;

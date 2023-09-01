@@ -18,12 +18,14 @@ import loaderBlue from '../../../../../images/icons/loader-rings-blue.svg';
 import { Fragment } from 'react';
 import { sprintf } from '@wordpress/i18n';
 import ModalDemo from '../../../../theme/packages/components/modal/ModalDemo';
+import LoaderSteps from "../../../../theme/packages/components/loaders/LoaderSteps";
 import he from 'he';
 
 const ExpiringAds = (props) => {
   const dispatch = useDispatch();
   const data = useSelector(state => state);
   const { business, menuOpen } = data;
+  const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectActive, setSelectActive] = useState(false);
   const [adRenew, setAdRenew] = useState(false);
@@ -49,6 +51,47 @@ const ExpiringAds = (props) => {
     const body = document.querySelector('body');
     body.style.overflow = 'auto';
   };
+
+  const singleRenewAd = async (e, ad, id) => {
+    e.preventDefault();
+
+    const url = ci_data.ci_rapid_renew
+
+    const headers = {
+      'X-WP-Nonce': lc_data.nonce,
+      'Content-Type': 'application/json',  // Important when sending JSON data
+    };
+
+    console.log("post request for the ad and id")
+    console.log(ad)
+    console.log(id)
+
+    const data = {
+      product_id: ad.id
+    };
+
+    setRenewing(ad.id);
+
+    await axios({
+      credentials: 'same-origin',
+      headers,
+      method: 'post',
+      url: url,
+      data: JSON.stringify(data),  // Convert the data object to a JSON string
+    }).then(response => {
+      // alert(JSON.stringify(response))
+      // alert(JSON.stringify(response.data))
+      // alert(response.data.permalink)
+      if (response.data.permalink) {
+        // Handle success case
+        window.location.href = response.data.permalink;
+      } else {
+        window.location.reload(false);
+      }
+    }).catch(error => {
+      console.error("An error occurred:", error);
+    });
+  }
 
   const renewAdModal = (ad, index) => {
     setModalOpen(true);
@@ -134,6 +177,7 @@ const ExpiringAds = (props) => {
   }, []);
 
   return (
+
     <div
       className="dashboard-widget--expiring-products flex flex-col mb-20 p-20 bg-white rounded shadow-theme w-full sm:w-1/2 xl:w-full">
 
@@ -186,8 +230,8 @@ const ExpiringAds = (props) => {
                     </div>
 
                     {business.options.enable_packages && (!renewing || renewing !== ad.id) &&
-                    <button type="button" className="flex-center font-semibold text-base text-blue-700"
-                            onClick={() => renewAdModal(ad, id)}
+                    <button type="button" className="flex-center font-semibold text-base text-blue-700 renew-ad-modal single-renew-ad"
+                            onClick={(e) => singleRenewAd(e, ad, id)}
                     >
                       {lc_data.jst[167]}
                       <ReactSVG
@@ -197,8 +241,8 @@ const ExpiringAds = (props) => {
                     </button>
                     }
                     {!business.options.enable_packages && (!renewing || renewing !== ad.id) &&
-                    <button type="button" className="flex-center font-semibold text-base text-blue-700"
-                            onClick={(e) => renewAd(e, false, ad, id)}
+                    <button type="button" className="flex-center font-semibold text-base text-blue-700 renew-ad"
+                            onClick={(e) => singleRenewAd(e, ad, id)}
                     >
                       {lc_data.jst[167]}
                       <ReactSVG
@@ -236,6 +280,9 @@ const ExpiringAds = (props) => {
           handleClickOutside={handleClickOutside}
           closeModal={closeModal}
         >
+          <div className={"ad-renewal"}>
+
+          </div>
           <form className="" onSubmit={(e) => renewAd(e)}>
             <div className="flex flex-col p-30">
               {business.options.enable_packages && business.active_packages.length > 0 &&
