@@ -36,9 +36,19 @@ class Headless_GravityForms
     public function get_form(WP_REST_Request $request)
     {
         $form_id = $request['form_id'];
+        $post_id = $request['postID'];
+
         $form = GFAPI::get_form($form_id);
 
         if ($form) {
+            // Loop through each field in the form to find the hidden field with ID 5
+            foreach ($form['fields'] as &$field) {
+                if ($field['id'] == 5 && $field['type'] == 'hidden') {
+                    $field['defaultValue'] = $post_id; // Set the defaultValue to postID
+                }
+            }
+            unset($field);  // Unset the reference to prevent unexpected behavior
+
             // Strip data we do not want to share
             unset($form['notifications']);
 
