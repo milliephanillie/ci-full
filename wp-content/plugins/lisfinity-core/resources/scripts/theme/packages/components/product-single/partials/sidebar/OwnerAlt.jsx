@@ -21,6 +21,7 @@ import QR from './partials-owner/QR';
 import GravityForm from "react-gravity-form";
 import LoaderGlobal from '../../../loaders/LoaderGlobal';
 import OwnerPhone from "./partials-owner/OwnerPhone";
+import loaderBlue from "../../../../../../../images/icons/loader-rings-blue.svg";
 
 function OwnerAlt(props) {
   const { product, currentUser, options } = props;
@@ -35,7 +36,6 @@ function OwnerAlt(props) {
     let arr = email.split("@");
     return censorWord(arr[0]) + "@" + censorWord(arr[1]);
   }
-
 
   return (
     <Fragment>
@@ -155,11 +155,23 @@ function OwnerAlt(props) {
 
         {!isEmpty(product) && !product?.is_expired && !props.businessPage &&
             <div className='send-message send-message-gf'>
-              <div className="or-send-message"><h4>Or send a message...</h4></div>
+              <div className="or-send-message"><h4>Send a message...</h4></div>
               <GravityForm
                   backendUrl={`${lc_data.url}wp-json/ci/v1/gf/forms`}
                   formID="3"
-                  submitComponent={<LoaderGlobal title={"Sending Message"} />}
+                  styledComponents={<ReactSVG
+                      src={`${lc_data.dir}dist/${loaderBlue}`}
+                      className="absolute right-20"
+                      style={{ zoom: 0.6 }}
+                  />}
+                  submitComponent={<ReactSVG
+                      src={`${lc_data.dir}dist/${loaderBlue}`}
+                      className="absolute right-20"
+                      style={{ zoom: 0.6 }}
+                  />}
+                  jumpToConfirmation={false}
+                  populatedFields={{input_5: ci_data.ci_post_id}}
+                  getParams={{postID: ci_data.ci_post_id}}
               />
             </div>
         }

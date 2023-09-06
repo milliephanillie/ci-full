@@ -29,6 +29,7 @@ use ConcreteIron\Includes\RapidProductSubmit;
 use ConcreteIron\Includes\RapidEditModel;
 use ConcreteIron\Includes\RapidHooks;
 use ConcreteIron\Includes\RapidRenew;
+use ConcreteIron\Includes\RapidMailer;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -40,6 +41,7 @@ function load_my_plugin() {
         $rapidProductSubmit = new RapidProductSubmit();
         $rapidEditModel = new RapidEditModel();
         $rapidRenew = new RapidRenew();
+        $rapidMailer = new RapidMailer();
 
         add_action('rest_api_init', [$rapidProductSubmit, 'register_routes']);
 
@@ -76,6 +78,7 @@ function ci_scripts() {
         "ci_purchase_package" => get_site_url() . '/wp-json/ci/v1/purchase-package',
         "ci_product_store" => get_site_url() . '/wp-json/ci/v1/product/store',
         "ci_rapid_renew" => get_site_url() . '/wp-json/ci/v1/rapid_renew',
+        "ci_post_id" => get_the_ID(),
     ];
 
     wp_enqueue_script( 'ci-localize', plugin_dir_path( CONCRETEIRON ) . 'assets/scripts/localize.js', [
