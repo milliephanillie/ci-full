@@ -482,7 +482,7 @@ $translations = [
     __('Reset', 'lisfinity-core'),
     __('Category', 'lisfinity-core'),
     __('Search %s', 'lisfinity-core'),
-    __('On Call', 'lisfinity-core'),
+    __('Call for price', 'lisfinity-core'),
     __('%s results', 'lisfinity-core'),
     __('Selected:', 'lisfinity-core'),
     __('Product Image', 'lisfinity-core'),
