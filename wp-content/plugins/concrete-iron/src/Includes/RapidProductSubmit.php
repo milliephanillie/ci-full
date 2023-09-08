@@ -143,9 +143,6 @@ class RapidProductSubmit
 
     public function update_product($order_id, $posted_data, $order)
     {
-        // Assume you've saved post ID as meta data in the order
-        // with a meta_key "my_custom_post_id" =; $order_id
-
         foreach ($order->get_items() as $item_id => $item) {
             $product_id = $item->get_meta('_listing_id', true);
             $package_id = $item->get_product_id();
@@ -154,9 +151,6 @@ class RapidProductSubmit
         }
 
         $site_timestamp = current_time('timestamp');
-//
-//        error_log("this the error");
-//        error_log($site_timestamp);
         $gmt_offset = get_option('gmt_offset');
 
         if (!is_numeric($gmt_offset)) {
@@ -170,26 +164,20 @@ class RapidProductSubmit
         $updated_activation = update_post_meta($product_id, '_product-listed', $activation_date);
         $updated_expiration = update_post_meta($product_id, '_product-expiration', strtotime('+90 days', (int)current_time('timestamp')));
 
-
-
         $listing_id = $this->update_lisfinity_packages((int)$package_id, $product_id, $order_id, 90);
 
         if ($listing_id) {
             $updated_payment_package = update_post_meta($product_id, '_payment-package', $listing_id);
         }
-        // $this->update_lisfinity_promotions($payment_package_id,);
 
         $updated_post = wp_publish_post($product_id);
+        if($updated_post) {
+            if (\lisfinity_is_enabled(\lisfinity_get_option('email-listing-submitted'))) {
+                $this->notify_admin($updated_post);
+            }
 
-        carbon_set_post_meta($product_id, 'product-status', 'active');
-//
-//        error_log("activation", print_r($activation_date, true));
-//        error_log("expiration", print_r($expiration_date, true));
-//        error_log("activation", print_r($updated_activation, true));
-//        error_log("expiration", print_r($updated_expiration, true));
-//
-//        error_log("hi there: " . print_r([['_listing_id' => $product_id], ['all_meta' => $item->get_meta()], $order_id, $posted_data,$order], true));
-
+            carbon_set_post_meta($product_id, 'product-status', 'active');
+        }
     }
 
     /**
@@ -272,9 +260,28 @@ class RapidProductSubmit
         return $lisfinity_package_id;
     }
 
-//    public function submit_product() {
-//        return "sure";
-//    }
+    /**
+     * Genreate a unique post name (permalink) if the ad's post title and permalink already exist.
+     *
+     * @param $post_name
+     * @param $post_type
+     * @return mixed|string
+     */
+    public function generate_unique_post_name($post_name, $post_type = 'product') {
+        global $wpdb;
+
+        $suffix = 1;
+        $unique_post_name = $post_name;
+
+        // Loop to check existing post_names
+        while ($wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->posts WHERE post_name = %s AND post_type = %s", $unique_post_name, $post_type))) {
+            $unique_post_name = "{$post_name}-{$suffix}";
+            $suffix++;
+        }
+
+        return $unique_post_name;
+    }
+
 
     /**
      * Form submission handler
@@ -337,11 +344,13 @@ class RapidProductSubmit
             $formatted_title = $this->custom_titles($variable, $post_title, $data);
         }
 
+        $unique_post_name = $this->generate_unique_post_name(sanitize_title(wp_strip_all_tags($data['title'])), $data['post_type'] ?? 'product');
+
         // create basic product post and update package count.
         $args = [
             'post_type' => $data['post_type'] ?? 'product',
             'post_title' => !empty($formatted_title) ? $formatted_title : wp_strip_all_tags($data['title']),
-            'post_name' => sanitize_title(wp_strip_all_tags($data['title'])),
+            'post_name' => $unique_post_name,
             'post_content' => $data['description'],
             'post_author' => $user_id,
             'post_status' => 'draft',
@@ -434,10 +443,6 @@ class RapidProductSubmit
         }
 
         $result['redirect'] = $this->redirect;
-
-        if (\lisfinity_is_enabled(\lisfinity_get_option('email-listing-submitted'))) {
-            $this->notify_admin($id);
-        }
 
         return $result;
     }
