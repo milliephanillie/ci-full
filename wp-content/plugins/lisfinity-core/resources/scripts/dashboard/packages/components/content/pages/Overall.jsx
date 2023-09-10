@@ -35,7 +35,8 @@ const Overall = (props) => {
       <section className="dashboard--stats flex flex-wrap justify-center w-full xl:w-11/16">
 
         <div className="flex flex-wrap -mx-14 w-full">
-          <div className={`mt-20 lg:mt-0 px-8 w-full md:w-1/2 ${classes}`}>
+          {/*<div className={`mt-20 lg:mt-0 px-8 w-full md:w-1/2 ${classes}`}>*/}
+          <div className={`mt-20 lg:mt-0 px-8 w-full md:w-full`}>
             <div className="flex flex-col items-center p-40 bg-white rounded shadow-theme">
 
               <div className="flex-center mx-auto p-4 w-48 h-48 bg-blue-200 rounded-full">
@@ -49,55 +50,55 @@ const Overall = (props) => {
               <span className="font-light uppercase">{lc_data.jst[130]}</span>
             </div>
           </div>
-          {props.options?.disable_bidding &&
-          <div className={`mt-20 lg:mt-0 px-8 w-full md:w-1/2 ${classes}`}>
-            <div className="flex flex-col items-center p-40 bg-white rounded shadow-theme">
+          {/*{props.options?.disable_bidding &&*/}
+          {/*<div className={`mt-20 lg:mt-0 px-8 w-full md:w-1/2 ${classes}`}>*/}
+          {/*  <div className="flex flex-col items-center p-40 bg-white rounded shadow-theme">*/}
 
-              <div className="flex-center mx-auto p-4 w-48 h-48 bg-green-300 rounded-full">
-                <ReactSVG
-                  src={`${lc_data.dir}dist/${HammerIcon}`}
-                  className="w-20 h-20 fill-green-700"
-                />
-              </div>
+          {/*    <div className="flex-center mx-auto p-4 w-48 h-48 bg-green-300 rounded-full">*/}
+          {/*      <ReactSVG*/}
+          {/*        src={`${lc_data.dir}dist/${HammerIcon}`}*/}
+          {/*        className="w-20 h-20 fill-green-700"*/}
+          {/*      />*/}
+          {/*    </div>*/}
 
-              <span className="mt-20 font-bold text-shadow">{business.stats.bids}</span>
-              <span className="font-light uppercase">{lc_data.jst[131]}</span>
-            </div>
-          </div>
-          }
+          {/*    <span className="mt-20 font-bold text-shadow">{business.stats.bids}</span>*/}
+          {/*    <span className="font-light uppercase">{lc_data.jst[131]}</span>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
+          {/*}*/}
 
-          {props.options?.messenger &&
-          <div className={`mt-20 lg:mt-0 px-8 w-full md:w-1/2 ${classes}`}>
-            <div className="flex flex-col items-center p-40 bg-white rounded shadow-theme">
+          {/*{props.options?.messenger &&*/}
+          {/*<div className={`mt-20 lg:mt-0 px-8 w-full md:w-1/2 ${classes}`}>*/}
+          {/*  <div className="flex flex-col items-center p-40 bg-white rounded shadow-theme">*/}
 
-              <div className="flex-center mx-auto p-4 w-48 h-48 bg-yellow-300 rounded-full">
-                <ReactSVG
-                  src={`${lc_data.dir}dist/${EnvelopeIcon}`}
-                  className="w-20 h-20 fill-yellow-900"
-                />
-              </div>
+          {/*    <div className="flex-center mx-auto p-4 w-48 h-48 bg-yellow-300 rounded-full">*/}
+          {/*      <ReactSVG*/}
+          {/*        src={`${lc_data.dir}dist/${EnvelopeIcon}`}*/}
+          {/*        className="w-20 h-20 fill-yellow-900"*/}
+          {/*      />*/}
+          {/*    </div>*/}
 
-              <span className="mt-20 font-bold text-shadow">{business.stats.messages}</span>
-              <span className="font-light uppercase">{lc_data.jst[132]}</span>
-            </div>
-          </div>
-          }
-          {data?.options?.packages &&
-          <div className={`mt-20 lg:mt-0 px-8 w-full md:w-1/2 ${classes}`}>
-            <div className="flex flex-col items-center p-40 bg-white rounded shadow-theme">
+          {/*    <span className="mt-20 font-bold text-shadow">{business.stats.messages}</span>*/}
+          {/*    <span className="font-light uppercase">{lc_data.jst[132]}</span>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
+          {/*}*/}
+          {/*{data?.options?.packages &&*/}
+          {/*<div className={`mt-20 lg:mt-0 px-8 w-full md:w-1/2 ${classes}`}>*/}
+          {/*  <div className="flex flex-col items-center p-40 bg-white rounded shadow-theme">*/}
 
-              <div className="flex-center mx-auto p-4 w-48 h-48 bg-orange-200 rounded-full">
-                <ReactSVG
-                  src={`${lc_data.dir}dist/${PackageIcon}`}
-                  className="w-20 h-20 fill-orange-700"
-                />
-              </div>
+          {/*    <div className="flex-center mx-auto p-4 w-48 h-48 bg-orange-200 rounded-full">*/}
+          {/*      <ReactSVG*/}
+          {/*        src={`${lc_data.dir}dist/${PackageIcon}`}*/}
+          {/*        className="w-20 h-20 fill-orange-700"*/}
+          {/*      />*/}
+          {/*    </div>*/}
 
-              <span className="mt-20 font-bold text-shadow">{business.stats.packages}</span>
-              <span className="font-light uppercase">{lc_data.jst[133]}</span>
-            </div>
-          </div>
-          }
+          {/*    <span className="mt-20 font-bold text-shadow">{business.stats.packages}</span>*/}
+          {/*    <span className="font-light uppercase">{lc_data.jst[133]}</span>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
+          {/*}*/}
         </div>
 
 
