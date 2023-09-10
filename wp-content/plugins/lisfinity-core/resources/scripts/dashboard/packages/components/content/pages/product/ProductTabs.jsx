@@ -59,26 +59,26 @@ const ProductTabs = (props) => {
                 {lc_data.jst[176]}
               </NavLink>
             </li>
-            {options && options.promotions &&
-            <li>
-              <NavLink
-                to={`${lc_data.site_url}${url}/promotions`}
-                className="flex-center relative py-4 px-20 rounded font-bold text-grey-900 text-lg whitespace-no-wrap"
-                activeClassName="bg-grey-100"
-              >
-                {ad && ad[0] && ad[0].promotions && Object.keys(ad[0].promotions).length > 0 && <span
-                  className="absolute flex-center w-18 h-18 bg-red-500 rounded text-sm text-white z-1"
-                  style={{top: '-5px', right: '-3px'}}>
-                {Object.keys(ad[0].promotions).length}
-              </span>}
-                <ReactSVG
-                  src={`${lc_data.dir}dist/${CoinIcon}`}
-                  className="mr-8 w-16 h-16 fill-grey-900"
-                />
-                {lc_data.jst[177]}
-              </NavLink>
-            </li>
-            }
+            {/*{options && options.promotions &&*/}
+            {/*<li>*/}
+            {/*  <NavLink*/}
+            {/*    to={`${lc_data.site_url}${url}/promotions`}*/}
+            {/*    className="flex-center relative py-4 px-20 rounded font-bold text-grey-900 text-lg whitespace-no-wrap"*/}
+            {/*    activeClassName="bg-grey-100"*/}
+            {/*  >*/}
+            {/*    {ad && ad[0] && ad[0].promotions && Object.keys(ad[0].promotions).length > 0 && <span*/}
+            {/*      className="absolute flex-center w-18 h-18 bg-red-500 rounded text-sm text-white z-1"*/}
+            {/*      style={{top: '-5px', right: '-3px'}}>*/}
+            {/*    {Object.keys(ad[0].promotions).length}*/}
+            {/*  </span>}*/}
+            {/*    <ReactSVG*/}
+            {/*      src={`${lc_data.dir}dist/${CoinIcon}`}*/}
+            {/*      className="mr-8 w-16 h-16 fill-grey-900"*/}
+            {/*    />*/}
+            {/*    {lc_data.jst[177]}*/}
+            {/*  </NavLink>*/}
+            {/*</li>*/}
+            {/*}*/}
             {(options && options.messenger || options.messenger === 'undefined') &&
             <li>
               <NavLink
