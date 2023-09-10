@@ -16,8 +16,91 @@ class RapidHooks {
      */
     public function boot()
     {
+        add_action( 'init', [$this, 'rapid_register_product_statuses'], 10, 1 );
+        add_filter('lisfinity__set_product_statuses', [$this, 'add_incomplete_status'], 10, 1);
+        add_filter( 'display_post_states', [$this, 'rapid_add_display_post_states'], 11, 2 );
+        add_filter('post_row_actions', [$this, 'modify_view_link_for_incomplete_status'], 10, 2);
+
         add_filter('get_post_metadata', [$this, 'format_price_meta'], 12, 4);
+
         add_filter('woocommerce_before_template_part', [$this, 'add_link_to_listings'], 10, 4);
+    }
+
+    /**
+     * Remove the view link for incomplete posts
+     *
+     * @param $actions
+     * @param $post
+     * @return mixed
+     */
+    public function modify_view_link_for_incomplete_status($actions, $post)
+    {
+        if ('incomplete' === $post->post_status) {
+            unset($actions['view']);
+        }
+        return $actions;
+    }
+
+    /*
+     * Register the incomplete post status
+     */
+    public function rapid_register_product_statuses() {
+        register_post_status( 'incomplete', array(
+            'label'                     => _x( 'Incomplete', 'lisfinity_core', 'lisfinity-core' ),
+            'label_count'               => _n_noop( 'Incomplete <span class="count">(%s)</span>', 'Incomplete <span class="count">(%s)</span>', 'lisfinity-core' ),
+            'public'                    => false,
+            'exclude_from_search'       => true,
+            'show_in_admin_all_list'    => true,
+            'show_in_admin_status_list' => true
+        ) );
+    }
+
+    /*
+     * Add the incomplete status to the available lisfinity status types (for the carbon field)
+     */
+    public function add_incomplete_status($statuses) {
+        if (is_array($statuses)) {
+            $statuses = array_merge($statuses, ['incomplete']);
+        }
+
+        return $statuses;
+    }
+
+    /*
+     * Set the incomplete post state and remove all other (non-default) post states
+     */
+    public function rapid_add_display_post_states($post_states, $post) {
+        //We will keep these default WP states
+        $default_states = array(
+            'draft' => true,
+            'pending' => true,
+            'private' => true,
+            'password protected' => true,
+            'protected' => true,
+            'scheduled' => true,
+            'custom' => true,
+            'sticky' => true,
+        );
+
+        $product_type = get_the_terms( $post->ID, 'product_type' );
+        if ( ! empty( $product_type[0] ) ) {
+            if ( 'listing' === $product_type[0]->slug ) {
+                $product_status = carbon_get_post_meta($post->ID, 'product-status');
+
+                if ($product_status && $product_status === 'incomplete') {
+                    // Remove custom states
+                    foreach ($post_states as $key => $value) {
+                        if (!isset($default_states[$key])) {
+                            unset($post_states[$key]);
+                        }
+                    }
+
+                    $post_states['rapid_product_incomplete'] = sprintf( '<span style="padding: 2px 4px; background-color: #f3c647; color: #fff; border-radius: 4px;">%s<span>', __( 'Incomplete', 'lisfinity-core' ) );
+                }
+            }
+        }
+
+        return $post_states;
     }
 
     public function add_link_to_listings($template_name, $template_path, $located, $args) {

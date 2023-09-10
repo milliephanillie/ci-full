@@ -353,7 +353,7 @@ class RapidProductSubmit
             'post_name' => $unique_post_name,
             'post_content' => $data['description'],
             'post_author' => $user_id,
-            'post_status' => 'draft',
+            'post_status' => 'incomplete',
         ];
 
         $account_page = get_permalink( lisfinity_get_page_id( 'page-account' ) );
@@ -396,6 +396,21 @@ class RapidProductSubmit
 //            }
         } else {
             $id = wp_insert_post($args);
+            carbon_set_post_meta($id, 'product-status', 'incomplete');
+
+            $site_timestamp = current_time('timestamp');
+            $gmt_offset = get_option('gmt_offset');
+
+            if (!is_numeric($gmt_offset)) {
+                error_log("Invalid gmt_offset value: ", print_r($gmt_offset, true));
+            } else {
+                $utc_timestamp = $site_timestamp - $gmt_offset * 3600;
+                $activation_date = $site_timestamp;
+                $expiration_date = date('Y-m-d H:i:s', strtotime("+90 days", $utc_timestamp));
+            }
+
+            $updated_activation = update_post_meta($id, '_product-listed', $activation_date);
+            $updated_expiration = update_post_meta($id, '_product-expiration', strtotime('+90 days', (int)current_time('timestamp')));
         }
 
         // assign a package id to the product.
