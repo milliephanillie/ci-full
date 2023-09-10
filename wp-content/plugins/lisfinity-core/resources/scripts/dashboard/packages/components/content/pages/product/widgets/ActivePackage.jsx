@@ -16,10 +16,19 @@ import cx from 'classnames';
 const ActivePackage = (props) => {
   const dispatch = useDispatch();
   const data = useSelector(state => state);
-  const { business, menuOpen, paymentPackage } = data;
+  const { business, menuOpen, product, paymentPackage  } = data;
   const { productId } = props;
   const [modalOpen, setModalOpen] = useState(false);
-  let product = paymentPackage;
+  const [effectivePackage, setEffectivePackage] = useState(product?.package || paymentPackage?.payment_package || {});
+
+  // useEffect to update effectivePackage whenever product or paymentPackage changes
+  useEffect(() => {
+    if (product?.package) {
+      setEffectivePackage(product.package);
+    } else if (paymentPackage?.payment_package) {
+      setEffectivePackage(paymentPackage.payment_package);
+    }
+  }, [product, paymentPackage]);
 
   const closeModal = (e) => {
     setModalOpen(false);
@@ -45,14 +54,6 @@ const ActivePackage = (props) => {
     return () => document.removeEventListener('keydown', escFunction, false);
   }, [escFunction]);
 
-  if (isEmpty(product)) {
-    product = props.product;
-  }
-
-  if (product.payment_package) {
-    product = product.payment_package;
-  }
-
   const timelineClass = cx({
     'bg-green-700': product.percentage < 35,
     'bg-yellow-700': product.percentage >= 35 && product.percentage < 75,
@@ -73,7 +74,7 @@ const ActivePackage = (props) => {
             </article>
           </div>}
 
-      {!paymentPackage?.product?.is_expired && product?.title &&
+      {!paymentPackage?.product?.is_expired && (product?.title || paymentPackage?.payment_package?.title) &&
           <div>
           <div className="dashboard-widget--header flex justify-between items-center mb-20 px-10">
             <div className="flex-center">
@@ -103,7 +104,7 @@ const ActivePackage = (props) => {
 
         <button
         type="button"
-        className="flex-center font-semibold text-base text-blue-700"
+        className="set-modal-open flex-center font-semibold text-base text-blue-700"
         onClick={() => setModalOpen(true)}
         >
       {lc_data.jst[211]}
@@ -113,7 +114,7 @@ const ActivePackage = (props) => {
         />
         </button>
 
-      {modalOpen && product && product.package &&
+      {modalOpen && effectivePackage &&
         <div
         key={1}
         className="modal--wrapper modal-send-message fixed top-0 left-0 flex justify-center w-full h-full overflow-y-auto"
@@ -145,43 +146,43 @@ const ActivePackage = (props) => {
         </div>
 
         <div className="packages-active--content">
-        <article key={product.package.id}
+        <article key={effectivePackage.id}
         className="flex flex-wrap items-center px-20 bg-white rounded">
 
         <div className="flex flex-col w-full md:w-2/5 package--width__title">
-        <h6 className="font-semibold text-3xl">{product.package.title}</h6>
+        <h6 className="active-package-title font-semibold text-3xl">{effectivePackage.title}</h6>
         <div className="timeline relative mt-16 w-2/3 h-10 bg-grey-300 rounded overflow-hidden">
         <div
         className={`timeline--line absolute top-0 left-0 h-10 ${timelineClass}`}
-        style={{ width: `${product.package.percentage}%` }}
+        style={{ width: `${effectivePackage.percentage}%` }}
         ></div>
         </div>
         <span
-        className="mt-20 font-semibold text-sm">{sprintf(_n(lc_data.jst[125], lc_data.jst[126], product.package.remaining, 'lisfinity-core'), product.package.remaining)}</span>
+        className="mt-20 font-semibold text-sm">{sprintf(_n(lc_data.jst[125], lc_data.jst[126], effectivePackage.remaining, 'lisfinity-core'), effectivePackage.remaining)}</span>
         </div>
 
         <div className="mt-20 w-full md:mt-0 md:w-1/5">
-        <span className="text-grey-500">{product.package.products_count}</span>
+        <span className="text-grey-500">{effectivePackage.products_count}</span>
         <span className="mx-2 text-grey-900">/</span>
-        <span className="font-semibold text-grey-900">{product.package.products_limit}</span>
+        <span className="font-semibold text-grey-900">{effectivePackage.products_limit}</span>
         <span className="package--mobile-info ml-2 text-grey-500">{lc_data.jst[24]}</span>
         </div>
 
         <div className="mt-20 w-full md:mt-0 md:w-1/5">
-      {product.package.products_duration}
+      {effectivePackage.products_duration}
         <span className="package--mobile-info ml-2 text-grey-500">{lc_data.jst[127]}</span>
         </div>
 
         <div className="flex flex-col mt-20 w-full md:mt-0 md:w-1/5">
         <Fragment>
-      {product && product.package && product.package.promotion && !isEmpty(product.package.promotion.addon) && map(product.package.promotion.addon, (addon, i) =>
+      {product && effectivePackage && effectivePackage.promotion && !isEmpty(effectivePackage.promotion.addon) && map(effectivePackage.promotion.addon, (addon, i) =>
         <div key={i} className="package--promotion mb-12">
         <span>{addon.value}</span>
         <span className="ml-4">{lc_data.jst[128]}</span>
         <span className="ml-4 text-grey-700">{addon.title}</span>
         </div>
         )}
-      {product && product.package && product.package.promotion && isEmpty(product.package.promotion.addon) &&
+      {product && effectivePackage && effectivePackage.promotion && isEmpty(effectivePackage.promotion.addon) &&
         <div>
         <span className="text-grey-700">{lc_data.jst[129]}</span>
         </div>
@@ -201,7 +202,7 @@ const ActivePackage = (props) => {
 
           <div>
             <h5 className="mb-4 font-bold" dangerouslySetInnerHTML={{
-              __html: product?.title,
+              __html: effectivePackage?.title || '',
             }}/>
           </div>
 
