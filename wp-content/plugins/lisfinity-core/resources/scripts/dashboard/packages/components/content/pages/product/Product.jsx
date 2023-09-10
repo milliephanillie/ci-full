@@ -77,7 +77,7 @@ const Product = (props) => {
         {data?.options?.packages &&
         <ActivePackage product={product} productId={props.match.params.id}/>
         }
-        <ActivePromotions product={product} productId={props.match.params.id}/>
+        {/*<ActivePromotions product={product} productId={props.match.params.id}/>*/}
       </aside>
       }
       {productLoading &&
