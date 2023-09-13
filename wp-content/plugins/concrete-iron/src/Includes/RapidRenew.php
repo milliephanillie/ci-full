@@ -69,7 +69,7 @@ class RapidRenew {
 
            $package_id = $wpdb->get_var($query);
        } else {
-           $payment_package_id = $product_id;
+           $package_id = $product_id;
        }
 
 
