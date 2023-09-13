@@ -48,6 +48,7 @@ class RapidRenew {
 
         $params = $request->get_params();
         $product_id = $params['product_id'] ?? null;
+        $exact_package = $params['exact_package'] ? boolval($params['exact_package']) : true;
         $result = [];
 
 
@@ -58,15 +59,20 @@ class RapidRenew {
             ]));
         }
 
-        $payment_package_id = get_post_meta($product_id, '_payment-package', true);
+       if(empty($exact_package)) {
+           $payment_package_id = get_post_meta($product_id, '_payment-package', true);
 
-        $query = $wpdb->prepare(
-            "SELECT product_id FROM {$wpdb->prefix}lisfinity_packages WHERE id = %d",
-            $payment_package_id
-        );
+           $query = $wpdb->prepare(
+               "SELECT product_id FROM {$wpdb->prefix}lisfinity_packages WHERE id = %d",
+               $payment_package_id
+           );
+
+           $package_id = $wpdb->get_var($query);
+       } else {
+           $payment_package_id = $product_id;
+       }
 
 
-        $package_id = $wpdb->get_var($query);
 
         if ( ! $payment_package_id ) {
             return rest_ensure_response(new \WP_REST_Response([
@@ -83,6 +89,7 @@ class RapidRenew {
         WC()->cart->add_to_cart( $package_id, 1, '', '', $cart_args );
 
         $result['sucess'] = true;
+        $result['exact_package'] = $exact_package;
         $result['permalink'] = get_permalink( wc_get_page_id( 'checkout' ) ) . '?product_id=' . $product_id;
         $result['payment_package_id'] = $payment_package_id;
         $result['_listing_id'] = $product_id;

@@ -65,6 +65,11 @@ const ProductInfo = (props) => {
     };
   }, []);
 
+  // useEffect to listen for changes to `redirect`
+  useEffect(() => {
+    console.log(`redirect has changed to: ${redirect}`);
+  }, [redirect]);  // The effect depends on `redirect`, so it runs whenever `redirect` changes
+
   const deleteProduct = (id) => {
     if (!confirm(lc_data.jst[173])) {
       return false;
@@ -168,6 +173,46 @@ const ProductInfo = (props) => {
     setAdIndex(findAdIndex(ad));
   };
 
+  const singleRenewAd = async (e) => {
+    e.preventDefault();
+    setRenewing(true);
+
+    const url = ci_data.ci_rapid_renew
+
+    const headers = {
+      'X-WP-Nonce': lc_data.nonce,
+      'Content-Type': 'application/json',  // Important when sending JSON data
+    };
+
+    const formData = new FormData(e.target);
+    const product_id = formData.get("package");
+
+    const data = {
+      product_id: product_id,
+      exact_package: true
+    };
+
+    await axios({
+      credentials: 'same-origin',
+      headers,
+      method: 'post',
+      url: url,
+      data: JSON.stringify(data),  // Convert the data object to a JSON string
+    }).then(response => {
+      // alert(JSON.stringify(response))
+      // alert(JSON.stringify(response.data))
+      // alert(response.data.permalink)
+      if (response.data.permalink) {
+        // Handle success case
+        window.location.href = response.data.permalink;
+      } else {
+        window.location.reload(false);
+      }
+    }).catch(error => {
+      console.error("An error occurred:", error);
+    });
+  }
+
   const renewAd = async (e, fromModal = true, ad, id) => {
     e.preventDefault();
     if (lc_data.is_demo) {
@@ -215,7 +260,7 @@ const ProductInfo = (props) => {
         product.percentage = response.data.percentage;
         product.expires_human = response.data.expires_human;
         if (response.data.package) {
-          map(business.active_packages, p => {
+          map(business.available_packages, p => {
             if (parseInt(p.id, 10) === response.data.package) {
               p.products_count = parseInt(p.products_count, 10) + 1;
             }
@@ -411,7 +456,7 @@ const ProductInfo = (props) => {
         </div>
 
         {redirect &&
-        <Redirect to={`${lc_data.site_url}${lc_data.myaccount}products`}/>
+        <Redirect to={`${lc_data.site_url}${lc_data.myaccount}ads`}/>
         }
 
         {modalOpen &&
@@ -426,22 +471,22 @@ const ProductInfo = (props) => {
             handleClickOutside={handleClickOutside}
             closeModal={closeModal}
           >
-            <form className="" onSubmit={(e) => renewAd(e)}>
+            <form className="" onSubmit={(e) => singleRenewAd(e)}>
               <div className="flex flex-col p-30">
-                {business.options.enable_packages && business.active_packages.length > 0 &&
+                {business.options.enable_packages && business.available_packages.length > 0 &&
                 <div className="flex flex-col">
                   <label htmlFor="package" className="package ml-10 mb-4">{lc_data.jst[318]}</label>
                   <select name="package" id="package"
                           className={`lisfinity-field flex p-10 h-44 w-full border border-grey-300 rounded font-semibold cursor-pointer outline-none ${selectActive ? 'bg-transparent' : 'bg-grey-100'}`}
                   >
-                    {map(business.active_packages, p_package => (
+                    {map(business.available_packages, p_package => (
                       <option key={p_package.id} value={p_package.id}>{p_package.title}</option>
                     ))}
                   </select>
                   <span className="description mt-2 ml-10 text-sm text-grey-700">{lc_data.jst[577]}</span>
                 </div>
                 }
-                {business.options.enable_packages && business.active_packages.length > 0 &&
+                {business.options.enable_packages && business.available_packages.length > 0 &&
                 <div className="flex">
                   <button
                     type="submit"
@@ -460,7 +505,7 @@ const ProductInfo = (props) => {
                   </button>
                 </div>
                 }
-                {business.options.enable_packages && business.active_packages.length === 0 &&
+                {business.options.enable_packages && business.available_packages.length === 0 &&
                 <div className="flex flex-col">
                   <p>{lc_data.jst[578]}</p>
                   <div>

@@ -162,6 +162,7 @@ class DashboardRoute extends Route {
 		$business->banned             = $this->format_banned_users_meta( carbon_get_post_meta( $business->business->ID, 'blocked-profiles' ) );
 
 		$business->commissions = $this->get_commissions( $business->business->ID );
+        $business = apply_filters('lisfinity__get_business', $business);
 
 		return $business;
 	}
