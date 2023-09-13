@@ -30,6 +30,10 @@ use ConcreteIron\Includes\RapidEditModel;
 use ConcreteIron\Includes\RapidHooks;
 use ConcreteIron\Includes\RapidRenew;
 use ConcreteIron\Includes\RapidMailer;
+use ConcreteIron\Includes\RapidMemberSince;
+use ConcreteIron\Includes\RapidDashRoute;
+
+use ConcreteIron\Import\ListingsImport;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -42,14 +46,12 @@ function load_my_plugin() {
         $rapidEditModel = new RapidEditModel();
         $rapidRenew = new RapidRenew();
         $rapidMailer = new RapidMailer();
+        $rapidMemberSince = new RapidMemberSince();
+        $rapidDashRoute = new RapidDashRoute();
+
+        $listingsImport = new ListingsImport();
 
         add_action('rest_api_init', [$rapidProductSubmit, 'register_routes']);
-
-//        add_action('plugins_loaded', 'load_ci_classes', 9);
-//
-//        function load_ci_classes() {
-//            $rapidFormSubmitInstance = new RapidFormSubmitModel();
-//        }
     } else {
         // The other plugin isn't loaded. Handle this case appropriately.
         var_dump("the lisfinity plugin wasn't loaded correctly");
@@ -60,7 +62,7 @@ function load_my_plugin() {
 require plugin_dir_path( CONCRETEIRON ) . 'class-concreteiron.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-custom-import.php';
 //require plugin_dir_path( CONCRETEIRON ) . 'class-listings-import.php';
-require plugin_dir_path( CONCRETEIRON ) . 'class-single-subcategory-update.php';
+//require plugin_dir_path( CONCRETEIRON ) . 'class-single-subcategory-update.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-product-images.php';
 //require plugin_dir_path( CONCRETEIRON ) . 'class-update-package.php';
 require plugin_dir_path( CONCRETEIRON ) . 'class-update-product.php';
