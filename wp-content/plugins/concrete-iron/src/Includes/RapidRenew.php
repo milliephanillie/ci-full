@@ -48,6 +48,7 @@ class RapidRenew {
 
         $params = $request->get_params();
         $product_id = $params['product_id'] ?? null;
+        $package_id = $params['package_id'] ?? null;
         $exact_package = $params['exact_package'] ? boolval($params['exact_package']) : true;
         $result = [];
 
@@ -68,8 +69,6 @@ class RapidRenew {
            );
 
            $package_id = $wpdb->get_var($query);
-       } else {
-           $package_id = $product_id;
        }
 
 
