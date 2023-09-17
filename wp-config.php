@@ -25,7 +25,7 @@ $db_user = 'root';
 $db_password = 'root';
 $db_host = 'localhost';
 
-if($dev_host === 'dev.concreteiron') {
+if($dev_host === 'localhost') {
     $db_name = 'concreteiron';
     $db_user = 'root';
     $db_password = 'root';

@@ -14,7 +14,7 @@
 namespace ConcreteIron\Import;
 
 /**
- * Main ConcreteIron Class
+ * Listings Import Class
  *
  * The init class that runs the Concrete Iron plugin.
  * Intended To make sure that the plugin's minimum requirements are met.
@@ -31,11 +31,12 @@ class ListingsImport {
     const DEFAULT_BUSINESS_PROFILE_PREFIX = 'Seller: %s';
 
     private $post_stati;
-    private $taxes;
-    private $cats;
-    private $terms_to_tax_slug;
     private $subcats;
     private $makes;
+    private $updated_listed;
+    private $update_expired;
+    private $failed_uploads = [];
+    private $description_add;
     private $invalidTopCategories = [
         'Parts and surplus low cost ads',
         'Help Wanted Ads'
@@ -69,14 +70,14 @@ class ListingsImport {
      *
      * @param string $mysecondcategory The second category.
      * @param string $mythirdcategory The third category.
-     * @param string $myadtitle The ad title.
+     * @param string $title The ad title.
      * @param string $import_id The import ID.
      * @return string The generated original URL.
      */
-    public function generateOriginalUrl($mysecondcategory, $mythirdcategory, $myadtitle, $import_id) {
+    public function generateOriginalUrl($mysecondcategory, $mythirdcategory, $title, $import_id) {
         $cat_2 = $this->transformString($mysecondcategory);
         $cat_3 = $this->transformString($mythirdcategory);
-        $suff = $this->transformString($myadtitle);
+        $suff = $this->transformString($title);
 
         return self::ORIGINAL_SOURCE_BASE_URL . $cat_2 . $cat_3 . $suff . '-' . $import_id . '.html';
     }
@@ -92,20 +93,6 @@ class ListingsImport {
      * Boot the actions/filters/functions
      */
     public function boot() {
-        //$this->register_acf_fields();
-//        $taxes = new Tax_Map();
-//        $this->cats = $taxes->cat_map;
-
-
-        $terms = get_taxonomies([
-            'object_type' => [ 'product' ],
-        ],
-            'objects');
-
-//        var_dump(get_option('lisfinity_custom_fields'));
-//        var_dump(get_terms('placing-equipment-type'));
-//        die();
-
         add_filter('https_ssl_verify', '__return_false');
         add_action( 'rest_api_init', [ $this, 'register_routes' ] );
     }
@@ -123,13 +110,24 @@ class ListingsImport {
             'methods' => \WP_REST_Server::CREATABLE,
             'callback' => [$this, 'ci_listings_import'],
             'args' => [],
+            'permission_callback' => '__return_true',
         ));
     }
 
-    public function validateUser($username) {
+    /**
+     * Get the user in a multitude of ways
+     *
+     * @param $username
+     * @param $alternate_contact_name
+     * @return void|\WP_User
+     */
+    public function validateUser($username, $alternate_contact_name) {
         $user = get_user_by_email($username);
         if (!$user) {
-            return false;
+            $user = get_user_by('login', $username);
+            if(!$user) {
+                return;
+            }
         }
         return $user;
     }
@@ -140,7 +138,11 @@ class ListingsImport {
      * @param int|null $conditionCode
      * @return string|null
      */
-    public function determineCondition(int $conditionCode = null) {
+    public function determineCondition($conditionCode = null) {
+        if(gettype($conditionCode) === 'string') {
+            return strtolower($conditionCode);
+        }
+
         switch ($conditionCode) {
             case 1:
                 return 'new';
@@ -184,24 +186,180 @@ class ListingsImport {
     }
 
     /**
+     * Create the listing activated and expired dates
+     *
+     * @param string $given_date_str
+     * @param int $post_id
+     * @return mixed
+     */
+    public function getStatusFromDate(string $given_date_str) {// Your given date as a string
+        if(!$given_date_str) {
+            return null;
+        }
+
+        $given_date_timestamp = strtotime($given_date_str);
+        $current_time = current_time('timestamp');
+        $ninety_days_ago = strtotime('-90 days', $current_time);
+
+        $status = 'expired';
+
+        if ($given_date_timestamp >= $ninety_days_ago && $given_date_timestamp <= $current_time) {
+            $status = 'active';
+        }
+
+       $status = $this->checkIfSold($this->description_add, $status);
+
+        return $status;
+    }
+
+    /**
+     * Look for the word "SOLD" in all caps in the description
+     *
+     * @param string $description
+     * @param string $status
+     * @return string
+     */
+    public function checkIfSold(string $description, string $status = '') : string {
+        // Search for the word "SOLD" in the listing without converting case
+        if (strpos($description, 'SOLD') !== false) {
+            $status = "sold";
+        }
+
+        return $status;
+    }
+
+    /**
+     * Convert something like $49,876 to something like 49876.00
+     *
+     * @param string $currencyString
+     * @return float|string
+     */
+    public function convertCurrencyToNumber(string $currencyString) {
+        // Remove the dollar sign and commas
+        $numberString = str_replace(['$', ','], '', $currencyString);
+
+        // Convert the cleaned string to a float
+        $number = (float) $numberString;
+
+        // Check if the number is an integer, and format accordingly
+        if (floor($number) == $number) {
+            return number_format($number, 2, '.', '');
+        } else {
+            return $number;
+        }
+    }
+
+    /**
+     * Check if the image already exists
+     *
+     * @param $url
+     * @return false|string
+     */
+    public function image_already_exists($url) {
+        global $wpdb;
+        $query = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_wp_attached_file' AND meta_value = %s LIMIT 1";
+        $id = $wpdb->get_var($wpdb->prepare($query, $url));
+        return ($id) ? $id : false;
+    }
+
+    /**
+     * Download from url and upload to media, and add to product image gallery
+     *
+     * @param $csv_cell
+     * @param $post_id
+     * @return array|string[]
+     */
+    public function add_images_to_product_gallery($gallery_images, $post_id, $alt_text) {
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        // Convert gallery_images to array of URLs
+        $urls = array_map('trim', str_getcsv($gallery_images));
+
+        // Initialize an empty array to hold the new or existing attachment IDs
+        $attachment_ids = [];
+
+        // Check if the product already has a main image
+        $has_main_image = get_post_meta($post_id, '_thumbnail_id', true);
+
+        // Loop through each URL
+        foreach ($urls as $url) {
+            // Check if the image already exists
+            $existing_id = $this->image_already_exists($url);
+
+            if ($existing_id) {
+                $attach_id = $existing_id;
+            } else {
+                // Download file to temp dir
+                $response = wp_remote_get($url, ['timeout' => 300]);
+
+                if (is_wp_error($response) || wp_remote_retrieve_response_code($response) != 200) {
+                    $this->failed_uploads[] = $url;
+                    continue;
+                }
+
+                // Write to a temporary file
+                $tmpfile = wp_tempnam($url);
+                file_put_contents($tmpfile, wp_remote_retrieve_body($response));
+
+                $file_array = array(
+                    'name'     => basename($url),
+                    'tmp_name' => $tmpfile,
+                );
+
+                // Insert downloaded file as an attachment
+                $attach_id = media_handle_sideload($file_array, $post_id);
+
+                // Check for handle sideload errors
+                if (is_wp_error($attach_id)) {
+                    $this->failed_uploads[] = $url;
+                    continue;
+                }
+            }
+
+            // Add alt text
+            update_post_meta($attach_id, '_wp_attachment_image_alt', $alt_text);
+
+            // If there is no main product image, set the first successful upload as the main image
+            if (!$has_main_image) {
+                update_post_meta($post_id, '_thumbnail_id', $attach_id);
+                $has_main_image = true;  // Prevent setting additional images as main
+            }
+
+            $attachment_ids[] = $attach_id;
+        }
+
+        // Update product gallery
+        if (!empty($attachment_ids)) {
+            $existing_gallery = get_post_meta($post_id, '_product_image_gallery', true);
+            $merged_gallery = implode(',', array_merge(explode(',', $existing_gallery), $attachment_ids));
+            update_post_meta($post_id, '_product_image_gallery', $merged_gallery);
+        }
+
+        // Return information about failed uploads
+        if (!empty($this->failed_uploads)) {
+            return ['status' => 'error', 'message' => 'Failed to upload some images', 'failed_uploads' => $this->failed_uploads];
+        }
+
+        return ['status' => 'success', 'message' => 'All images uploaded successfully', 'alt_text' => $alt_text, 'has_main_image' => $has_main_image];
+    }
+
+    /**
      * Count reasons why the row was skipped.
      *
      * @param $row_number
      * @param $reason
      * @return array|false
      */
-    public function add_to_row_skipped($row_number = null, $codes = null) {
+    public function add_to_row_skipped($row_number = null, $codes = null, $var = null) {
         if ( ! $row_number ||  ! $codes) {
             return false;
         }
 
-        error_log(print_r("codes", true));
-        error_log(print_r($codes, true));
-        error_log(print_r($this->row_skipped_codes[$codes], true));
-
         array_push($this->skipped_rows, [
             'row_number' => $row_number,
             'error_message' => $this->row_skipped_codes[$codes] ?? 'Error generating reason code.',
+            'param' => $var
         ]);
     }
 
@@ -215,6 +373,7 @@ class ListingsImport {
     {
         $params = $request->get_file_params();
         $fileName = $params["file"]['tmp_name'];
+        $images = $request->get_params()['images'];
         $limit= $params["limit"] ?? 1000;
         $res = ["Nothing yet."];
         $headers = [];
@@ -246,126 +405,117 @@ class ListingsImport {
                     $data = [];
                     // Minimum
                     $user_id = null;
-                    $admin_user_name = 'admin';
-                    $import_id = $column[$headers['ID']] ?? null;
-                    $mycustomfields = $column[$headers['mycustomfields']] ?? null; // Read row bhttps://concreteiron.com/concrete-equipment/concrete-finishing-equipment/laser-screeds/1995-somero-s-240-30.htmly the column name.
-                    $mycustomfields = trim($mycustomfields, " \t\r\n.");
-                    $myadtitle = $column[$headers['myadtitle']] ?? null; // Read row by the column name.
-                    $myadtitle = trim($myadtitle, " \t\r\n.");
-                    $remove = 'SOLD - ';
-                    $myadtitle = str_replace($remove, "",$myadtitle);
-                    $description_add = $column[$headers['description_add']] ?? null;
-                    $mythirdcategory = $column[$headers['mythirdcategory']] ?? null;
-                    $mythirdcategory = strtok($mythirdcategory, ',');
-                    $mythirdcategory = strtok($mythirdcategory, '/');
-                    $mythirdcategory = trim($mythirdcategory, " \t\r\n.");
-                    $mytopcategory = $column[$headers['mytopcategory']] ?? null;
-                    $mytopcategory = strtok($mythirdcategory, ',');
-                    $mytopcategory = strtok($mythirdcategory, '/');
-                    $mytopcategory = trim($mythirdcategory, " \t\r\n.");
-                    $mysecondcategory = $column[$headers['mysecondcategory']] ?? null;
-                    $mysecondcategory = trim($mysecondcategory, " \t\r\n.");
-                    $mycreatedate = $column[$headers['mycreatedate']] ?? null;
-                    $mycreatedate = trim($mycreatedate, "\r\n.");
-                    $mycreatedate = strtotime($mycreatedate);
-                    $myexpirationdate = $column[$headers['myexpirationdate']] ?? null;
-                    $myexpirationdate = trim($myexpirationdate, "\r\n.");
-                    $myexpirationdate = strtotime($myexpirationdate);
-                    $myadimageurls = $column[$headers['myadimageurls']] ?? null;
-                    $myusername = $column[$headers['myusername']] ?? null;
-                    $myusername = preg_replace('/\s+/', '', $myusername);
-                    $status = $column[$headers['Status']] ?? null;
-                    $status = trim($status, " \t\r\n.");
-                    $sub_status = $column[$headers['Sub_status'] ?? null] ?? null;
-                    if($sub_status) {
-                        $sub_status = trim($sub_status, " \t\r\n.");
-                        $status = ($sub_status === 'sold') ? 'sold' : $status;
-                    }
-                    $stocknumber = $column[$headers['stocknumber']] ?? null;
-                    $price = $column[$headers['price']] ?? null;
-                    $year = $column[$headers['built']] ?? null;
-                    $year = trim($year, "\r\n.");
-                    $condition = $column[$headers['condition']] ?? null;
-                    $condition = trim($condition, "\r\n.");
-                    $model = $column[$headers['equipment_model']] ?? null;
-                    $model = trim($model, "\r\n.");
-                    $make = $column[$headers['model_make']] ?? null;
-                    $make = trim($make, "\r\n.");
-                    $equipment_hours = $column[$headers['equipment_hours']] ?? null;
-                    $equipment_hours = trim($equipment_hours, "\r\n.");
 
-                    $package_id = \Redux::getOption('lisfinity-options', '_auth-default-packages');
+                    //Title
+                    $year = $column[$headers['Year']] ?? null;
+                    $make = $column[$headers['Make / Brand']] ?? null;
+                    $model = $column[$headers['Model']] ?? null;
+                    $condition = $column[$headers['Condition']] ?? null;
+
+                    //Fields
+                    $equipment_hours = $column[$headers['Equipment Hours']] ?? null;
+                    $price = $column[$headers['Price']] ?? null;
+                    $this->description_add = $description_add = $column[$headers['Description']] ?? null;
+                    $stocknumber = $column[$headers['Stock Number']] ?? null;
+
+                    $import_id = $row;
+                    $username = $column[$headers['Username']] ?? null;
+                    $date = $column[$headers['Date']] ?? null;
+                    $status = null; //not in this spreadsheet
+                    $title = null;
+                    $category           = $column[$headers['Category']] ?? null;
+                    $subcategory_lvl_1  = $column[$headers['Subcategory level 1']] ?? null;
+                    $subcategory_lvl_2  = $column[$headers['Subcategory level 2']] ?? null;
+                    $subcategory_lvl_3  = $column[$headers['Subcategory level 3']] ?? null;
+                    $gallery_images  = $column[$headers['Picture URL']] ?? null;
 
 
+                    $status = $this->getStatusFromDate($date);
 
-                    $rows_skipped = [];
-
-                    $user = $this->validateUser($myusername);
-                    if (!$user) {
-                        $this->add_to_row_skipped($row, 'user_missing');
+                    if( ($status != 'active') ) {
                         continue;
                     }
 
-                    if(in_array($mytopcategory, $this->invalidTopCategories)) {
+                    $user = $this->validateUser($username, null);
+
+                    if (!$user) {
+                        $user = get_user_by_email('me+assign@philiparudy.com');
+                        if (!$user) {
+                            $this->add_to_row_skipped($row, 'user_missing', [$username]);
+                            continue;
+                        }
+                    }
+
+                    if(in_array($category, $this->invalidTopCategories)) {
                         $this->add_to_row_skipped($row, 'invalid_top_level_category');
                         continue;
                     }
 
-                    if( empty($mythirdcategory) ) {
-                        $this->add_to_row_skipped($row, 'missing_category');
-                        continue;
-                    }
+//                    if( empty($subcategory_lvl_3) ) {
+//                        $this->add_to_row_skipped($row, 'missing_category');
+//                        continue;
+//                    }
 
+                    $title_empty = false;
                     // Minimum required to create an ad title is year make and model
-                    if (empty($myadtitle)) {
-                        if (!empty($year) && !empty($make) && !empty($model)) {
-                            $myadtitle = "$year $make $model";
+                    if (empty($title)) {
+                        $title_empty = 'true';
 
-                            if (!empty($condition)) {
-                                $myadtitle .= " $condition";
-                            }
-                        } else {
+                        // Try with all four
+                        if (!empty($year) && !empty($make) && !empty($model) && !empty($condition)) {
+                            $title = "$year $make $model $condition";
+                        }
+                        // Try with year, make, model
+                        elseif (!empty($year) && !empty($make) && !empty($model)) {
+                            $title = "$year $make $model";
+                        }
+                        // Try with year, make
+                        elseif (!empty($year) && !empty($make)) {
+                            $title = "$year $make";
+                        }
+                        // Try with year, model
+                        elseif (!empty($year) && !empty($model)) {
+                            $title = "$year $model";
+                        }
+                        // Try with make, model
+                        elseif (!empty($make) && !empty($model)) {
+                            $title = "$make $model";
+                        }
+                        // Try with just make
+                        elseif (!empty($make)) {
+                            $title = "$make";
+                        }
+                        // Try with just model
+                        elseif (!empty($model)) {
+                            $title = "$model";
+                        }
+                        // If all else fails, log an issue
+                        else {
                             $this->add_to_row_skipped($row, 'missing_ad_title');
                             continue;
                         }
                     }
 
-                    if( empty($stocknumber) ) {
-                        $this->add_to_row_skipped($row, 'missing_stock');
-                        continue;
+                    if (strpos($subcategory_lvl_3, 'Volumetric Mixers') || $subcategory_lvl_3 === 'Cementech Mobile Volumetric Mixers' || $subcategory_lvl_3 === 'Concrete Mobile Mixers' || $subcategory_lvl_3 === 'Concrete Volumetric Mixers') {
+                        $subcategory_lvl_3 = 'Volumetric Mixers';
                     }
 
-                    if( empty($status) ) {
-                        $this->add_to_row_skipped($row, 'missing_status');
-                        continue;
+                    if (strpos($subcategory_lvl_3,'Diversion Valves') || strpos($subcategory_lvl_3,'Line Pumps') || strpos($subcategory_lvl_3,'City Pumps') || strpos($subcategory_lvl_3,'Line Pump') || $subcategory_lvl_3 === 'Concrete Trailer Line Pumps' || $subcategory_lvl_3 === 'Concrete City Pumps') {
+                        $subcategory_lvl_3 = 'Line Pumps';
                     }
 
-                    $condition = $this->determineCondition($condition);
-
-                    //Special Categories
-                    if ($mythirdcategory === 'Concrete Mobile Mixers' || $mythirdcategory === 'Concrete Volumetric Mixers') {
-                        $mythirdcategory = 'Volumetric Mixers';
-                    }
-
-                    if ($mythirdcategory === 'Concrete Diversion Valves' || $mythirdcategory === 'Concrete Trailer Line Pumps' || $mythirdcategory === 'Concrete City Pumps') {
-                        $mythirdcategory = 'Line Pumps';
-                    }
-
-                    $orig_url = $this->generateOriginalUrl($mysecondcategory, $mythirdcategory, $myadtitle, $import_id);
+                    $old_url = $this->generateOriginalUrl($subcategory_lvl_2, $subcategory_lvl_3, $title, $import_id);
 
                     $auth_business_name = \Redux::getOption('lisfinity-options', '_auth-business-name') ?? self::DEFAULT_BUSINESS_PROFILE_PREFIX;
                     $user_id = $user->ID;
 
                     $business_id = $this->getBusinessID($auth_business_name, $user);
-
                     if ( empty($business_id) ) {
                         $this->add_to_row_skipped($row, 'no_business_id');
                         continue;
                     }
 
                     $user_phone = $this->getUserPhone($user_id);
-
-                    $businesses = [];
                     if ($user_phone) {
                         $phone_update = update_post_meta($business_id, '_profile-phones|profile-phone|0|0|value', $user_phone);
 //                        $businesses[$business_id] = [
@@ -377,56 +527,106 @@ class ListingsImport {
 //                        ];
                     }
 
-                    $post_id = $this->update_post($import_id, $myadtitle, $description_add, $user_id);
-                    $business_update = update_post_meta($post_id, '_product-business', $business_id);
-                    $update_business_email = update_post_meta($business_id, '_profile-email', $user->user_email);
+                    $post_id = $this->update_post($import_id, $title, $description_add, $user_id);
 
                     if( empty( $post_id ) ) {
                         $this->add_to_row_skipped($row, 'no_post_update');
                         continue;
                     }
 
-                    $status_map = [
-                        'expired' => 'expired',
-                        'approval' => 'active',
-                        'active' => 'active',
-                        'sold' => 'sold',
-                        'trash' => 'trash'
-                    ];
-
-                    $activate_date = current_time('timestamp');
-                    $ex_duration = 90;
-                    if($status_map[$status] === 'expired') {
-                        $activate_date = date('Y-m-d H:i:s', strtotime('-2 days', (int)current_time('timestamp')));
-                        $ex_duration = -1;
+                    $updated_gallery = null;
+                    if($images) {
+                        $updated_gallery = $this->add_images_to_product_gallery($gallery_images, $post_id, $title);
                     }
 
-                    if($status_map[$status] === 'sold' && array_key_exists('sold', $this->post_stati)) {
-                        wp_update_post(array(
-                            'ID'    =>  $post_id,
-                            'post_status'   =>  'sold'
-                        ));
+//                                        return rest_ensure_response(new \WP_REST_Response(
+//                                            ['Uupdated' => $updated_gallery]
+//                        [
+//                            "username" => $username,
+//                            "user_id" => $user_id,
+//                            "title" => $title,
+//                            "stocknumber" => $stocknumber,
+//                            "subcategory_lvl_3" => $subcategory_lvl_3,
+//                            "auth_business_name" => $auth_business_name,
+//                            "business_id" => $business_id,
+//                            "user_phone" => $user_phone,
+//                            "post_id" => $post_id,
+//                            //"post" => get_post($post_id),
+//                            "status" => $status,
+//                            "active_date" => $active_date,
+//                            "expiration_date" => $expired_date,
+//                            "package_id" => $package_id,
+//                            "subcategory_lvl_3_check" => $subcategory_lvl_3_check->slug,
+////                            "all_the_makes" => $this->makes,
+//                            "make" => $make,
+//                            "model" => $model,
+//                            "condition" => $condition,
+//                            "equipment_hours" => $equipment_hours,
+//                            "year" => $year,
+//                            "price" => $price,
+//                            "old_url" => $old_url,
+//                            "new_url" => $new_url,
+//                            "updates" => [
+//                                "updated_status" => $updated_status,
+//                                "updated_business" => $business_update,
+//                                "updated_business_email" => $update_business_email,
+//                                "updated_active_date" => $this->updated_listed,
+//                                "updated_expiration_date" => $this->updated_expired,
+//                                "updated_payment_package" => $updated_payment_package,
+//                                "updated_subcategory_lvl_3" => $subcategory_lvl_3_update,
+//                                "updated_type_term" => $type_term_update->slug,
+//                                "updated_make" => $make_update,
+//                                "updated_model" => $model_update,
+//                                "updated_condition" => $condition_update,
+//                                "updated_equipment_hours" => $equipment_update,
+//                                "updated_years" => $year_update,
+//                                "updated_price" => $price_update,
+//                                "updated_regular_price" => $reg_price_update,
+//                            ]
+//                        ]
+//                    ));
+                    if( empty($status) ) {
+                        $this->add_to_row_skipped($row, 'missing_status');
+                        continue;
+                    } else {
+                        $updated_status = update_post_meta($post_id, '_product-status', $status);
                     }
 
-                    $expiration_date = date('Y-m-d H:i:s', strtotime("+ {$ex_duration} days", current_time('timestamp')));
+                    $business_update = update_post_meta($post_id, '_product-business', $business_id);
+                    $update_business_email = update_post_meta($business_id, '_profile-email', $user->user_email);
 
+                    $use_current_date_for_expiration = false; // Set to true if needed
+
+                    $current_time = current_time('timestamp');
+                    $active_date = strtotime($date); // Active date is the given date
+
+                    if ($use_current_date_for_expiration) {
+                        $expired_date = strtotime('+90 days', $current_time); // Expired date is 90 days from the current time
+                    } else {
+                        $expired_date = strtotime('+90 days', $active_date); // Expired date is 90 days from the given date
+                    }
+
+                    $this->updated_listed = update_post_meta($post_id, '_product-listed', $active_date);
+                    $this->updated_expired = update_post_meta($post_id, '_product-expiration', $expired_date);
+
+                    $updated_payment_package = null;
+                    $package_id = \Redux::getOption('lisfinity-options', '_auth-default-packages');
                     if (!empty($package_id)) {
                         //Intro payment package
-                        $payment_package_udpate = carbon_set_post_meta($post_id, 'payment-package', $package_id);
+                        $updated_payment_package = update_post_meta($post_id, 'payment-package', $package_id[0]);
                     }
 
-                    $post_status_update = update_post_meta($post_id, '_product-status', $status_map[$status]);
-                    $create_date_update = update_post_meta($post_id, '_product-listed', current_time('timestamp'));
-                    $expire_date_update = update_post_meta($post_id, '_product-expiration', $expiration_date);
-
                     //TAXONOMY UPDATES
+                    $category_update = update_post_meta($post_id, '_product-category', 'concrete-equipment');
 
-                    $cat_update = update_post_meta($post_id, '_product-category', 'concrete-equipment');
+                    if(!empty($subcategory_lvl_3)) {
+                        $subcategory_lvl_3_update = $this->update_subcats($post_id, $subcategory_lvl_3);
+                    } else {
+                        $missing_subcategory_lvl_3 = update_post_meta($post_id, 'missing_third_cat', true);
+                    }
 
-                    $subcat_update = $this->update_subcats($post_id, $mythirdcategory);
-
-                    if($subcat_update) {
-                        $term = get_term_by('term_taxonomy_id', $subcat_update[0], 'concrete-equipment-subcategory');
+                    if($subcategory_lvl_3_update) {
+                        $term = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
 
                         $parent = get_term_by('term_id', $term->parent, 'concrete-equipment-type');
 
@@ -447,7 +647,7 @@ class ListingsImport {
                                 $type_term_update = wp_set_object_terms($post_id, $parent->slug, 'concrete-equipment-type');
                             }
 
-                            $subcat_update = get_term_by('term_taxonomy_id', $subcat_update, 'concrete-equipment-subcategory');
+                            $subcategory_lvl_3_check = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
 
                             $type_term_update = get_term_by('term_taxonomy_id', $type_term_update, 'concrete-equipment-type');
                         }
@@ -460,6 +660,8 @@ class ListingsImport {
                     if( $model ) {
                         $model_update = $this->model_update($post_id, $model);
                     }
+
+                    $condition = $this->determineCondition($condition);
 
                     if( $condition ) {
                         $condition_update = $this->update_condition($post_id, $condition);
@@ -474,62 +676,111 @@ class ListingsImport {
                     }
 
                     if ( $price ) {
-                        $price = (int) trim(strtok($price, '|'));
+                        $price = $this->convertCurrencyToNumber($price);
                         $price_update = update_post_meta($post_id, '_price', $price);
                         $reg_price_update = update_post_meta($post_id, '_regular_price', $price);
                     }
 
                     $new_url = get_permalink($post_id);
 
+                    //Set woocommerce product type to listing
                     $this->update_product_type($post_id);
 
-                    $post = get_post($post_id);
+//                    return rest_ensure_response(new \WP_REST_Response(
+//                        [
+//                            "username" => $username,
+//                            "user_id" => $user_id,
+//                            "title" => $title,
+//                            "stocknumber" => $stocknumber,
+//                            "subcategory_lvl_3" => $subcategory_lvl_3,
+//                            "auth_business_name" => $auth_business_name,
+//                            "business_id" => $business_id,
+//                            "user_phone" => $user_phone,
+//                            "post_id" => $post_id,
+//                            //"post" => get_post($post_id),
+//                            "status" => $status,
+//                            "active_date" => $active_date,
+//                            "expiration_date" => $expired_date,
+//                            "package_id" => $package_id,
+//                            "subcategory_lvl_3_check" => $subcategory_lvl_3_check->slug,
+////                            "all_the_makes" => $this->makes,
+//                            "make" => $make,
+//                            "model" => $model,
+//                            "condition" => $condition,
+//                            "equipment_hours" => $equipment_hours,
+//                            "year" => $year,
+//                            "price" => $price,
+//                            "old_url" => $old_url,
+//                            "new_url" => $new_url,
+//                            "updates" => [
+//                                "updated_status" => $updated_status,
+//                                "updated_business" => $business_update,
+//                                "updated_business_email" => $update_business_email,
+//                                "updated_active_date" => $this->updated_listed,
+//                                "updated_expiration_date" => $this->updated_expired,
+//                                "updated_payment_package" => $updated_payment_package,
+//                                "updated_subcategory_lvl_3" => $subcategory_lvl_3_update,
+//                                "updated_type_term" => $type_term_update->slug,
+//                                "updated_make" => $make_update,
+//                                "updated_model" => $model_update,
+//                                "updated_condition" => $condition_update,
+//                                "updated_equipment_hours" => $equipment_update,
+//                                "updated_years" => $year_update,
+//                                "updated_price" => $price_update,
+//                                "updated_regular_price" => $reg_price_update,
+//                            ]
+//                        ]
+//                    ));
 
                     $data[$post_id] = [
+                        "username" => $username,
+                        "user_id" => $user_id,
+                        "title" => $title,
+                        "stocknumber" => $stocknumber,
+                        "subcategory_lvl_3" => $subcategory_lvl_3,
+                        "auth_business_name" => $auth_business_name,
+                        "business_id" => $business_id,
+                        "user_phone" => $user_phone,
                         "post_id" => $post_id,
-                        'product-status' => $status_map[$status],
-                        'product-status-update' => $status_map[$status],
-                        "post_title" => $post->post_title,
-                        'orig_url' => $orig_url,
-                        'new_url' => $new_url,
-                        "cat_update" => get_post_meta($post_id, '_product-category', true),
-                        "subcat_update" => $subcat_update,
-                        "type_term_update" => $type_term_update,
-                        "get_sub_cat_terms" => get_the_terms($post_id, 'concrete-equipment-subcategory'),
-                        "get_type_terms" => get_the_terms($post_id, 'concrete-equipment-type'),
-                        "make_update" => $make_update,
-//                        'dates' => [
-//                            strval($myexpirationdate),
-//                            new DateTime('@' . $myexpirationdate),
-//                        ],
-//                        "product_type" => $new_product->get_type(),
-//                        "post_status_update" => [
-//                            "updated" => $post_status_update,
-//                            "value" => get_post_meta($post_id, '_product-status', true)
-//                        ],
-//                        "_product-listing"      => $create_date_update,
-//                        "_product-expiration"   => $expire_date_update,
-//                        "business_update" => [
-//                            'ID' => $business_id,
-//                            'title' => $business_title,
-//                        ],
-//                        "cat_update" => [
-//                            "updated" => $cat_update,
-//                            "value" => get_post_meta($post_id, '_product-category', true)
-//                        ],
-//                        "price_update" => [
-//                            "updated" => $price_update,
-//                            "value" => get_post_meta($post_id, '_price', true)
-//                        ],
-//                        "reg_price_update" => [
-//                            "updated" => $reg_price_update,
-//                            "value" => get_post_meta($post_id, '_regular_price', true)
-//                        ],
+                        //"post" => get_post($post_id),
+                        "status" => $status,
+                        "active_date" => $active_date,
+                        "expiration_date" => $expired_date,
+                        "package_id" => $package_id,
+                        "subcategory_lvl_3_check" => $subcategory_lvl_3_check->slug,
+//                            "all_the_makes" => $this->makes,
+                        "make" => $make,
+                        "model" => $model,
+                        "condition" => $condition,
+                        "equipment_hours" => $equipment_hours,
+                        "year" => $year,
+                        "price" => $price,
+                        "old_url" => $old_url,
+                        "new_url" => $new_url,
+                        "description" => $description_add,
+                        "updates" => [
+                            'updated_gallery' => $updated_gallery,
+                            "updated_status" => $updated_status,
+                            "updated_business" => $business_update,
+                            "updated_business_email" => $update_business_email,
+                            "updated_active_date" => $this->updated_listed,
+                            "updated_expiration_date" => $this->updated_expired,
+                            "updated_payment_package" => $updated_payment_package,
+                            "updated_subcategory_lvl_3" => $subcategory_lvl_3_update,
+                            "updated_type_term" => $type_term_update->slug,
+                            "updated_make" => $make_update,
+                            "updated_model" => $model_update,
+                            "updated_condition" => $condition_update,
+                            "updated_equipment_hours" => $equipment_update,
+                            "updated_years" => $year_update,
+                            "updated_price" => $price_update,
+                            "updated_regular_price" => $reg_price_update,
+                        ]
                     ];
 
                     array_push($imports, [$post_id => $data[$post_id]]);
 
-//                    if($count == 44) {
+//                    if($count == 4) {
 //                        break;
 //                    }
 
@@ -538,14 +789,23 @@ class ListingsImport {
 
 
 
-                $res = new \WP_REST_Response([$this->skipped_rows,$imports]);
+                $res = new \WP_REST_Response(["top", $this->skipped_rows, $imports]);
             }
 
-            return rest_ensure_response([$imports, $this->skipped_rows]);
+            return rest_ensure_response(["bottom", $imports, $this->skipped_rows]);
         }
     }
 
-    public function update_post($import_id, $myadtitle, $description_add, $user_id) {
+    /**
+     * Should check for an import id, and if the post doesn't exist, create it, otherwise update it.
+     *
+     * @param $import_id
+     * @param $title
+     * @param $description_add
+     * @param $user_id
+     * @return int|\WP_Error
+     */
+    public function update_post($import_id, $title, $description_add, $user_id) {
         $query = new \WP_Query([
             'posts_per_page'   => -1,
             'post_status'      => 'publish',
@@ -561,8 +821,8 @@ class ListingsImport {
 
         $args = [
             'post_type' => 'product',
-            'post_title' => wp_strip_all_tags($myadtitle),
-            'post_name' => sanitize_title(wp_strip_all_tags($myadtitle)),
+            'post_title' => wp_strip_all_tags($title),
+            'post_name' => sanitize_title(wp_strip_all_tags($title)),
             'post_content' => $description_add,
             'post_author' => $user_id,
             "post_status" => 'publish',
@@ -583,6 +843,13 @@ class ListingsImport {
     }
 
 
+    /**
+     * Update the subcategories
+     *
+     * @param $post_id
+     * @param $subcat
+     * @return array|bool|int|int[]|string|string[]|\WP_Error|null
+     */
     public function update_subcats($post_id, $subcat) {
         $this->subcats = get_terms('concrete-equipment-subcategory', [
             'hide_empty' => false
@@ -604,29 +871,57 @@ class ListingsImport {
         return $term_update;
     }
 
+    /**
+     * Update the makes
+     *
+     * @param $post_id
+     * @param $make
+     * @return array|bool|int|int[]|string|string[]|\WP_Error|null
+     */
     public function update_makes($post_id, $make) {
-        $filter_makes = [];
-
         if(! $this->makes ) {
             return null;
         }
 
-        foreach($this->makes as $model_make) {
-            if(str_contains(strtolower($make), strtolower($model_make->name))) {
+        $filter_makes = [];
+        $make_update = null;
+        $make_found = false;
+
+        foreach ($this->makes as $model_make) {
+            if (str_contains(strtolower($make), strtolower($model_make->name))) {
                 $make = $model_make->name;
+                $make_found = true;
             }
+
             $filter_makes[$model_make->name] = $model_make->slug;
         }
 
-        $make_update = null;
+        // If the make is not found, insert it
+        if (!$make_found) {
+            $term = wp_insert_term($make, 'concrete-equipment-make');
 
-        if($make && array_key_exists($make, $filter_makes)) {
-            $make_update = wp_set_object_terms($post_id, $filter_makes[$make], 'concrete-equipment-make',  false);
+            // Assuming wp_insert_term was successful, fetch the slug of the newly created term
+            if (!is_wp_error($term) && isset($term['term_id'])) {
+                $new_term = get_term($term['term_id'], 'concrete-equipment-make');
+                $filter_makes[$make] = $new_term->slug;
+            }
+        }
+
+        // If the term exists in the filter or has been inserted, update the post meta
+        if ($make && array_key_exists($make, $filter_makes)) {
+            $make_update = wp_set_object_terms($post_id, $filter_makes[$make], 'concrete-equipment-make', false);
         }
 
         return $make_update;
     }
 
+    /**
+     * Update the model
+     *
+     * @param $post_id
+     * @param $model
+     * @return array|bool|int|int[]|string|string[]|\WP_Error|null
+     */
     public function model_update($post_id, $model) {
         // UPDATE MODEL
         if($model) {
@@ -644,21 +939,42 @@ class ListingsImport {
         return $model_update;
     }
 
+    /**
+     * Update the equipment hours
+     *
+     * @param $post_id
+     * @param $equipment_hours
+     * @return array|bool|int|int[]|string|string[]|\WP_Error|null
+     */
     public function equipment_update($post_id, $equipment_hours) {
+        if(!$equipment_hours) {
+            return null;
+        }
+
         //UPDATE Equipment Hours
         if($equipment_hours) {
             $term = get_term_by('name', $equipment_hours, 'concrete-equipment-hours');
 
             if( ! $term ) {
                 $insert_term = wp_insert_term($equipment_hours, 'concrete-equipment-hours');
+                return $insert_term;
             }
 
             $term = get_term_by('name', $equipment_hours, 'concrete-equipment-hours');
 
             $equipment_hours_update = wp_set_object_terms($post_id, $term->slug, 'concrete-equipment-hours',  false);
         }
+
+        return $equipment_hours_update;
     }
 
+    /**
+     * Update the year
+     *
+     * @param $post_id
+     * @param $year
+     * @return array|bool|int|int[]|string|string[]|\WP_Error|null
+     */
     public function year_update($post_id, $year) {
         $year_update = null;
         //UPDATE Year
@@ -677,6 +993,13 @@ class ListingsImport {
         return $year_update;
     }
 
+    /**
+     * Update the condition
+     *
+     * @param $post_id
+     * @param $condition
+     * @return array|bool|int|int[]|string|string[]|\WP_Error|null
+     */
     public function update_condition($post_id, $condition) {
         if (! $condition) {
             return null;
@@ -685,6 +1008,12 @@ class ListingsImport {
         return wp_set_object_terms($post_id, $condition, 'concrete-equipment-condition',  false);
     }
 
+    /**
+     * Update the WooCommerce product type
+     *
+     * @param $post_id
+     * @return void
+     */
     public function update_product_type($post_id) {
         $product = wc_get_product($post_id);
         $product_id = $product->get_id();
@@ -693,20 +1022,14 @@ class ListingsImport {
         $new_product->save();
     }
 
-
-
-    public function category_id($category_id) {
-
-        // turn a number into a category
-        // Map to a category
-        // The Second category is the main category
-        // The Third Category
-        $cats = [
-            'Boom Pumps' => ''
-        ];
-
-    }
-
+    /**
+     * Helper function to get string inbetween
+     *
+     * @param $string
+     * @param $start
+     * @param $end
+     * @return string
+     */
     function get_string_between($string, $start, $end = null){
         // get postigion of Year_String:
         // check with the offset
@@ -719,25 +1042,5 @@ class ListingsImport {
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
         return substr($string, $ini, $len);
-    }
-
-    public function terms_to_tax_slug() {
-        $l_cfs = get_option('lisfinity_custom_fields');
-        $terms_to_tax_slug = [];
-        foreach($l_cfs as $cf => $taxonomies) {
-            foreach($taxonomies as $taxonomy) {
-                if(is_array($taxonomy) && array_key_exists('slug', $taxonomy)) {
-                    $terms = get_terms($taxonomy['slug'], ['hide_empty' => false]);
-                    foreach($terms as $term) {
-                        $terms_to_tax_slug[$term->name] = [
-                            'slug' => $term->slug,
-                            'taxonomy' => $term->taxonomy
-                        ];
-                    }
-                }
-            }
-        }
-
-        return $terms_to_tax_slug;
     }
 }
