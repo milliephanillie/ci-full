@@ -71,14 +71,6 @@ class RapidRenew {
            $package_id = $wpdb->get_var($query);
        }
 
-
-
-        if ( ! $payment_package_id ) {
-            return rest_ensure_response(new \WP_REST_Response([
-                "error" => "The product doesn't have an associated payment_package_id",
-            ]));
-        }
-
         $cart_args = [ 'package_id' => $package_id ];
         $cart_args['wc_product'] = $package_id;
         $cart_args['_listing_id'] = $product_id;

@@ -185,10 +185,11 @@ const ProductInfo = (props) => {
     };
 
     const formData = new FormData(e.target);
-    const product_id = formData.get("package");
+    const package_id = formData.get("package");
 
     const data = {
-      product_id: product_id,
+      product_id: product.id,
+      package_id: package_id,
       exact_package: true
     };
 
@@ -199,9 +200,6 @@ const ProductInfo = (props) => {
       url: url,
       data: JSON.stringify(data),  // Convert the data object to a JSON string
     }).then(response => {
-      // alert(JSON.stringify(response))
-      // alert(JSON.stringify(response.data))
-      // alert(response.data.permalink)
       if (response.data.permalink) {
         // Handle success case
         window.location.href = response.data.permalink;
