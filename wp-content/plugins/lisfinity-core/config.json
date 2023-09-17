@@ -30,6 +30,6 @@
     }
   },
   "development": {
-    "url": "https://dev.concreteiron"
+    "url": "http://localhost/"
   }
 }

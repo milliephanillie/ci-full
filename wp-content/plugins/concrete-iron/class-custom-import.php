@@ -54,11 +54,11 @@ class CI_Custom_Import {
     public function register_routes()
     {
         $namespace = 'ci/v1';
-        $route = 'ci_import';
+        $route = 'ci_users_import';
 
         register_rest_route($namespace, $route, array(
             'methods' => WP_REST_Server::CREATABLE,
-            'callback' => [$this, 'ci_import'],
+            'callback' => [$this, 'ci_users_import'],
             'args' => [],
             'permission_callback' => '__return_true'
         ));
@@ -70,18 +70,19 @@ class CI_Custom_Import {
      * @param WP_REST_Request $request
      * @return WP_REST_Response
      */
-    public function ci_import(WP_REST_Request $request): \WP_REST_Response
+    public function ci_users_import(WP_REST_Request $request): \WP_REST_Response
     {
         $params     = $request->get_file_params();
         $fileName   = $params["file"]['tmp_name'];
         $limit      = $params["limit"] ?? 1000;
         $res        = ["Nothing yet."];
         $headers    = [];
+        $imports = [];
 
         if ($params["file"]["size"] > 0) {
             $file = fopen($fileName, "r");
             $row = 0;
-            $imports = [];
+
             $count = 0;
 
             while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
@@ -92,6 +93,10 @@ class CI_Custom_Import {
                     $headers = array_flip($column); // Get the column names from the header.
                     continue;
                 } else {
+                    // Disable the email notification
+                    remove_action('after_password_reset', 'wp_password_change_notification');
+                    remove_action('wp_insert_user', 'wp_send_new_user_notifications');
+                    
                     // Minimum
                     $user_id            = null;
                     $admin_user_name    = 'admin';
@@ -109,6 +114,7 @@ class CI_Custom_Import {
                     $first_name         = $column[$headers['First_name']] ?? '';
                     $last_name          = $column[$headers['Last_name']] ?? '';
                     $about              = $column[$headers['about_me']] ?? '';
+                    $member_since       = $column[$headers['Date']] ?? '';
 
                     $company_name       = $column[$headers['company_name']] ?? null;
                     $address            = $column[$headers['address']] ?? null;
@@ -173,7 +179,6 @@ class CI_Custom_Import {
                     $wp_user_object = new WP_User($user_id);
                     $wp_user_object->set_role('editor');
 
-
                     if ($user_type === 'dealer') {
                         $update = update_user_meta($user_id, '_account-type', 'business', 'personal');
                     }
@@ -229,25 +234,29 @@ class CI_Custom_Import {
                        // do_action('woocommerce_created_customer', $user_id, null, null);
                     }
 
+                    if (!empty($member_since)) {
+                        update_user_meta($user_id, 'member_since', $member_since);
+                    }
+
                     $final_user_data = [
                         'user_data' => $userdata,
                         'username_from_csv' => $username,
                         'user_id' => $user_id,
                         'user_login' => get_userdata($user_id)->user_login,
+                        'user_existed_already' => $user_id_from_update ? 'True' : 'False',
                         'user_id_from_insert' => $user_id_from_insert
                     ];
-
-                    var_dump($final_user_data);
-                    die();
 
                     array_push($imports, (array) $final_user_data);
                 }
 
                 $count ++;
             }
-
-            $res = new \WP_REST_Response($imports);
+        } else {
+            $imports = ['Loop never started.'];
         }
+
+        $res = new \WP_REST_Response($imports);
 
         return rest_ensure_response($res);
     }

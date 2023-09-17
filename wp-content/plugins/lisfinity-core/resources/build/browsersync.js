@@ -19,10 +19,10 @@ const config = {
   proxy: typeof userConfig.development.url !== 'undefined' ? userConfig.development.url : 'localhost',
   port: 3000,
   open: 'external',
-  https: {
-    key: "./resources/build/certs/dev.concreteiron.key",
-    cert: "./resources/build/certs/dev.concreteiron.crt"
-  },
+  // https: {
+  //   key: "./resources/build/certs/dev.concreteiron.key",
+  //   cert: "./resources/build/certs/dev.concreteiron.crt"
+  // },
   files: [
     utils.themeRootPath('./**/*.php'),
     utils.themeRootPath('./**/*.js'),
