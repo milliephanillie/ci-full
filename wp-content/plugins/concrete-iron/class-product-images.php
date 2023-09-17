@@ -32,6 +32,7 @@ class ProductImages
         register_rest_route($namespace, $route, array(
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'product_images'],
+            'permission_callback' => '__return_true',
         ));
     }
 

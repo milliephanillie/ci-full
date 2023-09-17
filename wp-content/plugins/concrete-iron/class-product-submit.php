@@ -50,6 +50,7 @@ class ProductSubmit {
         register_rest_route($namespace, $route, array(
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'submit_product'],
+            'permission_callback' => '__return_true',
         ));
     }
 

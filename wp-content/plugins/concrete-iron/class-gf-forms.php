@@ -24,6 +24,7 @@ class Headless_GravityForms
                         'default' => 'view',
                     ],
                 ],
+                'permission_callback' => '__return_true',
             ],
         ]);
     }

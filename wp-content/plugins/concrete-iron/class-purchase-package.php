@@ -32,6 +32,7 @@ class PurchasePackage {
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'purchase_package'],
             'args' => [],
+            'permission_callback' => '__return_true',
         ));
     }
 

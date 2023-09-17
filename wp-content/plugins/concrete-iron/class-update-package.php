@@ -30,6 +30,7 @@ class Update_Package {
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'ci_update_package'],
             'args' => [],
+            'permission_callback' => '__return_true',
         ));
     }
 

@@ -66,6 +66,7 @@ class Single_Subcategory_Update {
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'single_subcategory_update'],
             'args' => [],
+            'permission_callback' => '__return_true',
         ));
     }
 
