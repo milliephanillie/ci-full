@@ -50,6 +50,7 @@ class Package_Products
         register_rest_route($namespace, $route, array(
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'get_packages'],
+            'permission_callback' => '__return_true',
         ));
 
         $namespace = 'ci/v1';
@@ -58,6 +59,7 @@ class Package_Products
         register_rest_route($namespace, $route, array(
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'get_single_package'],
+            'permission_callback' => '__return_true',
         ));
     }
 

@@ -49,6 +49,22 @@ class RapidProductSubmit
         add_action('woocommerce_checkout_create_order_line_item', [$this, 'save_product_id_with_order_item'], 10, 4);
         add_action('woocommerce_checkout_order_processed', [$this, 'update_product'], 10, 3);
         //add_filter('lisfinity__submit_form_fields', [$this, 'alter_fields']);
+        add_action( 'transition_post_status', [$this, 'trans_to_sold'], 10, 3 );
+    }
+
+    /**
+     *
+     *
+     * @param $new_status
+     * @param $old_status
+     * @param $post
+     * @return void
+     */
+    public function trans_to_sold( $new_status, $old_status, $post ) {
+        if ( 'sold' === $new_status ) {
+            // Your code here
+            carbon_set_post_meta($post->ID, 'product-status', 'sold');
+        }
     }
 
     /**
@@ -62,6 +78,7 @@ class RapidProductSubmit
         register_rest_route($namespace, $route, array(
             'methods' => \WP_REST_Server::CREATABLE,
             'callback' => [$this, 'submit_product'],
+            'permission_callback' => '__return_true',
         ));
     }
 
@@ -170,13 +187,13 @@ class RapidProductSubmit
             $updated_payment_package = update_post_meta($product_id, '_payment-package', $listing_id);
         }
 
-        $updated_post = wp_publish_post($product_id);
-        if($updated_post) {
-            if (\lisfinity_is_enabled(\lisfinity_get_option('email-listing-submitted'))) {
-                $this->notify_admin($updated_post);
-            }
+        $post_status = get_post_status($product_id);
 
-            carbon_set_post_meta($product_id, 'product-status', 'active');
+        wp_publish_post($product_id);
+        $updated_product_status = update_post_meta($product_id, '_product-status', 'active');
+
+        if (\lisfinity_is_enabled(\lisfinity_get_option('email-listing-submitted'))) {
+            $this->notify_admin($product_id);
         }
     }
 

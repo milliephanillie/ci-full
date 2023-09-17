@@ -38,6 +38,7 @@ class Update_Product {
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'force_expired'],
             'args' => [],
+            'permission_callback' => '__return_true',
         ));
 
         $route = 'force_dates';
@@ -46,6 +47,7 @@ class Update_Product {
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'force_dates'],
             'args' => [],
+            'permission_callback' => '__return_true',
         ));
 
         $route = 'force_post_status';
@@ -54,6 +56,7 @@ class Update_Product {
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [$this, 'force_post_status'],
             'args' => [],
+            'permission_callback' => '__return_true',
         ));
     }
 
