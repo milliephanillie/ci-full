@@ -96,7 +96,7 @@ class CI_Custom_Import {
                     // Disable the email notification
                     remove_action('after_password_reset', 'wp_password_change_notification');
                     remove_action('wp_insert_user', 'wp_send_new_user_notifications');
-                    
+
                     // Minimum
                     $user_id            = null;
                     $admin_user_name    = 'admin';

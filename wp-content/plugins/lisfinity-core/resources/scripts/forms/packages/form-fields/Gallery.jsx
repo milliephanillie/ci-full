@@ -41,8 +41,6 @@ const Gallery = (props) => {
   const [payCount, setPayCount] = useState(0);
   const [media, setMedia] = useState({
     limit: field.limit || 16,
-    free: field.free || 4,
-    price: promotion?.price || 0.25,
   });
   const attachments = useRef();
 
@@ -51,8 +49,6 @@ const Gallery = (props) => {
     // data for submit
     setImages(imageList);
     form[name] = imageList;
-    console.log("FIELD")
-    console.log(props)
     dispatch(actions.updateFormData(form));
   };
 
@@ -80,12 +76,11 @@ const Gallery = (props) => {
         formData.free_images = free;
       }
       promotion.value = parseInt(free, 10) - addonsToPay;
-      setMedia({
-        limit: field.limit || 16,
-        free: free - addonsToPay,
-        price: promotion?.price || 0.25,
-      });
     }
+
+    setMedia({
+      limit: field.limit || 16,
+    });
 
     dispatch(actions.updateFormData(formData));
   }, []);
@@ -125,7 +120,6 @@ const Gallery = (props) => {
       <div className="mb-40">
         <div className="flex flex-col mb-20">
           <div className="relative flex mb-10">
-
             { console.log("we are here inside the gallery") }
             { console.log(field) }
             { console.log(media) }
@@ -253,53 +247,53 @@ const Gallery = (props) => {
                     </div>
                   </div>
 
-                  {console.log("media and images")}
+                  {console.log("media and images all the rest of em")}
                   {console.log(media)}
                   {console.log(images)}
 
-                  {media && images &&
+                  {media &&
                   <div className="flex justify-between items-center mt-20 text-sm text-grey-500">
 
                     <div
                       className="flex"
                       dangerouslySetInnerHTML={{
                         __html: sprintf(lc_data.jst[353],
-                          `<span class="mr-4 font-bold text-grey-900">${(media.limit - images.length)}</span>`, field.labels[1])
+                          `<span class="mr-4 font-bold text-grey-900">${(media.limit - (images.length || 0))}</span>`, field.labels[1])
                       }}>
                     </div>
-                    <div className="flex items-center">
-                      {freeCount > 0 &&
-                      <div>
-                        <span>{lc_data.jst[354]}</span>
-                        {freeCount === 1 ?
-                          <span
-                            className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[0])}</span>
-                          :
-                          <span
-                            className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[1])}</span>
-                        }
-                      </div>
-                      }
-                      {payCount > 0 &&
-                      <div className="ml-4">
-                        <span>{lc_data.jst[356]}</span>
-                        {payCount === 1 ?
-                          <span
-                            className="ml-4 font-bold text-red-600">{payCount} {sprintf(lc_data.jst[357], field.labels[0])}</span>
-                          :
-                          <span
-                            className="ml-4 font-bold text-red-600">{payCount} {sprintf(lc_data.jst[357], field.labels[1])}</span>
-                        }
-                      </div>
-                      }
-                      {costs && payment_package &&
-                      <div
-                        className="ml-20 py-6 px-10 bg-green-100 border border-green-300 rounded font-bold text-green-800"
-                        dangerouslySetInnerHTML={{
-                          __html: sprintf(payment_package.price_format, payment_package.currency, formatMoney(costs?.media?.[name] || 0, payment_package.decimals, payment_package.decimal_separator, payment_package.thousand_separator))
-                        }}></div>
-                      }
-                    </div>
+                    {/*<div className="flex items-center">*/}
+                    {/*  {freeCount > 0 &&*/}
+                    {/*  <div>*/}
+                    {/*    <span>{lc_data.jst[354]}</span>*/}
+                    {/*    {freeCount === 1 ?*/}
+                    {/*      <span*/}
+                    {/*        className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[0])}</span>*/}
+                    {/*      :*/}
+                    {/*      <span*/}
+                    {/*        className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[1])}</span>*/}
+                    {/*    }*/}
+                    {/*  </div>*/}
+                    {/*  }*/}
+                    {/*  {payCount > 0 &&*/}
+                    {/*  <div className="ml-4">*/}
+                    {/*    <span>{lc_data.jst[356]}</span>*/}
+                    {/*    {payCount === 1 ?*/}
+                    {/*      <span*/}
+                    {/*        className="ml-4 font-bold text-red-600">{payCount} {sprintf(lc_data.jst[357], field.labels[0])}</span>*/}
+                    {/*      :*/}
+                    {/*      <span*/}
+                    {/*        className="ml-4 font-bold text-red-600">{payCount} {sprintf(lc_data.jst[357], field.labels[1])}</span>*/}
+                    {/*    }*/}
+                    {/*  </div>*/}
+                    {/*  }*/}
+                    {/*  {costs && payment_package &&*/}
+                    {/*  <div*/}
+                    {/*    className="ml-20 py-6 px-10 bg-green-100 border border-green-300 rounded font-bold text-green-800"*/}
+                    {/*    dangerouslySetInnerHTML={{*/}
+                    {/*      __html: sprintf(payment_package.price_format, payment_package.currency, formatMoney(costs?.media?.[name] || 0, payment_package.decimals, payment_package.decimal_separator, payment_package.thousand_separator))*/}
+                    {/*    }}></div>*/}
+                    {/*  }*/}
+                    {/*</div>*/}
                   </div>
                   }
                 </Fragment>

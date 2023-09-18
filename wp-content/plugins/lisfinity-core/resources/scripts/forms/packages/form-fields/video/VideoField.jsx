@@ -75,15 +75,14 @@ class VideoField extends Component {
       promotion.value = free;
       formData['addon-video'] = promotion;
       this.props.dispatch(actions.updateFormData(formData));
-      this.props.setState(prevState => ({
-        videos: {
-          ...prevState.videos,
-          ['limit']: field.limit,
-          ['free']: free,
-          ['price']: promotion.price,
-        }
-      }));
     }
+
+    this.props.setState(prevState => ({
+      videos: {
+        ...prevState.videos,
+        ['limit']: field.limit,
+      }
+    }));
   }
 
   /**
@@ -402,39 +401,39 @@ class VideoField extends Component {
             }}>
           </div>
 
-          <div className="flex items-center">
-            {freeCount > 0 &&
-            <div>
-              <span>{lc_data.jst[354]}</span>
-              {freeCount === 1 ?
-                <span
-                  className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[0])}</span>
-                :
-                <span
-                  className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[1])}</span>
-              }
-            </div>
-            }
-            {toPayCount > 0 &&
-            <div className="ml-4">
-              <span>{lc_data.jst[356]}</span>
-              {toPayCount === 1 ?
-                <span
-                  className="ml-4 font-bold text-red-600">{toPayCount} {sprintf(lc_data.jst[357], field.labels[0])}</span>
-                :
-                <span
-                  className="ml-4 font-bold text-red-600">{toPayCount} {sprintf(lc_data.jst[357], field.labels[1])}</span>
-              }
-            </div>
-            }
-            {videos && payment_package &&
-            <div
-              className="ml-20 py-6 px-10 bg-green-100 border border-green-300 rounded font-bold text-green-800"
-              dangerouslySetInnerHTML={{
-                __html: sprintf(payment_package.price_format, payment_package.currency, formatMoney(videos.cost, payment_package.decimals, payment_package.decimal_separator, payment_package.thousand_separator))
-              }}></div>
-            }
-          </div>
+          {/*<div className="flex items-center">*/}
+          {/*  {freeCount > 0 &&*/}
+          {/*  <div>*/}
+          {/*    <span>{lc_data.jst[354]}</span>*/}
+          {/*    {freeCount === 1 ?*/}
+          {/*      <span*/}
+          {/*        className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[0])}</span>*/}
+          {/*      :*/}
+          {/*      <span*/}
+          {/*        className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[1])}</span>*/}
+          {/*    }*/}
+          {/*  </div>*/}
+          {/*  }*/}
+          {/*  {toPayCount > 0 &&*/}
+          {/*  <div className="ml-4">*/}
+          {/*    <span>{lc_data.jst[356]}</span>*/}
+          {/*    {toPayCount === 1 ?*/}
+          {/*      <span*/}
+          {/*        className="ml-4 font-bold text-red-600">{toPayCount} {sprintf(lc_data.jst[357], field.labels[0])}</span>*/}
+          {/*      :*/}
+          {/*      <span*/}
+          {/*        className="ml-4 font-bold text-red-600">{toPayCount} {sprintf(lc_data.jst[357], field.labels[1])}</span>*/}
+          {/*    }*/}
+          {/*  </div>*/}
+          {/*  }*/}
+          {/*  {videos && payment_package &&*/}
+          {/*  <div*/}
+          {/*    className="ml-20 py-6 px-10 bg-green-100 border border-green-300 rounded font-bold text-green-800"*/}
+          {/*    dangerouslySetInnerHTML={{*/}
+          {/*      __html: sprintf(payment_package.price_format, payment_package.currency, formatMoney(videos.cost, payment_package.decimals, payment_package.decimal_separator, payment_package.thousand_separator))*/}
+          {/*    }}></div>*/}
+          {/*  }*/}
+          {/*</div>*/}
         </div>}
       </Fragment>
       ,
