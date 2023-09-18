@@ -10,6 +10,7 @@ const ChoosePackage  = (props) => {
     const [value, setValue] = useState(props.value);
     const {packages, handlePaymentPackage} = props;
     const allData = useSelector(state => state);
+    const fields = allData.fields;
     const data = allData.formData;
     const dispatch = useDispatch();
 
@@ -69,7 +70,11 @@ const ChoosePackage  = (props) => {
 
           response.then(result => {
             data['payment_package'] = result.data;
-            dispatch(actions.updateFormData(data))
+            dispatch(actions.updateFormData(data));
+            fields['media']['_product_image_gallery']['limit'] = result.data.image_limit;
+            fields['media']['_product-files']['limit'] = result.data.docs_limit;
+            fields['media']['_product-videos']['limit'] = result.data.video_limit;
+            dispatch(actions.setupFieldGroups(groups))
 
             console.log(data)
             console.log("are we even in the tehn statement")

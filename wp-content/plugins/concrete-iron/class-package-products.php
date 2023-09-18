@@ -145,8 +145,6 @@ class Package_Products
 
         $package->api = "get_single_package";
 
-        $promotions = $this->get_promotions_for_package( $package_id );
-
         $free_promotions = carbon_get_post_meta( $package_id, 'package-free-promotions' );
 
         $is_subscription = false; // TODO: figure out subscriptions, we leave false for now
@@ -154,7 +152,20 @@ class Package_Products
 
         $package->id = $package_id;
         $package->_promotion_addon_type = get_post_meta($package_id, '_promotion-addon-type');
-        $package->promotions = get_post_meta($package_id, '_package-promotions');
+        $package->promotions             = carbon_get_post_meta($package_id, 'package-promotions');
+        foreach ($package->promotions as $promotion) {
+            switch ($promotion['package-promotions-product']) {
+                case 'addon-image':
+                    $package->image_limit = $promotion['package-promotions-product-value'];
+                    break;
+                case 'addon-video':
+                    $package->video_limit = $promotion['package-promotions-product-value'];
+                    break;
+                case 'addon-docs':
+                    $package->docs_limit = $promotion['package-promotions-product-value'];
+                    break;
+            }
+        }
         $package->free_promotions      = $free_promotions ?? false;
         $package->is_subscription      = $is_subscription;
         $package->currency             = get_woocommerce_currency_symbol();
@@ -166,7 +177,14 @@ class Package_Products
         $package->price                = $wc_product->get_price() * lisfinity_get_chosen_currency_rate();
         $package->price_html           = lisfinity_get_price_html( $package->price );
         $package->price_format         = get_woocommerce_price_format();
-//
+        $package->features             = [];
+        $package_features = carbon_get_post_meta($package_id, "package-features");
+        $count = 0;
+        foreach($package_features as $feature) {
+            $count++;
+            array_push($package->features, array_merge($feature, ["uniqueId" => "featureID-" . $count]));
+        }
+        //
 //        //TODO: We don't have the ability to add multiple packages just yet (should be $package->products_limit - $package->products_count)
         $package->remaining            = 0;
         //TODO: $package->percentage = floor( 100 - ( $package->remaining * 100 ) / $package->products_limit )

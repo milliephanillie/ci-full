@@ -384,39 +384,39 @@ class MediaGalleryField extends Component {
                         }}>
                       </div>
 
-                      <div className="flex items-center">
-                        {freeCount > 0 &&
-                        <div>
-                          <span>{lc_data.jst[354]}</span>
-                          {freeCount === 1 ?
-                            <span
-                              className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[0])}</span>
-                            :
-                            <span
-                              className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[1])}</span>
-                          }
-                        </div>
-                        }
-                        {toPayCount > 0 &&
-                        <div className="ml-4">
-                          <span>{lc_data.jst[356]}</span>
-                          {toPayCount === 1 ?
-                            <span
-                              className="ml-4 font-bold text-red-600">{toPayCount} {sprintf(lc_data.jst[357], field.labels[0])}</span>
-                            :
-                            <span
-                              className="ml-4 font-bold text-red-600">{toPayCount} {sprintf(lc_data.jst[357], field.labels[1])}</span>
-                          }
-                        </div>
-                        }
-                        {media && payment_package &&
-                        <div
-                          className="ml-20 py-6 px-10 bg-green-100 border border-green-300 rounded font-bold text-green-800"
-                          dangerouslySetInnerHTML={{
-                            __html: sprintf(payment_package.price_format, payment_package.currency, formatMoney(!isEmpty(costs?.media) ? costs?.media['_product_image_gallery']?.['cost'] : media.cost, payment_package.decimals, payment_package.decimal_separator, payment_package.thousand_separator))
-                          }}></div>
-                        }
-                      </div>
+                      {/*<div className="flex items-center">*/}
+                      {/*  {freeCount > 0 &&*/}
+                      {/*  <div>*/}
+                      {/*    <span>{lc_data.jst[354]}</span>*/}
+                      {/*    {freeCount === 1 ?*/}
+                      {/*      <span*/}
+                      {/*        className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[0])}</span>*/}
+                      {/*      :*/}
+                      {/*      <span*/}
+                      {/*        className="ml-4 font-bold text-green-800">{freeCount} {sprintf(lc_data.jst[355], field.labels[1])}</span>*/}
+                      {/*    }*/}
+                      {/*  </div>*/}
+                      {/*  }*/}
+                      {/*  {toPayCount > 0 &&*/}
+                      {/*  <div className="ml-4">*/}
+                      {/*    <span>{lc_data.jst[356]}</span>*/}
+                      {/*    {toPayCount === 1 ?*/}
+                      {/*      <span*/}
+                      {/*        className="ml-4 font-bold text-red-600">{toPayCount} {sprintf(lc_data.jst[357], field.labels[0])}</span>*/}
+                      {/*      :*/}
+                      {/*      <span*/}
+                      {/*        className="ml-4 font-bold text-red-600">{toPayCount} {sprintf(lc_data.jst[357], field.labels[1])}</span>*/}
+                      {/*    }*/}
+                      {/*  </div>*/}
+                      {/*  }*/}
+                      {/*  {media && payment_package &&*/}
+                      {/*  <div*/}
+                      {/*    className="ml-20 py-6 px-10 bg-green-100 border border-green-300 rounded font-bold text-green-800"*/}
+                      {/*    dangerouslySetInnerHTML={{*/}
+                      {/*      __html: sprintf(payment_package.price_format, payment_package.currency, formatMoney(!isEmpty(costs?.media) ? costs?.media['_product_image_gallery']?.['cost'] : media.cost, payment_package.decimals, payment_package.decimal_separator, payment_package.thousand_separator))*/}
+                      {/*    }}></div>*/}
+                      {/*  }*/}
+                      {/*</div>*/}
 
                     </div>
                     }
@@ -476,14 +476,6 @@ function handler(props) {
           if (promotion) {
             const free = props.isEdit && value.length > promotion.value ? value.length : promotion.value;
             promotion.value = parseInt(free, 10) - addonsToPay;
-            setState(prevState => ({
-              media: {
-                ...prevState.media,
-                ['limit']: field.limit,
-                ['free']: free - addonsToPay,
-                ['price']: promotion.price,
-              }
-            }));
 
             dispatch(actions.updateFormData(formData));
 
@@ -517,6 +509,13 @@ function handler(props) {
               costs['final'] = (costs.total.media) + (costs['total']['promo'] || 0) || 0;
             }
           }
+
+          setState(prevState => ({
+            media: {
+              ...prevState.media,
+              ['limit']: field.limit,
+            }
+          }));
         }
 
         let valuesToGet = value;
