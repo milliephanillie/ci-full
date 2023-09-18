@@ -429,7 +429,6 @@ class ListingsImport {
                     $subcategory_lvl_3  = $column[$headers['Subcategory level 3']] ?? null;
                     $gallery_images  = $column[$headers['Picture URL']] ?? null;
 
-
                     $status = $this->getStatusFromDate($date);
 
                     if( ($status != 'active') ) {
@@ -619,15 +618,18 @@ class ListingsImport {
                     //TAXONOMY UPDATES
                     $category_update = update_post_meta($post_id, '_product-category', 'concrete-equipment');
 
+                    error_log(print_r("subcat update", true));
+                    error_log(print_r($subcategory_lvl_3, true));
                     if(!empty($subcategory_lvl_3)) {
                         $subcategory_lvl_3_update = $this->update_subcats($post_id, $subcategory_lvl_3);
                     } else {
                         $missing_subcategory_lvl_3 = update_post_meta($post_id, 'missing_third_cat', true);
                     }
+                    error_log(print_r($subcategory_lvl_3_update, true));
 
                     if($subcategory_lvl_3_update) {
                         $term = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
-
+                        error_log(print_r($term, true));
                         $parent = get_term_by('term_id', $term->parent, 'concrete-equipment-type');
 
                         if(is_object($parent) && property_exists($parent, 'slug')) {
@@ -648,7 +650,7 @@ class ListingsImport {
                             }
 
                             $subcategory_lvl_3_check = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
-
+                            error_log(print_r($subcategory_lvl_3_check, true));
                             $type_term_update = get_term_by('term_taxonomy_id', $type_term_update, 'concrete-equipment-type');
                         }
                     }
@@ -747,7 +749,10 @@ class ListingsImport {
                         "active_date" => $active_date,
                         "expiration_date" => $expired_date,
                         "package_id" => $package_id,
-                        "subcategory_lvl_3_check" => $subcategory_lvl_3_check->slug,
+                        "subcategory_lvl_3_check" => [
+                            "slug" => $subcategory_lvl_3_check->slug,
+                            "term_taxonomy_id" => $subcategory_lvl_3_update[0]
+                        ],
 //                            "all_the_makes" => $this->makes,
                         "make" => $make,
                         "model" => $model,
@@ -855,17 +860,27 @@ class ListingsImport {
             'hide_empty' => false
         ]);
 
-        $filter =[];
+        $filter = [];
 
-        if($this->subcats) {
+        if ($this->subcats) {
             foreach ($this->subcats as $cat_term) {
                 $filter[$cat_term->name] = $cat_term->slug;
             }
         }
 
         $term_update = null;
+
+        // If exact match exists
         if (array_key_exists($subcat, $filter)) {
-            $term_update = wp_set_object_terms($post_id, $filter[$subcat], 'concrete-equipment-subcategory',  false);
+            $term_update = wp_set_object_terms($post_id, $filter[$subcat], 'concrete-equipment-subcategory', false);
+        } else {
+            // If you want to match substrings
+            foreach ($filter as $key => $value) {
+                if (stripos($key, $subcat) !== false || stripos($subcat, $key) !== false) {
+                    $term_update = wp_set_object_terms($post_id, $filter[$key], 'concrete-equipment-subcategory', false);
+                    break;
+                }
+            }
         }
 
         return $term_update;
