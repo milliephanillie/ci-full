@@ -431,7 +431,11 @@ class ListingsImport {
 
                     $status = $this->getStatusFromDate($date);
 
-                    if( ($status != 'active') ) {
+//                    if( ($status != 'active') ) {
+//                        continue;
+//                    }
+
+                    if ( $row > 130 && $status != 'active' ) {
                         continue;
                     }
 

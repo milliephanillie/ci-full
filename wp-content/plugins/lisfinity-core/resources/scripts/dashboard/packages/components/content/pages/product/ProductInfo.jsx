@@ -94,7 +94,7 @@ const ProductInfo = (props) => {
       data,
     }).then(data => {
       if (data.data.success) {
-        setRedirect(true);
+        window.location.href = "/my-account/ads";
       }
     });
   };
