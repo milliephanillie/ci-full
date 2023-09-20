@@ -182,32 +182,32 @@ const Product = (props) => {
               </div>
               <span className="text-sm text-grey-500 leading-none">{lc_data.jst[131]}</span>
             </NavLink>}
-          {options && options.messenger && product.messages &&
-          <NavLink to={`${lc_data.site_url}${lc_data.myaccount}ad/${product.id}/messages`}
-                   className="flex flex-col ml-3 py-8 px-10 w-1/3 bg-grey-100 rounded">
-            <div className="flex items-center">
-              <ReactSVG
-                src={`${lc_data.dir}dist/${EnvelopeIcon}`}
-                className="mr-6 w-14 h-14 fill-grey-500"
-              />
-              <span className="font-semibold text-grey-900">{Object.keys(product.messages).length}</span>
-            </div>
-            <span className="text-sm text-grey-500 leading-none">{lc_data.jst[132]}</span>
-          </NavLink>
-          }
-          {options && options.promotions && product.promotions &&
-          <NavLink to={`${lc_data.site_url}${lc_data.myaccount}ad/${product.id}/promotions`}
-                   className="flex flex-col ml-3 py-8 px-10 w-1/3 bg-grey-100 rounded">
-            <div className="flex items-center">
-              <ReactSVG
-                src={`${lc_data.dir}dist/${BaloonIcon}`}
-                className="mr-6 w-14 h-14 fill-grey-500"
-              />
-              <span className="font-semibold text-grey-900">{Object.keys(product.promotions).length}</span>
-            </div>
-            <span className="text-sm text-grey-500 leading-none">{lc_data.jst[177]}</span>
-          </NavLink>
-          }
+          {/*{options && options.messenger && product.messages &&*/}
+          {/*<NavLink to={`${lc_data.site_url}${lc_data.myaccount}ad/${product.id}/messages`}*/}
+          {/*         className="flex flex-col ml-3 py-8 px-10 w-1/3 bg-grey-100 rounded">*/}
+          {/*  <div className="flex items-center">*/}
+          {/*    <ReactSVG*/}
+          {/*      src={`${lc_data.dir}dist/${EnvelopeIcon}`}*/}
+          {/*      className="mr-6 w-14 h-14 fill-grey-500"*/}
+          {/*    />*/}
+          {/*    <span className="font-semibold text-grey-900">{Object.keys(product.messages).length}</span>*/}
+          {/*  </div>*/}
+          {/*  <span className="text-sm text-grey-500 leading-none">{lc_data.jst[132]}</span>*/}
+          {/*</NavLink>*/}
+          {/*}*/}
+          {/*{options && options.promotions && product.promotions &&*/}
+          {/*<NavLink to={`${lc_data.site_url}${lc_data.myaccount}ad/${product.id}/promotions`}*/}
+          {/*         className="flex flex-col ml-3 py-8 px-10 w-1/3 bg-grey-100 rounded">*/}
+          {/*  <div className="flex items-center">*/}
+          {/*    <ReactSVG*/}
+          {/*      src={`${lc_data.dir}dist/${BaloonIcon}`}*/}
+          {/*      className="mr-6 w-14 h-14 fill-grey-500"*/}
+          {/*    />*/}
+          {/*    <span className="font-semibold text-grey-900">{Object.keys(product.promotions).length}</span>*/}
+          {/*  </div>*/}
+          {/*  <span className="text-sm text-grey-500 leading-none">{lc_data.jst[177]}</span>*/}
+          {/*</NavLink>*/}
+          {/*}*/}
         </div>
 
         <div className="product--actions relative flex items-center py-20 px-30 w-1/16">
