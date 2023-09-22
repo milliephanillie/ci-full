@@ -267,6 +267,8 @@ class Package_Products
 
         );
 
+
+
         $data = [];
 
         if (!$packages->posts) {
@@ -274,6 +276,10 @@ class Package_Products
         }
 
         foreach ($packages->posts as $post) {
+            if( get_field('administrative_package', $post->ID) && ! current_user_can('manage_options') ) {
+                continue;
+            }
+
             $package = $this->prepare_meta($post);
             //$package_extra_meta = get_post_meta($post->ID);
             array_push($data, array_merge(['package_id' => $post->ID], $package));

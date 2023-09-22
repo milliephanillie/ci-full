@@ -24,7 +24,72 @@ class RapidHooks {
         add_filter('get_post_metadata', [$this, 'format_price_meta'], 12, 4);
 
         add_filter('woocommerce_before_template_part', [$this, 'add_link_to_listings'], 10, 4);
+        add_filter('lisfinity__get_overal_stats', [$this, 'add_leads'], 10, 1 );
+        add_action('gform_after_submission', [$this, 'increment_form_submission_count'], 10, 2);
+        add_filter( 'posts_search', [$this, 'add_plurals_to_search'], 10, 2 );
     }
+
+    /**
+     * Add plurals to search
+     * 
+     * @param $search
+     * @param $wp_query
+     * @return array|mixed|string|string[]
+     */
+    public function add_plurals_to_search( $search, $wp_query ) {
+        if ( ! empty( $search ) && ! empty( $wp_query->query_vars['s'] ) ) {
+            $search_term = $wp_query->query_vars['s'];
+            $search = str_replace($search_term . '\'', $search_term . '\'s', $search); // Adjusting for terms ending with an apostrophe
+            $search = str_replace('"' . $search_term . '"', '"' . $search_term . 's"', $search);
+        }
+        return $search;
+    }
+
+    /**
+     * Update post meta count
+     *
+     * @param $entry
+     * @param $form
+     * @return void
+     */
+    public function increment_form_submission_count($entry, $form) {
+        // Check if the form title matches "Contact Seller"
+        if ($form['title'] !== 'Contact Seller') {
+            return;
+        }
+
+        // Get the post ID from the entry
+        $post_id = isset($entry[5]) ? intval($entry[5]) : 0;
+
+        // If there's a post ID
+        if ($post_id) {
+            $current_count = get_post_meta($post_id, 'gravity_form_submission_count', true);
+
+            // If there's no previous count, initialize to 0
+            if (empty($current_count)) {
+                $current_count = 0;
+            }
+
+            // Increment the count
+            $new_count = $current_count + 1;
+
+            // Update post meta
+            update_post_meta($post_id, 'gravity_form_submission_count', $new_count);
+        }
+    }
+
+
+    /**
+     * Add leads
+     *
+     * @param $stats
+     * @return mixed
+     */
+    public function add_leads($stats) {
+
+        return $stats;
+    }
+
 
     /**
      * Remove the view link for incomplete posts
