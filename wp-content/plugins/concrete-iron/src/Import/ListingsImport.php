@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ConcreteIron  Custom Import class.
  *
@@ -12,6 +13,9 @@
  * php version 7.3.9
  */
 namespace ConcreteIron\Import;
+
+use Lisfinity\Controllers\PackageController;
+use Lisfinity\Models\PromotionsModel;
 
 /**
  * Listings Import Class
@@ -45,13 +49,14 @@ class ListingsImport {
     private $skipped_rows = [];
     private $row_skipped_codes = [
         "user_missing" => "The user is not in the database.",
-        'invalid_top_level_category' => 'Must be in the top level category of "Concrete Equipment."',
-        'missing_category' => 'Listing is missing the third level category from Flynax.',
-        'missing_ad_title' => 'Listing is missing the ad title field from Flynax.',
-        'missing_stock' => 'Listing is does not have a stock quantity.',
-        'missing_status' => 'Listing is missing a post status.',
-        'no_post_update' => 'Failed to update or create post',
-        'no_business_id' => 'Failed to create a business ID',
+        "invalid_top_level_category" => 'Must be in the top level category of "Concrete Equipment."',
+        "missing_category" => 'Listing is missing the third level category from Flynax.',
+        "missing_ad_title" => 'Listing is missing the ad title field from Flynax.',
+        "missing_stock" => 'Listing is does not have a stock quantity.',
+        "missing_status" => 'Listing is missing a post status.',
+        "no_post_update" => 'Failed to update or create post',
+        "no_business_id" => 'Failed to create a business ID',
+        "missing_order_id" => 'Failed to create or get the order ID'
     ];
 
     /**
@@ -431,9 +436,13 @@ class ListingsImport {
 
                     $status = $this->getStatusFromDate($date);
 
-//                    if( ($status != 'active') ) {
-//                        continue;
-//                    }
+                    if( ($status != 'active') ) {
+                        continue;
+                    }
+
+                    if( ($row > 2) ) {
+                        break;
+                    }
 
                     if ( $row > 130 && $status != 'active' ) {
                         continue;
@@ -588,6 +597,7 @@ class ListingsImport {
 //                            ]
 //                        ]
 //                    ));
+
                     if( empty($status) ) {
                         $this->add_to_row_skipped($row, 'missing_status');
                         continue;
@@ -614,9 +624,29 @@ class ListingsImport {
 
                     $updated_payment_package = null;
                     $package_id = \Redux::getOption('lisfinity-options', '_auth-default-packages');
+                    $package_id = $package_id[0];
                     if (!empty($package_id)) {
                         //Intro payment package
-                        $updated_payment_package = update_post_meta($post_id, 'payment-package', $package_id[0]);
+                        $updated_payment_package = update_post_meta($post_id, 'payment-package', $package_id);
+
+                        $order_id = $this->order_exists_with_listing_id($post_id);
+                        if ( $order_id == false) {
+                            // Order with this listing ID already exists. Don't create a new one.
+                            $order_id = $this->create_woo_order($user_id, $package_id, $post_id);
+                        }
+
+                        if ( ! $order_id ) {
+                            $this->add_to_row_skipped($row, 'missing_order_id');
+                            continue;
+                        }
+
+                        /*
+                         * Check to see if there is a package in wp_lisfinity_packages already for a single post type. Since this is an import, there should only be one entry
+                         */
+                        $lisfintiy_package_id = 'not created';
+                        if( ! $this->order_id_exists_in_wp_lisfinity_packages($order_id)) {
+                            $lisfintiy_package_id = $this->update_lisfinity_packages($package_id, $post_id, $order_id, $user_id, 90, 1);
+                        }
                     }
 
                     //TAXONOMY UPDATES
@@ -692,62 +722,18 @@ class ListingsImport {
                     //Set woocommerce product type to listing
                     $this->update_product_type($post_id);
 
-//                    return rest_ensure_response(new \WP_REST_Response(
-//                        [
-//                            "username" => $username,
-//                            "user_id" => $user_id,
-//                            "title" => $title,
-//                            "stocknumber" => $stocknumber,
-//                            "subcategory_lvl_3" => $subcategory_lvl_3,
-//                            "auth_business_name" => $auth_business_name,
-//                            "business_id" => $business_id,
-//                            "user_phone" => $user_phone,
-//                            "post_id" => $post_id,
-//                            //"post" => get_post($post_id),
-//                            "status" => $status,
-//                            "active_date" => $active_date,
-//                            "expiration_date" => $expired_date,
-//                            "package_id" => $package_id,
-//                            "subcategory_lvl_3_check" => $subcategory_lvl_3_check->slug,
-////                            "all_the_makes" => $this->makes,
-//                            "make" => $make,
-//                            "model" => $model,
-//                            "condition" => $condition,
-//                            "equipment_hours" => $equipment_hours,
-//                            "year" => $year,
-//                            "price" => $price,
-//                            "old_url" => $old_url,
-//                            "new_url" => $new_url,
-//                            "updates" => [
-//                                "updated_status" => $updated_status,
-//                                "updated_business" => $business_update,
-//                                "updated_business_email" => $update_business_email,
-//                                "updated_active_date" => $this->updated_listed,
-//                                "updated_expiration_date" => $this->updated_expired,
-//                                "updated_payment_package" => $updated_payment_package,
-//                                "updated_subcategory_lvl_3" => $subcategory_lvl_3_update,
-//                                "updated_type_term" => $type_term_update->slug,
-//                                "updated_make" => $make_update,
-//                                "updated_model" => $model_update,
-//                                "updated_condition" => $condition_update,
-//                                "updated_equipment_hours" => $equipment_update,
-//                                "updated_years" => $year_update,
-//                                "updated_price" => $price_update,
-//                                "updated_regular_price" => $reg_price_update,
-//                            ]
-//                        ]
-//                    ));
-
                     $data[$post_id] = [
                         "username" => $username,
                         "user_id" => $user_id,
+                        "post_id" => $post_id,
+                        "order_id" => $order_id,
+                        "business_id" => $business_id,
+                        "lisfinity_package_id" => $lisfintiy_package_id,
                         "title" => $title,
                         "stocknumber" => $stocknumber,
                         "subcategory_lvl_3" => $subcategory_lvl_3,
                         "auth_business_name" => $auth_business_name,
-                        "business_id" => $business_id,
                         "user_phone" => $user_phone,
-                        "post_id" => $post_id,
                         //"post" => get_post($post_id),
                         "status" => $status,
                         "active_date" => $active_date,
@@ -795,8 +781,6 @@ class ListingsImport {
 
                     $count++;
                 }
-
-
 
                 $res = new \WP_REST_Response(["top", $this->skipped_rows, $imports]);
             }
@@ -888,6 +872,55 @@ class ListingsImport {
         }
 
         return $term_update;
+    }
+
+    /**
+     * Update the Lisfinity packages
+     *
+     * @param int $payment_package_id - the id column in wp_lisfinity_packages
+     * @param int $listing_id - the id of the actual post or listing
+     * @param int $order_id - the id of the order
+     * @param string $user_id - the id of the user
+     * @param int $products_duration - the products duration
+     * @param int $products_limit - the products limit
+     * @return bool|mixed|string|void
+     */
+    public function update_lisfinity_packages(int $payment_package_id, int $listing_id, int $order_id, string $user_id, int $products_duration = 90, int $products_limit = 1)
+    {
+        $customer_id = get_current_user_id();
+
+        $values = [
+            // id of the customer that made order.
+            $user_id,
+            // wc product id of this item.
+            $payment_package_id,
+            // wc order id for this item.
+            $order_id,
+            // limit amount of products in a package.
+            carbon_get_post_meta($payment_package_id, 'package-products-limit') ?? 1,
+            // current amount of submitted products in this package. (this should be only 1 for each post for new setup
+            1,
+            // duration of the submitted products.
+            $products_duration,
+            // type of the package.
+            'payment_package',
+            // status of the package.
+            'active',
+        ];
+
+        $package_controller = new PackageController();
+
+        $lisfinity_package_id = $package_controller->store($values);
+
+        if (!empty($lisfinity_package_id)) {
+            $promotions = carbon_get_post_meta($payment_package_id, 'package-free-promotions');
+
+            if (!empty($promotions)) {
+                $this->insert_promotions($lisfinity_package_id, $payment_package_id, $listing_id, $customer_id, $promotions, $order_id, $products_duration);
+            }
+        }
+
+        return $lisfinity_package_id;
     }
 
     /**
@@ -1061,5 +1094,177 @@ class ListingsImport {
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
         return substr($string, $ini, $len);
+    }
+
+    /**
+     * Check if the product exists in the table
+     *
+     * @param $product_id
+     * @return bool
+     */
+    public function order_id_exists_in_wp_lisfinity_packages($order_id) {
+        global $wpdb;
+
+        // Your custom table name
+        $table_name = $wpdb->prefix . 'lisfinity_packages';
+
+        $query = $wpdb->prepare("SELECT EXISTS (SELECT 1 FROM $table_name WHERE order_id = %d LIMIT 1)", $order_id);
+
+        // Execute the query. If the order ID exists, $result will be 1 (TRUE), otherwise it will be NULL.
+        $result = $wpdb->get_var($query);
+
+        return $result ? true : false;
+    }
+
+
+    /**
+     * Insert promotions
+     *
+     * @param $package_id
+     * @param $product_id
+     * @param $listing_id
+     * @param $user_id
+     * @param $promotions
+     * @param $order_id
+     * @param $products_duration
+     * @return void
+     */
+    public function insert_promotions($package_id, $product_id, $listing_id, $user_id, $promotions, $order_id, $products_duration)
+    {
+        $promotion_model = new PromotionsModel();
+        $products_duration = carbon_get_post_meta($product_id, 'package-products-duration');
+        $duration = 7;
+        $expiration_date = date('Y-m-d H:i:s', strtotime("+ {$duration} days", current_time('timestamp')));
+        $model = new PromotionsModel();
+        if (!empty($promotions)) {
+            foreach ($promotions as $promotion) {
+                $promotion_object = $model->get_promotion_product($promotion);
+                $promotion_product_id = $promotion_object[0]->ID;
+                $promotions_values = [
+                    // payment package id.
+                    $package_id ?? 0,
+                    // wc order id.
+                    $order_id ?? 0,
+                    // wc product id, id of this WooCommerce product.
+                    $promotion_product_id,
+                    // id of the user that made order.
+                    $user_id,
+                    // id of the product that this promotion has been activated.
+                    $listing_id,
+                    // limit or duration number depending on the type of the promotion.
+                    $products_duration,
+                    // count of addon promotions, this cannot be higher than value.
+                    0,
+                    // position of promotion on the site.
+                    $promotion,
+                    // type of the promotion.
+                    'product',
+                    // status of the promotion
+                    'active',
+                    // activation date of the promotion
+                    current_time('mysql'),
+                    // expiration date of the promotion if needed.
+                    $expiration_date,
+                ];
+
+                // save promotion data in the database.
+                $promotion_model->store($promotions_values);
+            }
+        }
+    }
+
+    /**
+     * Create an order with a _listing_id in the post meta. If and order with this _listing_id already exists, don't create it again, but return the ID
+     *
+     * @param $post_id
+     * @return false|int
+     */
+    public function order_exists_with_listing_id($post_id) {
+        $args = array(
+            'post_type'   => 'shop_order',
+            'post_status' => 'any',
+            'meta_key'    => '_listing_id',
+            'meta_value'  => $post_id,
+            'numberposts' => 1,
+        );
+
+        $orders = get_posts($args);
+
+        if (!empty($orders)) {
+            return $orders[0]->ID;  // Return the ID of the first order found
+        } else {
+            return false;  // No order found with the given listing ID
+        }
+    }
+
+    /**
+     * Create a woocommerce order for a listing
+     *
+     * @param $user_id
+     * @param $product_id
+     * @return int
+     */
+    public function create_woo_order($user_id, $package_id, $listing_id) {
+        if( ! $user_id || ! $package_id ) {
+            return null;
+        }
+
+        $product_id = $package_id;
+
+        // Fetch user billing and shipping details.
+        $user_info = get_userdata($user_id);
+
+        // Helper function to safely retrieve user meta with a fallback.
+        function get_user_meta_fallback($user_id, $key, $default = '') {
+            $value = get_user_meta($user_id, $key, true);
+            return !empty($value) ? $value : $default;
+        }
+
+        $billing_address = array(
+            'first_name' => get_user_meta_fallback($user_id, 'billing_first_name', $user_info->first_name),
+            'last_name'  => get_user_meta_fallback($user_id, 'billing_last_name', $user_info->last_name),
+            'company'    => get_user_meta_fallback($user_id, 'billing_company'),
+            'email'      => $user_info->user_email,
+            'phone'      => get_user_meta_fallback($user_id, 'billing_phone'),
+            'address_1'  => get_user_meta_fallback($user_id, 'billing_address_1'),
+            'address_2'  => get_user_meta_fallback($user_id, 'billing_address_2'),
+            'city'       => get_user_meta_fallback($user_id, 'billing_city'),
+            'state'      => get_user_meta_fallback($user_id, 'billing_state'),
+            'postcode'   => get_user_meta_fallback($user_id, 'billing_postcode'),
+            'country'    => get_user_meta_fallback($user_id, 'billing_country', 'US'), // Default to US
+        );
+
+        $shipping_address = array(
+            'first_name' => get_user_meta_fallback($user_id, 'shipping_first_name', $user_info->first_name),
+            'last_name'  => get_user_meta_fallback($user_id, 'shipping_last_name', $user_info->last_name),
+            'company'    => get_user_meta_fallback($user_id, 'shipping_company'),
+            'address_1'  => get_user_meta_fallback($user_id, 'shipping_address_1'),
+            'address_2'  => get_user_meta_fallback($user_id, 'shipping_address_2'),
+            'city'       => get_user_meta_fallback($user_id, 'shipping_city'),
+            'state'      => get_user_meta_fallback($user_id, 'shipping_state'),
+            'postcode'   => get_user_meta_fallback($user_id, 'shipping_postcode'),
+            'country'    => get_user_meta_fallback($user_id, 'shipping_country', 'US'), // Default to US
+        );
+
+        $order = wc_create_order(array(
+            'status'        => apply_filters('woocommerce_default_order_status', 'pending'),
+            'customer_id'   => $user_id,
+            'customer_note' => '',
+        ));
+
+        $product = wc_get_product($product_id);
+        $order->add_product($product, 1); // Add one quantity of the product, adjust as needed.
+
+        $order->set_address($billing_address, 'billing');
+        $order->set_address($shipping_address, 'shipping');
+
+        $order->calculate_totals();
+        $order->save();
+
+        $order_id = $order->get_id();
+        if (!empty($post_id)) {  // Assuming $listing_id contains the ID of the listing
+            update_post_meta($order_id, '_listing_id', $post_id);
+        }
+        return $order_id;
     }
 }

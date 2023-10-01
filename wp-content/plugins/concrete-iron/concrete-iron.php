@@ -91,3 +91,8 @@ function ci_scripts() {
     wp_localize_script( 'ci-localize', 'ci_data', $localized_vars );
 }
 
+class ConcreteCore {
+    private $instance = null;
+
+}
+

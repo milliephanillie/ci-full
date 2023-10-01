@@ -248,7 +248,6 @@ class Package_Products
         return $promotions;
     }
 
-
     public function get_packages(WP_REST_Request $request)
     {
         $packages = new WP_Query(

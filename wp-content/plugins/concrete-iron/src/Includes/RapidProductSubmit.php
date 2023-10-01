@@ -236,6 +236,8 @@ class RapidProductSubmit
             if (!empty($promotions)) {
                 $this->insert_promotions($lisfinity_package_id, $payment_package_id, $listing_id, $customer_id, $promotions, $order_id, $products_duration);
             }
+
+            update_post_meta( $order_id, 'package_processed', true );
         }
 
         return $lisfinity_package_id;
