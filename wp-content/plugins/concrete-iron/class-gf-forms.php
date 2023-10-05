@@ -5,33 +5,7 @@ class Headless_GravityForms
     public $rest_base = 'gf/forms';
 
     public function __construct($namespace)
-
     {
-
-        // This can be outside the class or in the same class
-        add_filter('custom_gf_field_modify', function($field) {
-            if ($field->type == 'text') {
-                $icon = "";  // Default icon
-
-                switch ($field->label) {
-                    case 'Name':
-                        $icon = '<i class="fas fa-user"></i>';
-                        break;
-                    case 'Phone':
-                        $icon = '<i class="fas fa-phone"></i>';
-                        break;
-                    case 'Email':
-                        $icon = '<i class="fas fa-envelope"></i>';
-                        break;
-                }
-
-                // Modify the field object to contain the desired output
-                // For this example, I'm just adding a new property for the icon
-                $field->icon = $icon;
-            }
-            return $field;
-        });
-
         /**
          * @api {get} /ci/v1/gf/forms/1
          * @apiName GetForm
@@ -55,35 +29,35 @@ class Headless_GravityForms
         ]);
     }
 
-    public function get_form(\WP_REST_Request $request)
+    /**
+     * Retreive a single form and all fields and options (exluding notifications)
+     * @param WP_REST_Request $request
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_form(WP_REST_Request $request)
     {
         $form_id = $request['form_id'];
         $post_id = $request['postID'];
 
-        $form = \GFAPI::get_form($form_id);
+        $form = GFAPI::get_form($form_id);
 
         if ($form) {
+            // Loop through each field in the form to find the hidden field with ID 5
             foreach ($form['fields'] as &$field) {
                 if ($field['id'] == 5 && $field['type'] == 'hidden') {
-                    $field->defaultValue = $post_id;
+                    $field['defaultValue'] = $post_id; // Set the defaultValue to postID
                 }
-
-                // Apply the custom filter directly within the method
-                $field = apply_filters('custom_gf_field_modify', $field);
             }
-
-            // Cleanup: Remove the reference to the field object to avoid unexpected behavior
-            unset($field);
+            unset($field);  // Unset the reference to prevent unexpected behavior
 
             // Strip data we do not want to share
             unset($form['notifications']);
 
-            return new \WP_REST_Response($form, 200);
+            return new WP_REST_Response($form, 200);
         } else {
-            return new \WP_Error('not_found', 'Form not found', ['status' => 404]);
+            return new WP_Error('not_found', 'Form not found', ['status' => 404]);
         }
     }
-
 
 }
 
