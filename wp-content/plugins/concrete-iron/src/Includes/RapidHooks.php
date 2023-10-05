@@ -16,6 +16,7 @@ class RapidHooks {
      */
     public function boot()
     {
+        add_filter( 'gform_pre_render', [$this, 'wrap_fields_in_div'] );
         add_action( 'init', [$this, 'rapid_register_product_statuses'], 10, 1 );
         add_filter('lisfinity__set_product_statuses', [$this, 'add_incomplete_status'], 10, 1);
         add_filter( 'display_post_states', [$this, 'rapid_add_display_post_states'], 11, 2 );
@@ -27,6 +28,69 @@ class RapidHooks {
         add_filter('lisfinity__get_overal_stats', [$this, 'add_leads'], 10, 1 );
         add_action('gform_after_submission', [$this, 'increment_form_submission_count'], 10, 2);
         add_filter( 'posts_search', [$this, 'add_plurals_to_search'], 10, 2 );
+
+        // Sets when the session is about to expire
+        add_filter( 'wc_session_expiring', [$this, 'woocommerce_cart_session_about_to_expire']);
+
+
+
+    }
+
+    /**
+     * @param $content
+     * @param $field
+     * @param $value
+     * @param $lead_id
+     * @param $form_id
+     * @return mixed|string
+     */
+    public function wrap_fields_in_div( $form ) {
+        error_log(print_r("should be contact seller", true));
+        // Assigning icons based on the field type or field label
+        if ( $form['title'] != 'Contact Seller' ) {  // You can also check by form id using $form['id']
+            return $form;
+        }
+
+        foreach ( $form['fields'] as &$field ) {
+            $icon = '';
+
+            // Assigning icons based on the field type or field label
+            switch ( $field->type ) {
+                case 'name':
+                    $icon = '<i class="fa fa-user"></i>';
+                    break;
+                case 'phone':
+                    $icon = '<i class="fa fa-phone"></i>';
+                    break;
+                case 'email':
+                    $icon = '<i class="fa fa-envelope"></i>';
+                    break;
+            }
+
+            if ( $icon ) {
+                // Modifying the content property of the field
+                $field->content = '<div class="contact-seller-input-wrapper">' . $icon . '{FIELD_CONTENT}</div>';
+            }
+        }
+
+        return $form;
+    }
+
+    public function get_form_id_by_name( $form_name ) {
+        $forms = \GFAPI::get_forms();
+        foreach ( $forms as $form ) {
+            if ( $form['title'] == $form_name ) {
+                return $form['id'];
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Woocommerce_cart_session_about_to_expire
+     */
+    public function woocommerce_cart_session_about_to_expire() {
+            return 60 * 60 * 47;
     }
 
     /**

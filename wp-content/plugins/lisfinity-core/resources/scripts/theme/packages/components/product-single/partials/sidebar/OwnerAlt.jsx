@@ -155,7 +155,7 @@ function OwnerAlt(props) {
 
         {!isEmpty(product) && !product?.is_expired && !props.businessPage &&
             <div className='send-message send-message-gf'>
-              <div className="or-send-message"><h4>Send a message...</h4></div>
+              {/*<div className="or-send-message"><h4>Send a message</h4></div>*/}
               <GravityForm
                   backendUrl={`${lc_data.url}wp-json/ci/v1/gf/forms`}
                   formID="3"
