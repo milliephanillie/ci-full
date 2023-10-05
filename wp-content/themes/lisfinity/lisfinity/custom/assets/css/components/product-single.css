@@ -12,6 +12,7 @@
 
 .or-send-message h4 {
     text-transform: uppercase;
+    display: none;
 }
 
 /*.profile--owner {*/

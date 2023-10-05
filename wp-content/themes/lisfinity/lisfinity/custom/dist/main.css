@@ -489,6 +489,7 @@ li.mega-button > a.mega-menu-link {
 
 .or-send-message h4 {
     text-transform: uppercase;
+    display: none;
 }
 
 /*.profile--owner {*/
