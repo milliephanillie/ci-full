@@ -119,7 +119,7 @@ form.send-message input[type=email] {
     position: absolute;
     bottom: -25px;
 }
-.profile--header .leading-none {
+.profile--owner .leading-none {
     color: #d9d9d9 !important;
 }
 .send-message button {
