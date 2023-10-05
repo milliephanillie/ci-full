@@ -30,7 +30,7 @@ if ( ! function_exists( 'lisfinity_enqueue_assets' ) ) {
 		}
 		wp_enqueue_style( 'lisfinity-style', PBS_THEME_URL . '/style.css', '', PBS_THEME_VERSION, 'all' );
         // added by Philip
-        wp_enqueue_style( 'lisfinity-custom-style', PBS_THEME_URL . "custom/dist/main.css", '', false, 'all' );
+        wp_enqueue_style( 'lisfinity-custom-style', PBS_THEME_URL . "custom/dist/main.css", '', null, 'all' );
         wp_enqueue_script( 'lisfinity-custom-script', PBS_THEME_URL . 'custom/dist/main.js', [ 'jquery' ], PBS_THEME_VERSION, true );
 
 		wp_localize_script(
