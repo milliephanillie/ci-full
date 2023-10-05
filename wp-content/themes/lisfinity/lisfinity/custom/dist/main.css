@@ -495,47 +495,56 @@ li.mega-button > a.mega-menu-link {
 /*    background: #e9e9e9;*/
 
 /*}*/
-
-/* Basic styling for all inputs */
-#input_3_1, #input_3_2, #input_3_3 {
-    padding-left: 30px; /* space for icon + some padding */
-    position: relative;
-}
-
-/* Add Font Awesome icon to "Full Name" input */
-#input_3_1::before {
-    content: "\f007"; /* Unicode for user icon */
-    font-family: "Font Awesome 5 Free"; /* for solid style */
-    font-weight: 900; /* necessary for solid style */
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-}
-
-/* Add Font Awesome icon to "Phone" input */
-#input_3_2::before {
-    content: "\f095"; /* Unicode for phone icon */
+/* Font Awesome Icons for the divs */
+div.text::before {
     font-family: "Font Awesome 5 Free";
-    font-weight: 900;
+    content: "\f007";  /* User icon for 'Name' */
+    padding-right: 10px;
+    font-weight: 900;  /* Important for solid icons in FA5 */
     position: absolute;
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px;
 }
 
-/* Add Font Awesome icon to "Email" input */
-#input_3_3::before {
-    content: "\f0e0"; /* Unicode for envelope icon */
+div.phone::before {
     font-family: "Font Awesome 5 Free";
-    font-weight: 900;
+    content: "\f095";  /* Phone icon */
+    padding-right: 10px;
+    font-weight: 900;  /* Important for solid icons in FA5 */
     position: absolute;
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px;
+}
+
+div.email::before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f0e0";  /* Envelope icon for 'Email' */
+    padding-right: 10px;
+    font-weight: 900;  /* Important for solid icons in FA5 */
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Styling for the div wrappers */
+div.text, div.phone, div.email {
+    position: relative;  /* This allows the ::before pseudo-elements to be positioned relative to them */
+    margin-bottom: 15px;
+}
+
+/* Styling for the input fields */
+div.text input, div.phone input, div.email input {
+    display: block;
+    width: 100%;
+    padding-left: 30px !important;  /* Make space for the icon */
+}
+
+/* Styling for the empty labels */
+div.text label, div.phone label, div.email label {
+    display: none;  /* Hide empty labels */
 }
 
 
