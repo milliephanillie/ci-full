@@ -74,6 +74,7 @@ $yoast_autoload_file = WPSEO_PATH . 'vendor/autoload.php';
 if ( is_readable( $yoast_autoload_file ) ) {
 	$yoast_autoloader = require $yoast_autoload_file;
 }
+
 elseif ( ! class_exists( 'WPSEO_Options' ) ) { // Still checking since might be site-level autoload R.
 	add_action( 'admin_init', 'yoast_wpseo_missing_autoload', 1 );
 

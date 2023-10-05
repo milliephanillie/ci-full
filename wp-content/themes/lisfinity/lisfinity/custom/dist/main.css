@@ -487,8 +487,100 @@ li.mega-button > a.mega-menu-link {
     border-color: orange !important;
 }
 
+.or-send-message h4 {
+    text-transform: uppercase;
+}
+
+/*.profile--owner {*/
+/*    background: #e9e9e9;*/
+
+/*}*/
+
+/* Basic styling for all inputs */
+#input_3_1, #input_3_2, #input_3_3 {
+    padding-left: 30px; /* space for icon + some padding */
+    position: relative;
+}
+
+/* Add Font Awesome icon to "Full Name" input */
+#input_3_1::before {
+    content: "\f007"; /* Unicode for user icon */
+    font-family: "Font Awesome 5 Free"; /* for solid style */
+    font-weight: 900; /* necessary for solid style */
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+}
+
+/* Add Font Awesome icon to "Phone" input */
+#input_3_2::before {
+    content: "\f095"; /* Unicode for phone icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+}
+
+/* Add Font Awesome icon to "Email" input */
+#input_3_3::before {
+    content: "\f0e0"; /* Unicode for envelope icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+}
+
+
+
+.contact-seller-input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.contact-seller-input-wrapper i {
+    position: absolute;
+    left: 10px;  /* adjust as needed */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2; /* to ensure icon is above input */
+}
+
+.contact-seller-input-wrapper input[type="text"],
+.contact-seller-input-wrapper input[type="tel"],
+.contact-seller-input-wrapper input[type="email"] {
+    padding-left: 30px;  /* adjust based on the width of the icon and desired spacing */
+}
+
+
+
+form.send-message input[type=text],
+form.send-message textarea,
+form.send-message input[type=phone],
+form.send-message input[type=email] {
+    background:#f6f6f6;
+    border: 2px solid #eee;
+}
+
+.send-message .error-button,
+.send-message .error-message {
+    color: red;
+    padding: 5px;
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+}
+
 .send-message button {
-    color: orange !important;
+    color: black !important;
+    background: orange !important;
     border-color: orange !important;
 }
 
@@ -618,6 +710,10 @@ section.product--title {
 }
 
 
+
+.send-message {
+
+}
 
 .or-send-message h4 {
     font-size: 14px;

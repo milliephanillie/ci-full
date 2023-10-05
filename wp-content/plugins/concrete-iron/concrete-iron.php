@@ -51,6 +51,12 @@ function load_my_plugin() {
 
         $listingsImport = new ListingsImport();
 
+        if ( class_exists( 'GFAPI' ) ) {
+            error_log( "Gravity Forms is active." );
+        } else {
+            error_log( "Gravity Forms is not active." );
+        }
+
         add_action('rest_api_init', [$rapidProductSubmit, 'register_routes']);
     } else {
         // The other plugin isn't loaded. Handle this case appropriately.
@@ -89,5 +95,10 @@ function ci_scripts() {
     ], '1.0.0', true );
 
     wp_localize_script( 'ci-localize', 'ci_data', $localized_vars );
+}
+
+class ConcreteCore {
+    private $instance = null;
+
 }
 

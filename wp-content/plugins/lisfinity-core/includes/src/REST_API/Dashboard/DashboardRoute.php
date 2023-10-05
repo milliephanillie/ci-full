@@ -1394,7 +1394,7 @@ class DashboardRoute extends Route {
 		$stats['messages'] = ! empty( $all_ads ) ? count( $this->messages ) : 0;
 		$stats['packages'] = ! empty( $all_ads ) ? $this->get_all_packages_count( $user_id ) : 0;
 
-		return $stats;
+		return apply_filters('lisfinity__get_overall_stats', $stats);
 	}
 
 	protected function get_bids( $user_id ) {
