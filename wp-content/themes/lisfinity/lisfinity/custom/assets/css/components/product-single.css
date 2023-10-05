@@ -104,6 +104,10 @@ form.send-message input[type=email] {
     border: 2px solid #eee;
 }
 
+.form-field.error {
+    padding-top: 10px;
+}
+
 .send-message .error-button,
 .send-message .error-message {
     color: red;
