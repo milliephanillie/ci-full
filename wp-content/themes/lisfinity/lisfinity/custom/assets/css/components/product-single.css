@@ -105,7 +105,7 @@ form.send-message input[type=email] {
 }
 
 .form-field.error {
-    padding: 10px 0;
+    padding-bottom: 15px;
 }
 
 .send-message .error-button,
