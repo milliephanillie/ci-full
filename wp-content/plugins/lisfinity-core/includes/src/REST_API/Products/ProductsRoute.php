@@ -1133,8 +1133,6 @@ class ProductsRoute extends Route {
 	}
 
 	protected function get_package_and_promotions_data( $data, $exact_package = false, $post_type = false ) {
-        error_log(print_r("lets take a look at the data here", true));
-        error_log(print_r($data, true));
 		$is_subscription = false;
 		$agent           = lisfinity_get_agent( get_current_user_id() );
 		if ( ! lisfinity_packages_enabled( $agent->owner_id ?? get_current_user_id() ) ) {
@@ -1150,9 +1148,6 @@ class ProductsRoute extends Route {
                 [ 'status', 'active' ],
                 [ 'products_limit', '>=', 'products_count' ],
 			] )->get( '1', '', 'id, product_id, created_at, products_limit, products_count, products_duration', '' );
-
-            error_log(print_r($package_id, true));
-            error_log(print_r($package, true));
 		} elseif ($exact_package && $post_type === 'package') {
             //TODO: this whole method is highly customized, check back for original method
             $package    = get_post($data['id']);
