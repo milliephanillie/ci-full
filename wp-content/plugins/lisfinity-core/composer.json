@@ -28,5 +28,10 @@
   },
   "scripts": {
     "install-wpcs": "composer create-project wp-coding-standards/wpcs --no-dev"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
   }
 }

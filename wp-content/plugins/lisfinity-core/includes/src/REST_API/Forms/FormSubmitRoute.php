@@ -117,8 +117,6 @@ class FormSubmitRoute extends Route {
 //        error_log(print_r("hope", true));
 
         if( ! empty($is_edit) && boolval($is_edit) === true && ! $is_expired ) {
-            error_log(print_r('why is is_edit broken', true));
-            error_log(print_r('why is is_edit broken', true));
             unset($form_fields['package']);
         }
 
@@ -132,9 +130,7 @@ class FormSubmitRoute extends Route {
             'payments' => esc_html__( 'Payments', 'lisfinity-core' ),
         ];
 
-        error_log(print_r("is the edit value passing, well is it?", true));
         $bool_string = $is_edit ? 'true' : 'false';
-        error_log(print_r("my bool value:".$bool_string, true));
 
         //$titles = apply_filters('lisfinity__product_fields', $titles, $is_edit);
 
