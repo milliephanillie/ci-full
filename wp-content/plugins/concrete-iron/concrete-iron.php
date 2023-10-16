@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Concrete Iron
+Plugin Name: ConcreteIron
 Plugin URI:  https://www.concreteiron.com/
 Description: To manage concrete iron marketplace
 Version:     1.0
@@ -99,6 +99,5 @@ function ci_scripts() {
 
 class ConcreteCore {
     private $instance = null;
-
 }
 

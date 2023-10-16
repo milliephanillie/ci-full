@@ -95,6 +95,7 @@ class CustomFields extends Component {
 
     console.log(taxonomies)
     console.log("taxonomies")
+    console.log("taxonomies")
 
     // populate terms
     let terms = [];
@@ -318,13 +319,13 @@ class CustomFields extends Component {
                 choices = filter(this.props.terms, { taxonomy: taxonomy.slug, slug: 'custom' });
               }
 
+              console.log(cf_terms);
+
               return (
                 <div key={index}>
                   {taxonomy.type === 'select' && !isEmpty(choices) &&
                     <SelectCF
                       display
-                      id="shit-head"
-                      dataTest="testingg"
                       name={taxonomy.slug}
                       label={sprintf(lc_data.jst[334], taxonomy.single_name)}
                       options={sortBy(choices, ['name'])}
@@ -337,19 +338,30 @@ class CustomFields extends Component {
                       error={error && error[taxonomy.slug]}
                     />
                   }
-                  {taxonomy.type === 'text' &&
-                    <Input
-                      display
-                      id={taxonomy.slug}
-                      name={taxonomy.slug}
-                      label={sprintf(lc_data.jst[335], taxonomy.single_name)}
-                      handleChange={e => this.handleChangeCF(e, taxonomy.slug, taxonomy.field_group, 'input', prefix, suffix)}
-                      value={filter(cf_terms, term => term.taxonomy === taxonomy.slug && term.slug === formData[taxonomy.field_group][taxonomy.slug])?.[0]?.name || ''}
-                      parent={taxonomy.parent}
-                      additional={{ class: 'xs:mb-20' }}
-                      type="text"
-                      errorTaxonomy={error && error[taxonomy.slug]}
-                    />
+                  {
+                      taxonomy.type === 'text' && (
+                          <React.Fragment>
+                            {
+                              // Log the desired value and return null to avoid rendering anything
+                              (console.log(formData[taxonomy.field_group][taxonomy.slug])?.[0]?.name, null)
+                            }
+                            <Input
+                                display
+                                customText={'custom-text-input'}
+                                id={taxonomy.slug}
+                                name={taxonomy.slug}
+                                label={sprintf(lc_data.jst[335], taxonomy.single_name)}
+                                handleChange={e => this.handleChangeCF(e, taxonomy.slug, taxonomy.field_group, 'input', prefix, suffix)}
+                                value={
+                                    filter(cf_terms, term => term.taxonomy === taxonomy.slug && term.slug === formData[taxonomy.field_group][taxonomy.slug])?.[0]?.name || ''
+                                }
+                                parent={taxonomy.parent}
+                                additional={{ class: 'xs:mb-20' }}
+                                type="text"
+                                errorTaxonomy={error && error[taxonomy.slug]}
+                            />
+                          </React.Fragment>
+                      )
                   }
                   {taxonomy.type === 'input' &&
                     <Input

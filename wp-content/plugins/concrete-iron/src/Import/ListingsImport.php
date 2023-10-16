@@ -440,7 +440,7 @@ class ListingsImport {
                         continue;
                     }
 
-                    if( ($row > 2) ) {
+                    if( ($row > $limit) ) {
                         break;
                     }
 
@@ -463,10 +463,10 @@ class ListingsImport {
                         continue;
                     }
 
-//                    if( empty($subcategory_lvl_3) ) {
-//                        $this->add_to_row_skipped($row, 'missing_category');
-//                        continue;
-//                    }
+                    if( empty($subcategory_lvl_3) ) {
+                        $this->add_to_row_skipped($row, 'missing_category');
+                        continue;
+                    }
 
                     $title_empty = false;
                     // Minimum required to create an ad title is year make and model
@@ -699,14 +699,17 @@ class ListingsImport {
 
                     $condition = $this->determineCondition($condition);
 
+                    $condition_update = null;
                     if( $condition ) {
                         $condition_update = $this->update_condition($post_id, $condition);
                     }
 
+                    $equipment_update = null;
                     if( $equipment_hours ) {
                         $equipment_update = $this->equipment_update($post_id, $equipment_hours);
                     }
 
+                    $year_update = null;
                     if( $year ) {
                         $year_update = $this->year_update($post_id, $year);
                     }
@@ -741,7 +744,7 @@ class ListingsImport {
                         "package_id" => $package_id,
                         "subcategory_lvl_3_check" => [
                             "slug" => $subcategory_lvl_3_check->slug,
-                            "term_taxonomy_id" => $subcategory_lvl_3_update[0]
+                            "term_taxonomy_id" => ($subcategory_lvl_3_update && isset($subcategory_lvl_3_update[0])) ? $subcategory_lvl_3_update[0] : null,
                         ],
 //                            "all_the_makes" => $this->makes,
                         "make" => $make,
@@ -1214,36 +1217,32 @@ class ListingsImport {
         // Fetch user billing and shipping details.
         $user_info = get_userdata($user_id);
 
-        // Helper function to safely retrieve user meta with a fallback.
-        function get_user_meta_fallback($user_id, $key, $default = '') {
-            $value = get_user_meta($user_id, $key, true);
-            return !empty($value) ? $value : $default;
-        }
+
 
         $billing_address = array(
-            'first_name' => get_user_meta_fallback($user_id, 'billing_first_name', $user_info->first_name),
-            'last_name'  => get_user_meta_fallback($user_id, 'billing_last_name', $user_info->last_name),
-            'company'    => get_user_meta_fallback($user_id, 'billing_company'),
+            'first_name' => $this->get_user_meta_fallback($user_id, 'billing_first_name', $user_info->first_name),
+            'last_name'  => $this->get_user_meta_fallback($user_id, 'billing_last_name', $user_info->last_name),
+            'company'    => $this->get_user_meta_fallback($user_id, 'billing_company'),
             'email'      => $user_info->user_email,
-            'phone'      => get_user_meta_fallback($user_id, 'billing_phone'),
-            'address_1'  => get_user_meta_fallback($user_id, 'billing_address_1'),
-            'address_2'  => get_user_meta_fallback($user_id, 'billing_address_2'),
-            'city'       => get_user_meta_fallback($user_id, 'billing_city'),
-            'state'      => get_user_meta_fallback($user_id, 'billing_state'),
-            'postcode'   => get_user_meta_fallback($user_id, 'billing_postcode'),
-            'country'    => get_user_meta_fallback($user_id, 'billing_country', 'US'), // Default to US
+            'phone'      => $this->get_user_meta_fallback($user_id, 'billing_phone'),
+            'address_1'  => $this->get_user_meta_fallback($user_id, 'billing_address_1'),
+            'address_2'  => $this->get_user_meta_fallback($user_id, 'billing_address_2'),
+            'city'       => $this->get_user_meta_fallback($user_id, 'billing_city'),
+            'state'      => $this->get_user_meta_fallback($user_id, 'billing_state'),
+            'postcode'   => $this->get_user_meta_fallback($user_id, 'billing_postcode'),
+            'country'    => $this->get_user_meta_fallback($user_id, 'billing_country', 'US'), // Default to US
         );
 
         $shipping_address = array(
-            'first_name' => get_user_meta_fallback($user_id, 'shipping_first_name', $user_info->first_name),
-            'last_name'  => get_user_meta_fallback($user_id, 'shipping_last_name', $user_info->last_name),
-            'company'    => get_user_meta_fallback($user_id, 'shipping_company'),
-            'address_1'  => get_user_meta_fallback($user_id, 'shipping_address_1'),
-            'address_2'  => get_user_meta_fallback($user_id, 'shipping_address_2'),
-            'city'       => get_user_meta_fallback($user_id, 'shipping_city'),
-            'state'      => get_user_meta_fallback($user_id, 'shipping_state'),
-            'postcode'   => get_user_meta_fallback($user_id, 'shipping_postcode'),
-            'country'    => get_user_meta_fallback($user_id, 'shipping_country', 'US'), // Default to US
+            'first_name' => $this->get_user_meta_fallback($user_id, 'shipping_first_name', $user_info->first_name),
+            'last_name'  => $this->get_user_meta_fallback($user_id, 'shipping_last_name', $user_info->last_name),
+            'company'    => $this->get_user_meta_fallback($user_id, 'shipping_company'),
+            'address_1'  => $this->get_user_meta_fallback($user_id, 'shipping_address_1'),
+            'address_2'  => $this->get_user_meta_fallback($user_id, 'shipping_address_2'),
+            'city'       => $this->get_user_meta_fallback($user_id, 'shipping_city'),
+            'state'      => $this->get_user_meta_fallback($user_id, 'shipping_state'),
+            'postcode'   => $this->get_user_meta_fallback($user_id, 'shipping_postcode'),
+            'country'    => $this->get_user_meta_fallback($user_id, 'shipping_country', 'US'), // Default to US
         );
 
         $order = wc_create_order(array(
@@ -1266,5 +1265,11 @@ class ListingsImport {
             update_post_meta($order_id, '_listing_id', $post_id);
         }
         return $order_id;
+    }
+
+    // Helper function to safely retrieve user meta with a fallback.
+    public function get_user_meta_fallback($user_id, $key, $default = '') {
+        $value = get_user_meta($user_id, $key, true);
+        return !empty($value) ? $value : $default;
     }
 }

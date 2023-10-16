@@ -400,7 +400,7 @@ $translations = [
     __('<span class="font-bold uppercase open-label text-green-800">Open</span> today from', 'lisfinity-core'),
     __('to', 'lisfinity-core'),
     __('Closed today', 'lisfinity-core'),
-    __('Price Acs', 'lisfinity-core'),
+    __('Price Asc', 'lisfinity-core'),
     __('Price Desc', 'lisfinity-core'),
     __('Top Rated', 'lisfinity-core'),
     __('Nearby', 'lisfinity-core'),
