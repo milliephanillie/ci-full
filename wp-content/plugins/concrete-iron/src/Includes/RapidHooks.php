@@ -28,17 +28,9 @@ class RapidHooks {
         add_action('gform_after_submission', [$this, 'increment_form_submission_count'], 10, 2);
         add_filter( 'posts_search', [$this, 'add_plurals_to_search'], 10, 2 );
         add_filter( 'lisfinity__available_price_types', [$this, 'add_custom_price_types']);
-        add_action('', [$this, 'inspect_woo']);
 
         // Sets when the session is about to expire
         add_filter( 'wc_session_expiring', [$this, 'woocommerce_cart_session_about_to_expire']);
-    }
-
-    public function inspect_woo($data, $errors) {
-        $nonce_value    = wc_get_var( $_REQUEST['woocommerce-process-checkout-nonce'], wc_get_var( $_REQUEST['_wpnonce'], '' ) );
-
-        error_log(print_r("the nonce value during a checkout", true));
-        error_log(print_r($nonce_value, true));
     }
 
     public function add_custom_price_types($types) {

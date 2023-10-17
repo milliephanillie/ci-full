@@ -114,9 +114,6 @@ class Package_Products
         }
 
 
-
-        var_dump($fields);
-        die();
         return $fields;
     }
 
@@ -265,8 +262,6 @@ class Package_Products
             ]
 
         );
-
-
 
         $data = [];
 
