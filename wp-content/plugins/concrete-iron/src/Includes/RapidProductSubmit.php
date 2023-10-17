@@ -322,6 +322,9 @@ class RapidProductSubmit
         }
 
         $agent = \lisfinity_get_agent(get_current_user_id());
+        error_log($agent->owner_id);
+        error_log("agent id");
+
         $this->is_edit = $is_edit;
         $this->packages_enabled = \lisfinity_packages_enabled($agent->owner_id ?? get_current_user_id());
         $this->has_promotions = isset($data['promotions']) && !empty($data['promotions']);

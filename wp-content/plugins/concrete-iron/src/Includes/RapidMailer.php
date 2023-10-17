@@ -16,7 +16,7 @@ class RapidMailer {
      */
     public function boot()
     {
-        add_filter( 'gform_notification', [$this, 'add_to_email'], 10, 3 );
+        add_filter( 'gform_notification', [$this, 'add_to_email'], 15, 3 );
     }
 
     /**
@@ -28,6 +28,12 @@ class RapidMailer {
      * @return mixed
      */
     public function add_to_email( $notification, $form, $entry ) {
+
+        error_log(print_r($entry[5], true));
+        error_log(print_r(get_post_meta( $entry[5], '_product-agent', true ), true));
+        error_log(print_r($notification['name'], true));
+        error_log(print_r("notification name", true));
+
         // Check if the notification name matches
         if ( $notification['name'] == 'Contact Seller' ) {
             $post_id = $entry[5];

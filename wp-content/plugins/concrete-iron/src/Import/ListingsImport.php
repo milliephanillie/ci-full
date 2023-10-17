@@ -384,7 +384,7 @@ class ListingsImport {
         $headers = [];
         $fix_cats = [];
 
-        $this->makes = get_terms('concrete-equipment-make', [
+        $this->makes = get_terms('concrete-equipment-makes', [
             'hide_empty' => false,
         ]);
 
@@ -953,18 +953,18 @@ class ListingsImport {
 
         // If the make is not found, insert it
         if (!$make_found) {
-            $term = wp_insert_term($make, 'concrete-equipment-make');
+            $term = wp_insert_term($make, 'concrete-equipment-makes');
 
             // Assuming wp_insert_term was successful, fetch the slug of the newly created term
             if (!is_wp_error($term) && isset($term['term_id'])) {
-                $new_term = get_term($term['term_id'], 'concrete-equipment-make');
+                $new_term = get_term($term['term_id'], 'concrete-equipment-makes');
                 $filter_makes[$make] = $new_term->slug;
             }
         }
 
         // If the term exists in the filter or has been inserted, update the post meta
         if ($make && array_key_exists($make, $filter_makes)) {
-            $make_update = wp_set_object_terms($post_id, $filter_makes[$make], 'concrete-equipment-make', false);
+            $make_update = wp_set_object_terms($post_id, $filter_makes[$make], 'concrete-equipment-makes', false);
         }
 
         return $make_update;

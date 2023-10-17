@@ -51,11 +51,11 @@ function load_my_plugin() {
 
         $listingsImport = new ListingsImport();
 
-        if ( class_exists( 'GFAPI' ) ) {
-            error_log( "Gravity Forms is active." );
-        } else {
-            error_log( "Gravity Forms is not active." );
-        }
+//        if ( class_exists( 'GFAPI' ) ) {
+//            error_log( "Gravity Forms is active." );
+//        } else {
+//            error_log( "Gravity Forms is not active." );
+//        }
 
         add_action('rest_api_init', [$rapidProductSubmit, 'register_routes']);
     } else {

@@ -36,6 +36,12 @@ class ConcreteIronActivation {
         add_filter('woocommerce_email_content_reset_password', [$this, 'custom_wc_reset_password_message'], 10, 2);
         add_filter('retrieve_password_message', [$this, 'custom_wp_reset_password_message'], 10, 4);
         add_filter('retrieve_password_title', [$this, 'custom_wp_reset_password_title']);
+
+        add_filter( 'wp_mail_content_type', [$this, 'wp_set_html_mail_content_type'] );
+    }
+
+    public function wp_set_html_mail_content_type() {
+        return 'text/html';
     }
 
     /**
@@ -57,6 +63,7 @@ class ConcreteIronActivation {
      * @return void|WP_Error
      */
     public function send_pass_reset(\WP_REST_Request $request) {
+
         $params = $request->get_params();
         $user_login = $params['user_login'] ?? null;
         $email = null;
@@ -101,13 +108,20 @@ class ConcreteIronActivation {
     function custom_wc_reset_password_message($message, $args) {
         $reset_key = $args['reset_key'];
         $user_login = $args['user_login'];
-
-        $name = get_user_by('user_login', $user_login);
-        // Define the path to the email template
+        $user = get_user_by('login', $user_login);
+        $user_display_name = isset($user_data->display_name) ? $user_data->display_name : $user_login;
         $template_path = plugin_dir_path(__FILE__) . 'templates/activation.php';
         $reset_link = $this->generate_reset_password_link($user_login);
+
+        $email = null;
+        if (filter_var($user_login, FILTER_VALIDATE_EMAIL)) {
+            $email = $user_login;
+        } else {
+            $email = $user->user_email;
+        }
+
         $email_vars = array(
-            'name'  => 'Jane Doe',
+            'name'  => $user_display_name,
             'user_login' => $user_login,
             'reset_link' => $reset_link,
             'reset_key' => $reset_key,
@@ -115,9 +129,6 @@ class ConcreteIronActivation {
         );
 
         $email_content = $this->get_template_content($template_path, $email_vars);
-
-        do_action('password_reset', $args['user_login']);
-
 
         // Customize your $message using the $reset_key and $user_login as required.
 
@@ -169,6 +180,7 @@ class ConcreteIronActivation {
         );
 
         $email_content = $this->get_template_content($template_path, $email_vars);
+
         return $email_content;
     }
 
