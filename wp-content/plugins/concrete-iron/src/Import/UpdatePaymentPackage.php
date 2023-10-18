@@ -1,18 +1,39 @@
 <?php
+/**
+ * Updates the payment package via the WP REST API
+ *
+ *
+ */
 namespace ConcreteIron\Import;
 
+/*
+ * Update Payment Package class
+ */
 class UpdatePaymentPackage
 {
+    /**
+     * class constructor
+     */
     public function __construct()
     {
         $this->boot();
     }
 
+    /**
+     * Boot the class
+     *
+     * @return void
+     */
     public function boot()
     {
         add_action('rest_api_init', [$this, 'register_routes']);
     }
 
+    /**
+     * Register our routes
+     *
+     * @return void
+     */
     public function register_routes()
     {
         $namespace = 'ci/v1';
@@ -29,6 +50,12 @@ class UpdatePaymentPackage
         ]);
     }
 
+    /**
+     * Update the payment package callback
+     *
+     * @param \WP_REST_Request $request
+     * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     */
     public function update_payment_package(\WP_REST_Request $request) {
         $params = $request->get_params();
 
