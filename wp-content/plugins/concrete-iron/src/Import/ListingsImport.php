@@ -467,17 +467,25 @@ class ListingsImport {
                         }
                     }
 
-                    if(in_array($category, $this->invalidTopCategories)) {
+                    $spare_parts = [
+                        436,
+                        680
+                    ];
+
+                    if(in_array($category, $this->invalidTopCategories) && !in_array($row, $spare_parts)) {
                         $this->add_to_row_skipped($row, 'invalid_top_level_category');
                         continue;
                     }
 
+                    if(in_array($row, $spare_parts)) {
+                        $subcategory_lvl_3 = 'Spare Parts';
+                    }
+
+
+
                     if( empty($subcategory_lvl_3) ) {
                         $subcategory_lvl_3 = '';
                     }
-
-                    error_log(print_r($subcategory_lvl_3, true));
-                    error_log(print_r('subcatelevel 3'));
 
                     $title_empty = false;
                     // Minimum required to create an ad title is year make and model
@@ -528,9 +536,6 @@ class ListingsImport {
                             $subcategory_lvl_3 = 'Line Pumps';
                         }
                     }
-
-                    error_log(print_r($subcategory_lvl_3, true));
-                    error_log(print_r('subcatelevel 3 next'));
 
 
                     $auth_business_name = \Redux::getOption('lisfinity-options', '_auth-business-name') ?? self::DEFAULT_BUSINESS_PROFILE_PREFIX;
