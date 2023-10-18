@@ -550,52 +550,6 @@ class ListingsImport {
                         $updated_gallery = $this->add_images_to_product_gallery($gallery_images, $post_id, $title);
                     }
 
-//                                        return rest_ensure_response(new \WP_REST_Response(
-//                                            ['Uupdated' => $updated_gallery]
-//                        [
-//                            "username" => $username,
-//                            "user_id" => $user_id,
-//                            "title" => $title,
-//                            "stocknumber" => $stocknumber,
-//                            "subcategory_lvl_3" => $subcategory_lvl_3,
-//                            "auth_business_name" => $auth_business_name,
-//                            "business_id" => $business_id,
-//                            "user_phone" => $user_phone,
-//                            "post_id" => $post_id,
-//                            //"post" => get_post($post_id),
-//                            "status" => $status,
-//                            "active_date" => $active_date,
-//                            "expiration_date" => $expired_date,
-//                            "package_id" => $package_id,
-//                            "subcategory_lvl_3_check" => $subcategory_lvl_3_check->slug,
-////                            "all_the_makes" => $this->makes,
-//                            "make" => $make,
-//                            "model" => $model,
-//                            "condition" => $condition,
-//                            "equipment_hours" => $equipment_hours,
-//                            "year" => $year,
-//                            "price" => $price,
-//                            "old_url" => $old_url,
-//                            "new_url" => $new_url,
-//                            "updates" => [
-//                                "updated_status" => $updated_status,
-//                                "updated_business" => $business_update,
-//                                "updated_business_email" => $update_business_email,
-//                                "updated_active_date" => $this->updated_listed,
-//                                "updated_expiration_date" => $this->updated_expired,
-//                                "updated_payment_package" => $updated_payment_package,
-//                                "updated_subcategory_lvl_3" => $subcategory_lvl_3_update,
-//                                "updated_type_term" => $type_term_update->slug,
-//                                "updated_make" => $make_update,
-//                                "updated_model" => $model_update,
-//                                "updated_condition" => $condition_update,
-//                                "updated_equipment_hours" => $equipment_update,
-//                                "updated_years" => $year_update,
-//                                "updated_price" => $price_update,
-//                                "updated_regular_price" => $reg_price_update,
-//                            ]
-//                        ]
-//                    ));
 
                     if( empty($status) ) {
                         $this->add_to_row_skipped($row, 'missing_status');
