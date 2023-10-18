@@ -32,7 +32,7 @@ use ConcreteIron\Includes\RapidRenew;
 use ConcreteIron\Includes\RapidMailer;
 use ConcreteIron\Includes\RapidMemberSince;
 use ConcreteIron\Includes\RapidDashRoute;
-use ConcreteIron\Includes\rapidTitleTags;
+use ConcreteIron\Includes\RapidTitleTags;
 
 use ConcreteIron\Import\ListingsImport;
 use ConcreteIron\Import\UserImport;
@@ -57,7 +57,7 @@ function load_my_plugin() {
         $createPost = new CreatePost();
         $updateTerms = new UpdateTerms();
         $updateImages = new UpdateImages();
-        $rapidTitleTags = new rapidTitleTags();
+        $rapidTitleTags = new RapidTitleTags();
 
         $listingsImport = new ListingsImport();
 
