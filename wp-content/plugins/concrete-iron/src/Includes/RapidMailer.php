@@ -44,6 +44,11 @@ class RapidMailer {
             $seller_info = get_userdata($seller_id);
             $seller_email = $seller_info->user_email;
 
+            error_log(print_r("notification seller id then email below", true));
+            error_log(print_r($seller_id, true));
+            error_log(print_r($seller_email, true));
+            error_log(print_r("notification above", true));
+
             // Append the seller's email to the existing "to" email addresses
             if ($seller_email) { // Check that email exists
                 if (!empty($notification['to'])) {
@@ -52,6 +57,8 @@ class RapidMailer {
                 $notification['to'] .= $seller_email;
             }
         }
+
+        error_log(print_r($notification['to'], true));
 
         return $notification;
     }
