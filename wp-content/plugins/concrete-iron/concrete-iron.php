@@ -32,6 +32,7 @@ use ConcreteIron\Includes\RapidRenew;
 use ConcreteIron\Includes\RapidMailer;
 use ConcreteIron\Includes\RapidMemberSince;
 use ConcreteIron\Includes\RapidDashRoute;
+use ConcreteIron\Includes\rapidTitleTags;
 
 use ConcreteIron\Import\ListingsImport;
 use ConcreteIron\Import\UserImport;
