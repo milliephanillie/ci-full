@@ -23,6 +23,42 @@ class CreatePost {
             'args' => [],
             'permission_callback' => '__return_true',
         ]);
+
+        $route = 'create/post/status';
+
+        register_rest_route($namespace, $route, [
+            'methods' => [\WP_REST_Server::CREATABLE],
+            'callback' => [
+                $this,
+                'create_post_status'
+            ],
+            'args' => [],
+            'permission_callback' => '__return_true',
+        ]);
+
+        $route = 'update/product-type';
+
+        register_rest_route($namespace, $route, [
+            'methods' => [\WP_REST_Server::CREATABLE],
+            'callback' => [
+                $this,
+                'update_product_type_from_rest'
+            ],
+            'args' => [],
+            'permission_callback' => '__return_true',
+        ]);
+
+        $route = 'update/expiration';
+
+        register_rest_route($namespace, $route, [
+            'methods' => [\WP_REST_Server::CREATABLE],
+            'callback' => [
+                $this,
+                'update_expiration'
+            ],
+            'args' => [],
+            'permission_callback' => '__return_true',
+        ]);
     }
 
     public function create_post(\WP_REST_Request $request) {
@@ -34,11 +70,52 @@ class CreatePost {
 
         $post_id = $this->update_post(null, $title, $user->ID);
 
+        $this->update_product_type($post_id);
+
         return rest_ensure_response(new \WP_REST_Response(
             [
                 'id' => $post_id,
                 'title' => $title,
                 'user' => $user
+            ]
+        ));
+    }
+
+    public function create_post_status(\WP_REST_Request $request) {
+        $params = $request->get_params();
+
+        if(!$params['status'] || !$params['post_id']) {
+            return new \WP_Error(
+                'update_status',
+                'missing status param or post id'
+            );
+        }
+
+        $updated_status = update_post_meta($params['post_id'], '_product-status', $params['status']);
+
+        return rest_ensure_response(new \WP_REST_Response(
+            [
+                'updated_status' => $updated_status
+            ]
+        ));
+    }
+
+
+    public function update_product_type_from_rest(\WP_REST_Request $request) {
+        $params = $request->get_params();
+
+        if(!$params['post_id']) {
+            return new \WP_Error(
+                'update_product_type',
+                'missing post id'
+            );
+        }
+
+        $this->update_product_type($params['post_id']);
+
+        return rest_ensure_response(new \WP_REST_Response(
+            [
+                'message' => "success?"
             ]
         ));
     }
@@ -111,6 +188,52 @@ class CreatePost {
         $post_id = wp_insert_post($args);
 
         return $post_id;
+    }
+
+    /**
+     * Update the WooCommerce product type
+     *
+     * @param $post_id
+     * @return void
+     */
+    public function update_product_type($post_id) {
+        $product = wc_get_product($post_id);
+        $product_id = $product->get_id();
+        $product_classname = \WC_Product_Factory::get_product_classname( $product_id, 'listing' );
+        $new_product       = new $product_classname( $product_id );
+        $new_product->save();
+    }
+
+    public function update_expiration(\WP_REST_Request $request) {
+        $params = $request->get_params();
+
+        if(!$params['date'] || !$params['post_id']) {
+            return new \WP_Error(
+                'update_status',
+                'missing date param or post id'
+            );
+        }
+
+        $use_current_date_for_expiration = true; // Set to true if needed
+
+        $current_time = current_time('timestamp');
+        $active_date = strtotime($params['date']); // Active date is the given date
+
+        if ($use_current_date_for_expiration) {
+            $expired_date = strtotime('+90 days', $current_time); // Expired date is 90 days from the current time
+        } else {
+            $expired_date = strtotime('+90 days', $active_date); // Expired date is 90 days from the given date
+        }
+
+        $updated_listed = update_post_meta($params['post_id'], '_product-listed', $active_date);
+        $updated_expired = update_post_meta($params['post_id'], '_product-expiration', $expired_date);
+
+        return rest_ensure_response(new \WP_REST_Response(
+            [
+                'update_listed' => $updated_listed,
+                'updated_expired' => $updated_expired,
+            ]
+        ));
     }
 }
 

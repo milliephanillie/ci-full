@@ -487,8 +487,6 @@ class ListingsImport {
                         $subcategory_lvl_3 = 'Spare Parts';
                     }
 
-
-
                     if( empty($subcategory_lvl_3) ) {
                         $subcategory_lvl_3 = '';
                     }
