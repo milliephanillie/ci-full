@@ -446,7 +446,9 @@ class ListingsImport {
                         114,
                         88,
                         87,
-                        30
+                        30,
+                        436,
+                        680,
                     ];
 
                     if ($status != 'active' && !in_array($row, $whitelist)) {
