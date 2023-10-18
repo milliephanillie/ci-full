@@ -37,6 +37,7 @@ class ListingsImport {
     private $post_stati;
     private $subcats;
     private $makes;
+    private $third_cats;
     private $updated_listed;
     private $update_expired;
     private $failed_uploads = [];
@@ -388,6 +389,9 @@ class ListingsImport {
             'hide_empty' => false,
         ]);
 
+        $this->third_cats = get_terms('concrete-equipment-third-cat', [
+            'hide_empty' => false,
+        ]);
 
         if ($params["file"]["size"] > 0) {
             $file = fopen($fileName, "r");
@@ -482,8 +486,6 @@ class ListingsImport {
                     if(in_array($row, $spare_parts)) {
                         $subcategory_lvl_3 = 'Spare Parts';
                     }
-
-
 
                     if( empty($subcategory_lvl_3) ) {
                         $subcategory_lvl_3 = '';
@@ -667,6 +669,8 @@ class ListingsImport {
 
                         }
                     }
+
+                    $this->update_third_cat($post_id, $subcategory_lvl_3, $subcategory_lvl_2, $make);
 
                     if( $make ) {
                         $make_update = $this->update_makes($post_id, $make);
@@ -897,6 +901,51 @@ class ListingsImport {
         }
 
         return $lisfinity_package_id;
+    }
+
+    public function update_third_cat($post_id, $third_cat, $second_cat, $make) {
+        if(!$this->third_cats) {
+            return null;
+        }
+
+//        var_dump($this->third_cats);
+//        die();
+
+        foreach ($this->third_cats as $third_cat) {
+            var_dump($third_cat);
+            if($this->findSubstring($make, $third_cat->name)) {
+                $parent = get_term_by('term_id', $third_cat->parent, 'concrete-equipment-type');
+                var_dump($parent);
+                die();
+            }
+        }
+
+        var_dump($this->third_cats);
+        die();
+
+        wp_set_object_terms($post_id, $filter[$key], 'concrete-equipment-subcategory', false);
+
+        $term = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
+
+        //check if the parent is the second category
+    }
+
+    function findSubstring($haystack, $needle) {
+        $words = explode(' ', $needle);
+        foreach ($words as $word) {
+            if (strpos(strtolower($haystack), strtolower($word)) === false) {
+                return null;
+            }
+        }
+        return [
+            'substring' => $needle,
+            'slugified' => slugify($needle),
+            'original'  => $haystack
+        ];
+    }
+
+    function slugify($string) {
+        return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string), '-'));
     }
 
     /**
