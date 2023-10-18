@@ -437,7 +437,19 @@ class ListingsImport {
 
                     $status = $this->getStatusFromDate($date);
 
-                    if( ($status != 'active') ) {
+                    $whitelist = [
+                        10,
+                        25,
+                        569,
+                        485,
+                        499,
+                        114,
+                        88,
+                        87,
+                        30
+                    ];
+
+                    if ($status != 'active' && !in_array($row, $whitelist)) {
                         continue;
                     }
 
@@ -463,6 +475,9 @@ class ListingsImport {
                     if( empty($subcategory_lvl_3) ) {
                         $subcategory_lvl_3 = '';
                     }
+
+                    error_log(print_r($subcategory_lvl_3, true));
+                    error_log(print_r('subcatelevel 3'));
 
                     $title_empty = false;
                     // Minimum required to create an ad title is year make and model
@@ -513,6 +528,9 @@ class ListingsImport {
                             $subcategory_lvl_3 = 'Line Pumps';
                         }
                     }
+
+                    error_log(print_r($subcategory_lvl_3, true));
+                    error_log(print_r('subcatelevel 3 next'));
 
 
                     $auth_business_name = \Redux::getOption('lisfinity-options', '_auth-business-name') ?? self::DEFAULT_BUSINESS_PROFILE_PREFIX;
@@ -612,7 +630,7 @@ class ListingsImport {
 
                     if($subcategory_lvl_3_update) {
                         $term = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
-                        error_log(print_r($term, true));
+
                         $parent = get_term_by('term_id', $term->parent, 'concrete-equipment-type');
 
                         if(is_object($parent) && property_exists($parent, 'slug')) {
@@ -636,7 +654,10 @@ class ListingsImport {
                                 $subcategory_lvl_3_check = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
                             }
 
-                            $type_term_update = get_term_by('term_taxonomy_id', $type_term_update, 'concrete-equipment-type');
+                            if($type_term_update) {
+                                $type_term_update = get_term_by('term_taxonomy_id', $type_term_update, 'concrete-equipment-type');
+                            }
+
                         }
                     }
 
@@ -710,7 +731,7 @@ class ListingsImport {
                             "updated_expiration_date" => $this->updated_expired,
                             "updated_payment_package" => $updated_payment_package,
                             "updated_subcategory_lvl_3" => $subcategory_lvl_3_update ?? '',
-                            "updated_type_term" => $type_term_update->slug,
+                            //"updated_type_term" => $type_term_update->slug,
                             "updated_make" => $make_update,
                             "updated_model" => $model_update,
                             "updated_condition" => $condition_update,
@@ -733,7 +754,7 @@ class ListingsImport {
                 $res = new \WP_REST_Response(["top", $this->skipped_rows, $imports]);
             }
 
-            return rest_ensure_response(["bottom", $imports, $this->skipped_rows]);
+            return rest_ensure_response([["count" => $count], $imports, $this->skipped_rows]);
         }
     }
 

@@ -74,8 +74,7 @@ class RapidDashRoute {
             }
         }
 
-        error_log("avail packs");
-        error_log(print_r($business, true));
+
 
         $business->available_packages = $formatted_packages;
 

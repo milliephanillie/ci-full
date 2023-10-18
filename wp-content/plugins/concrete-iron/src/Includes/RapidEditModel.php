@@ -53,9 +53,6 @@ class RapidEditModel
         }
 
 
-        error_log("here are the fields");
-        error_log(print_r($fields, true));
-
         return $fields;
     }
 
