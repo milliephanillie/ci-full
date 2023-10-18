@@ -35,6 +35,7 @@ use ConcreteIron\Includes\RapidDashRoute;
 
 use ConcreteIron\Import\ListingsImport;
 use ConcreteIron\Import\UserImport;
+use ConcreteIron\Import\CreatePost;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -50,6 +51,7 @@ function load_my_plugin() {
         $rapidMemberSince = new RapidMemberSince();
         $rapidDashRoute = new RapidDashRoute();
         $userImports = new UserImport();
+        $createPost = new CreatePost();
 
         $listingsImport = new ListingsImport();
 
