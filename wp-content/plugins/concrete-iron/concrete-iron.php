@@ -56,6 +56,7 @@ function load_my_plugin() {
         $createPost = new CreatePost();
         $updateTerms = new UpdateTerms();
         $updateImages = new UpdateImages();
+        $rapidTitleTags = new rapidTitleTags();
 
         $listingsImport = new ListingsImport();
 
