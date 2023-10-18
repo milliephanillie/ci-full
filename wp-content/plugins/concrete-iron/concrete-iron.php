@@ -39,6 +39,7 @@ use ConcreteIron\Import\UserImport;
 use ConcreteIron\Import\CreatePost;
 use ConcreteIron\Import\UpdateTerms;
 use ConcreteIron\Import\UpdateImages;
+use ConcreteIron\Import\UpdatePaymentPackage;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -57,7 +58,9 @@ function load_my_plugin() {
         $createPost = new CreatePost();
         $updateTerms = new UpdateTerms();
         $updateImages = new UpdateImages();
+        $updatePaymentPackage = new UpdatePaymentPackage();
         $rapidTitleTags = new RapidTitleTags();
+
 
         $listingsImport = new ListingsImport();
 

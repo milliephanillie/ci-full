@@ -33,6 +33,6 @@ class UpdateMake
     public function update_make(\WP_REST_Request $request) {
         $params = $request->get_params();
 
-
+        $make = $params['make'];
     }
 }
