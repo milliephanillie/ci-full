@@ -104,8 +104,6 @@ class Package_Products
 //                                $fields[$field_key][$value_key]['free'] = $types["image"]["free"];
                                 $fields['test'] = $fields[$field_key][$value_key];
                                 $fields[$field_key][$value_key]['free'] = $types["image"]["free"];
-                                var_dump($fields);
-                                die();
                             }
                         }
                     }

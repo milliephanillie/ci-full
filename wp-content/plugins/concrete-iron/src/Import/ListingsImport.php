@@ -388,6 +388,7 @@ class ListingsImport {
             'hide_empty' => false,
         ]);
 
+
         if ($params["file"]["size"] > 0) {
             $file = fopen($fileName, "r");
             $row = 0;
@@ -444,10 +445,6 @@ class ListingsImport {
                         break;
                     }
 
-                    if ( $row > 130 && $status != 'active' ) {
-                        continue;
-                    }
-
                     $user = $this->validateUser($username, null);
 
                     if (!$user) {
@@ -464,8 +461,9 @@ class ListingsImport {
                     }
 
                     if( empty($subcategory_lvl_3) ) {
-                        $this->add_to_row_skipped($row, 'missing_category');
-                        continue;
+                        $subcategory_lvl_3 = '';
+//                        $this->add_to_row_skipped($row, 'missing_category');
+//                        continue;
                     }
 
                     $title_empty = false;
@@ -508,15 +506,16 @@ class ListingsImport {
                         }
                     }
 
-                    if (strpos($subcategory_lvl_3, 'Volumetric Mixers') || $subcategory_lvl_3 === 'Cementech Mobile Volumetric Mixers' || $subcategory_lvl_3 === 'Concrete Mobile Mixers' || $subcategory_lvl_3 === 'Concrete Volumetric Mixers') {
-                        $subcategory_lvl_3 = 'Volumetric Mixers';
+                    if(!empty($subcategory_lvl_3)) {
+                        if (strpos($subcategory_lvl_3, 'Volumetric Mixers') || $subcategory_lvl_3 === 'Cementech Mobile Volumetric Mixers' || $subcategory_lvl_3 === 'Concrete Mobile Mixers' || $subcategory_lvl_3 === 'Concrete Volumetric Mixers') {
+                            $subcategory_lvl_3 = 'Volumetric Mixers';
+                        }
+
+                        if (strpos($subcategory_lvl_3,'Diversion Valves') || strpos($subcategory_lvl_3,'Line Pumps') || strpos($subcategory_lvl_3,'City Pumps') || strpos($subcategory_lvl_3,'Line Pump') || $subcategory_lvl_3 === 'Concrete Trailer Line Pumps' || $subcategory_lvl_3 === 'Concrete City Pumps') {
+                            $subcategory_lvl_3 = 'Line Pumps';
+                        }
                     }
 
-                    if (strpos($subcategory_lvl_3,'Diversion Valves') || strpos($subcategory_lvl_3,'Line Pumps') || strpos($subcategory_lvl_3,'City Pumps') || strpos($subcategory_lvl_3,'Line Pump') || $subcategory_lvl_3 === 'Concrete Trailer Line Pumps' || $subcategory_lvl_3 === 'Concrete City Pumps') {
-                        $subcategory_lvl_3 = 'Line Pumps';
-                    }
-
-                    $old_url = $this->generateOriginalUrl($subcategory_lvl_2, $subcategory_lvl_3, $title, $import_id);
 
                     $auth_business_name = \Redux::getOption('lisfinity-options', '_auth-business-name') ?? self::DEFAULT_BUSINESS_PROFILE_PREFIX;
                     $user_id = $user->ID;
@@ -651,15 +650,13 @@ class ListingsImport {
 
                     //TAXONOMY UPDATES
                     $category_update = update_post_meta($post_id, '_product-category', 'concrete-equipment');
-
-                    error_log(print_r("subcat update", true));
-                    error_log(print_r($subcategory_lvl_3, true));
+                    $subcategory_lvl_3_update = null;
                     if(!empty($subcategory_lvl_3)) {
                         $subcategory_lvl_3_update = $this->update_subcats($post_id, $subcategory_lvl_3);
                     } else {
                         $missing_subcategory_lvl_3 = update_post_meta($post_id, 'missing_third_cat', true);
                     }
-                    error_log(print_r($subcategory_lvl_3_update, true));
+
 
                     if($subcategory_lvl_3_update) {
                         $term = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
@@ -683,8 +680,10 @@ class ListingsImport {
                                 $type_term_update = wp_set_object_terms($post_id, $parent->slug, 'concrete-equipment-type');
                             }
 
-                            $subcategory_lvl_3_check = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
-                            error_log(print_r($subcategory_lvl_3_check, true));
+                            if($subcategory_lvl_3_update) {
+                                $subcategory_lvl_3_check = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
+                            }
+
                             $type_term_update = get_term_by('term_taxonomy_id', $type_term_update, 'concrete-equipment-type');
                         }
                     }
@@ -734,7 +733,7 @@ class ListingsImport {
                         "lisfinity_package_id" => $lisfintiy_package_id,
                         "title" => $title,
                         "stocknumber" => $stocknumber,
-                        "subcategory_lvl_3" => $subcategory_lvl_3,
+                        "subcategory_lvl_3" => $subcategory_lvl_3 ?? '',
                         "auth_business_name" => $auth_business_name,
                         "user_phone" => $user_phone,
                         //"post" => get_post($post_id),
@@ -743,17 +742,15 @@ class ListingsImport {
                         "expiration_date" => $expired_date,
                         "package_id" => $package_id,
                         "subcategory_lvl_3_check" => [
-                            "slug" => $subcategory_lvl_3_check->slug,
                             "term_taxonomy_id" => ($subcategory_lvl_3_update && isset($subcategory_lvl_3_update[0])) ? $subcategory_lvl_3_update[0] : null,
                         ],
 //                            "all_the_makes" => $this->makes,
-                        "make" => $make,
+                        "make" => $make ?? null,
                         "model" => $model,
                         "condition" => $condition,
                         "equipment_hours" => $equipment_hours,
                         "year" => $year,
                         "price" => $price,
-                        "old_url" => $old_url,
                         "new_url" => $new_url,
                         "description" => $description_add,
                         "updates" => [
@@ -764,7 +761,7 @@ class ListingsImport {
                             "updated_active_date" => $this->updated_listed,
                             "updated_expiration_date" => $this->updated_expired,
                             "updated_payment_package" => $updated_payment_package,
-                            "updated_subcategory_lvl_3" => $subcategory_lvl_3_update,
+                            "updated_subcategory_lvl_3" => $subcategory_lvl_3_update ?? '',
                             "updated_type_term" => $type_term_update->slug,
                             "updated_make" => $make_update,
                             "updated_model" => $model_update,
