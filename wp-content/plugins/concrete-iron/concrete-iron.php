@@ -34,6 +34,7 @@ use ConcreteIron\Includes\RapidMemberSince;
 use ConcreteIron\Includes\RapidDashRoute;
 
 use ConcreteIron\Import\ListingsImport;
+use ConcreteIron\Import\UserImport;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -48,6 +49,7 @@ function load_my_plugin() {
         $rapidMailer = new RapidMailer();
         $rapidMemberSince = new RapidMemberSince();
         $rapidDashRoute = new RapidDashRoute();
+        $userImports = new UserImport();
 
         $listingsImport = new ListingsImport();
 
