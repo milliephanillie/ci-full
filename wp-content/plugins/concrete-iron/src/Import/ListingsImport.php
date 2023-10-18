@@ -462,8 +462,8 @@ class ListingsImport {
 
                     if( empty($subcategory_lvl_3) ) {
                         $subcategory_lvl_3 = '';
-//                        $this->add_to_row_skipped($row, 'missing_category');
-//                        continue;
+                        $this->add_to_row_skipped($row, 'missing_category');
+                        continue;
                     }
 
                     $title_empty = false;
@@ -687,7 +687,6 @@ class ListingsImport {
                         "lisfinity_package_id" => $lisfintiy_package_id,
                         "title" => $title,
                         "stocknumber" => $stocknumber,
-                        "subcategory_lvl_3" => $subcategory_lvl_3 ?? '',
                         "auth_business_name" => $auth_business_name,
                         "user_phone" => $user_phone,
                         //"post" => get_post($post_id),
@@ -695,9 +694,6 @@ class ListingsImport {
                         "active_date" => $active_date,
                         "expiration_date" => $expired_date,
                         "package_id" => $package_id,
-                        "subcategory_lvl_3_check" => [
-                            "term_taxonomy_id" => ($subcategory_lvl_3_update && isset($subcategory_lvl_3_update[0])) ? $subcategory_lvl_3_update[0] : null,
-                        ],
 //                            "all_the_makes" => $this->makes,
                         "make" => $make ?? null,
                         "model" => $model,
