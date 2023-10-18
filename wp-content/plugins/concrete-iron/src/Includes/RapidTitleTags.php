@@ -1,4 +1,5 @@
 <?php
+namespace ConcreteIron\Includes;
 
 class RapidTitleTags {
     const SEPARATOR = '|';
