@@ -462,8 +462,6 @@ class ListingsImport {
 
                     if( empty($subcategory_lvl_3) ) {
                         $subcategory_lvl_3 = '';
-                        $this->add_to_row_skipped($row, 'missing_category');
-                        continue;
                     }
 
                     $title_empty = false;
@@ -561,7 +559,7 @@ class ListingsImport {
                     $business_update = update_post_meta($post_id, '_product-business', $business_id);
                     $update_business_email = update_post_meta($business_id, '_profile-email', $user->user_email);
 
-                    $use_current_date_for_expiration = false; // Set to true if needed
+                    $use_current_date_for_expiration = true; // Set to true if needed
 
                     $current_time = current_time('timestamp');
                     $active_date = strtotime($date); // Active date is the given date
