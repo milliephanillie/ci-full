@@ -60,9 +60,9 @@ class RapidEditModel
     }
 
     public function edit_product_fields($titles, bool $is_edit = false) {
-        error_log(print_r("what is the edit?", true));
-        error_log(print_r($is_edit, true));
-        error_log(print_r($titles, true));
+//        error_log(print_r("what is the edit?", true));
+//        error_log(print_r($is_edit, true));
+//        error_log(print_r($titles, true));
         if (array_key_exists('packages', $titles) && ! empty($is_edit) && $is_edit === true ) {
             //unset($titles['packages']);
         }
