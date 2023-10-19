@@ -40,6 +40,9 @@ use ConcreteIron\Import\CreatePost;
 use ConcreteIron\Import\UpdateTerms;
 use ConcreteIron\Import\UpdateImages;
 use ConcreteIron\Import\UpdatePaymentPackage;
+use ConcreteIron\Import\UpdateMakes;
+use ConcreteIron\Import\UpdatePrice;
+use ConcreteIron\Import\UpdateYear;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -55,9 +58,15 @@ function load_my_plugin() {
         $rapidMemberSince = new RapidMemberSince();
         $rapidDashRoute = new RapidDashRoute();
         $userImports = new UserImport();
+
+
         $createPost = new CreatePost();
         $updateTerms = new UpdateTerms();
         $updateImages = new UpdateImages();
+        $updateMakes = new UpdateMakes();
+        $updatePrice = new UpdatePrice();
+        $udpateYear = new UpdateYear();
+
         $updatePaymentPackage = new UpdatePaymentPackage();
         $rapidTitleTags = new RapidTitleTags();
 

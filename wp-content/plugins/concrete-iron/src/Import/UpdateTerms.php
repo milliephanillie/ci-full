@@ -33,9 +33,14 @@ class UpdateTerms {
         $subcategory_lvl_2 = $params['subcategory_lvl_2'] ?? null;
         $subcategory_lvl_3 = $params['subcategory_lvl_3'] ?? null;
 
-
         $category_update = update_post_meta($params['post_id'], '_product-category', 'concrete-equipment');
-        $subcategory_lvl_3_update = $this->set_subcategory_lvl_3($params['post_id'], $subcategory_lvl_3);
+
+        $subcategory_lvl_3_exists = $this->term_exists($subcategory_lvl_3, 'concrete-equipment-subcategory');
+
+        $subcategory_lvl_3_update = null;
+        if($subcategory_lvl_3_exists) {
+            $subcategory_lvl_3_update = $this->set_subcategory_lvl_3($params['post_id'], $subcategory_lvl_3);
+        }
 
         if(!$subcategory_lvl_3_update) {
             return new \WP_Error(
@@ -66,6 +71,26 @@ class UpdateTerms {
                 ],
             ]
         ));
+    }
+
+    public function term_exists($term_name, $taxonomy_slug) {
+        $the_terms = get_terms(
+            [
+                'taxonomy' => $taxonomy_slug,
+                'hide_empty' => false
+            ]
+        );
+
+        $termExists = false;
+
+        foreach($the_terms as $term) {
+            if (strpos($term->name, $term_name) !== false) {
+                $termExists = true;
+                break;
+            }
+        }
+
+        return $termExists;
     }
 
     public function set_subcategory_lvl_3($post_id, $subcategory_lvl_3) {

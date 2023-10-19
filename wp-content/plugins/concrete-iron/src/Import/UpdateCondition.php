@@ -1,17 +1,15 @@
 <?php
 /**
- * Updates the payment package via the WP REST API
+ * Updates the year via the WP REST API
  *
  *
  */
 namespace ConcreteIron\Import;
 
-use Lisfinity\Models\PackageModel;
-
 /*
- * Update Payment Package class
+ * Update Year class
  */
-class UpdatePaymentPackage
+class UpdateCondition
 {
     /**
      * class constructor
@@ -39,13 +37,13 @@ class UpdatePaymentPackage
     public function register_routes()
     {
         $namespace = 'ci/v1';
-        $route = 'update/payment-package';
+        $route = 'update/condition';
 
         register_rest_route($namespace, $route, [
             'methods' => [\WP_REST_Server::CREATABLE],
             'callback' => [
                 $this,
-                'update_payment_package'
+                'update_condition'
             ],
             'args' => [],
             'permission_callback' => '__return_true',
@@ -53,27 +51,25 @@ class UpdatePaymentPackage
     }
 
     /**
-     * Update the payment package callback
+     * Update the price
      *
      * @param \WP_REST_Request $request
      * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
-    public function update_payment_package(\WP_REST_Request $request) {
+    public function update_condition(\WP_REST_Request $request) {
         $params = $request->get_params();
 
-        if(!$params['post_id'] || !$params['payment_package_id']) {
+        if(!$params['post_id'] || !$params['condition']) {
             return new \WP_Error(
-                'update_payment_package',
-                'No payment package or post id'
+                'update_condition',
+                'No condition or post id'
             );
         }
 
-        $payment_package_update = update_post_meta($params['post_id'], 'payment-package', $params['payment_package_id']);
-        $actual = get_post_meta($params['post_id'], 'payment-package', $params['payment_package_id']);
+        $update = wp_set_object_terms($params['post_id'], $params['year'], 'concrete-equipment-condition',  false);
         return rest_ensure_response(new \WP_REST_Response(
             [
-                'payment_package_update' => $payment_package_update,
-                'actual' => $actual,
+                'condition_update' => $update,
             ]
         ));
     }
