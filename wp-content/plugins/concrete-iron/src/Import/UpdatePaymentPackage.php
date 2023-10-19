@@ -68,7 +68,7 @@ class UpdatePaymentPackage
             );
         }
 
-        $payment_package_update = update_post_meta($params['post_id'], '_payment-package', $params['payment_package_id']);
+        $payment_package_update = update_post_meta($params['post_id'], 'payment-package', $params['payment_package_id']);
         $actual = get_post_meta($params['post_id'], 'payment-package', $params['payment_package_id']);
         return rest_ensure_response(new \WP_REST_Response(
             [
