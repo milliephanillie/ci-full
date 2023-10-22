@@ -43,6 +43,7 @@ use ConcreteIron\Import\UpdatePaymentPackage;
 use ConcreteIron\Import\UpdateMakes;
 use ConcreteIron\Import\UpdatePrice;
 use ConcreteIron\Import\UpdateYear;
+use ConcreteIron\Import\CreateOrder;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -58,6 +59,7 @@ function load_my_plugin() {
         $rapidMemberSince = new RapidMemberSince();
         $rapidDashRoute = new RapidDashRoute();
         $userImports = new UserImport();
+        $createOrder = new CreateOrder();
 
 
         $createPost = new CreatePost();
@@ -122,4 +124,3 @@ function ci_scripts() {
 class ConcreteCore {
     private $instance = null;
 }
-
