@@ -124,7 +124,7 @@ class UpdatePaymentPackage
         return rest_ensure_response(new \WP_REST_Response(
             [
                 'post_id' => $params['post_id'],
-                'lisfintiy_package_id' => $payment_package_id,
+                'lisfinty_package_id' => $payment_package_id,
                 'actual' => $actual,
                 'update_order' => $this->update_order($params['order_id'], $params['package_id']),
                 'promotions' => $promotions,
@@ -246,7 +246,7 @@ class UpdatePaymentPackage
                         // type of the promotion.
                         $promotion_type,
                         // status of the promotion
-                        'pending',
+                        'active',
                         // activation date of the promotion
                         '',
                         // expiration date of the promotion if needed.
