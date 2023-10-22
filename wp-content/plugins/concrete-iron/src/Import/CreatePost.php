@@ -61,12 +61,37 @@ class CreatePost {
         ]);
     }
 
+    /**
+     * Generates a title
+     *
+     * @param \WP_REST_Request $request
+     * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     */
     public function create_post(\WP_REST_Request $request) {
         $params = $request->get_params();
+        $title = $params['title'] ?? null;
+
+        if(!$title || !$params['username'] || (!$params['model'] && !$params['year'] && !$params['make'] && !$params['model'] && $params['condition'])) {
+            return new \WP_Error(
+                    [
+                       'create_post',
+                       'missing_title'
+                    ]
+            );
+        }
 
         $user = $this->validateUser($params['username'], '');
 
-        $title = $this->generate_title(null, $params['year'], $params['make'], $params['model'], $params['condition']);
+        if(!$user) {
+            return new \WP_Error(
+                'create_post',
+                'problem with creating a user for a post'
+            );
+        }
+
+        if(!$title) {
+            $title = $this->generate_title(null, $params['year'], $params['make'], $params['model'], $params['condition']);
+        }
 
         $post_id = $this->update_post(null, $title, $user->ID);
 
@@ -76,7 +101,7 @@ class CreatePost {
             [
                 'id' => $post_id,
                 'title' => $title,
-                'user' => $user
+                'user' => $user,
             ]
         ));
     }

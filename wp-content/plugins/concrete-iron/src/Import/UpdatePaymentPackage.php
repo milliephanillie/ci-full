@@ -7,6 +7,10 @@
 namespace ConcreteIron\Import;
 
 use Lisfinity\Controllers\PackageController;
+use Lisfinity\Models\PromotionsModel;
+use Lisfinity\Models\PackageModel;
+
+use ConcreteIron\Includes\RapidProductSubmit;
 
 /*
  * Update Payment Package class
@@ -50,6 +54,18 @@ class UpdatePaymentPackage
             'args' => [],
             'permission_callback' => '__return_true',
         ]);
+
+        $route = 'get/payment-package';
+
+        register_rest_route($namespace, $route, [
+            'methods' => [\WP_REST_Server::READABLE],
+            'callback' => [
+                $this,
+                'get_payment_package'
+            ],
+            'args' => [],
+            'permission_callback' => '__return_true',
+        ]);
     }
 
     /**
@@ -61,203 +77,242 @@ class UpdatePaymentPackage
     public function update_payment_package(\WP_REST_Request $request) {
         $params = $request->get_params();
 
-        if(!$params['post_id'] || !$params['user_email'] || !$params['payment_package_id']) {
+        if(!$params['order_id'] || !$params['package_id'] || !$params['post_id']) {
             return new \WP_Error(
                 'update_payment_package',
-                'No payment package or post id or user_email'
+                'No orderID or package id or post id'
             );
         }
 
-        $user = get_user_by('email', $params['user_email']);
-        $user_id = $user->ID;
+        $package_model = new PackageModel();
+        $existing_package = $package_model->where( 'order_id', $params['order_id'] )->get( '1', '', 'id', 'col' );
 
-        $order_id = $this->order_exists_with_listing_id($params['post_id']);
-        if ($order_id == false) {
-            // Order with this listing ID already exists. Don't create a new one.
-            $order_id = $this->create_woo_order($user_id, $params['payment_package_id'], $params['post_id']);
+        if(empty($existing_package)) {
+            return new \WP_Error(
+                'update_payment_package',
+                'There is no payment package with that order ID'
+            );
         }
 
-        /*
-         * Check to see if there is a package in wp_lisfinity_packages already for a single post type. Since this is an import, there should only be one entry
-         */
-        $lisfintiy_package_id = 'not created';
-        if( ! $this->order_id_exists_in_wp_lisfinity_packages($order_id)) {
-            $lisfintiy_package_id = $this->update_lisfinity_packages($params['payment_package_id'], $params['post_id'], $order_id, $user_id, 90, 1);
+        $promotions_model = new PromotionsModel();
+        $promotions_model->where('order_id', $params['order_id'])->destroy();
+
+        $payment_package_id = $existing_package[0];
+        $promotions = null;
+
+        if (!empty($payment_package_id)) {
+            $package_model->set( 'product_id', $params['package_id'] )->where( 'id', $payment_package_id )->update();
+            $promotions = carbon_get_post_meta($params['package_id'], 'package-free-promotions');
         }
 
-        $payment_package_update = update_post_meta($params['post_id'], '_payment-package', $lisfintiy_package_id);
-        $payment_package_update = update_post_meta($params['post_id'], '_payment-package', $lisfintiy_package_id);
-        $actual = get_post_meta($params['post_id'], 'payment-package');
+
+        $addons = carbon_get_post_meta($params['package_id'],'package-promotions');
+
+        $promotions_inserted = null;
+        if($promotions) {
+            $promotions_inserted = $this->insert_promotions($payment_package_id, $params['package_id'], $params['post_id'], $params['user_id'], $promotions, $params['order_id'], $duration = 30);
+        }
+
+        $addons_inserted = null;
+        if($addons) {
+            $addons_inserted = $this->insert_addons($payment_package_id, $params['package_id'], $params['order_id'], $params['user_id'], $params['post_id']);
+        }
+
+        //delete_post_meta($params['post_id'], '_payment-package');
+        update_post_meta($params['post_id'], '_payment-package', $payment_package_id);
+        $actual = get_post_meta($params['post_id'], '_payment-package');
         return rest_ensure_response(new \WP_REST_Response(
             [
-                'payment_package_update' => $payment_package_update,
-                'lisfintiy_package_id' => $lisfintiy_package_id,
+                'post_id' => $params['post_id'],
+                'lisfintiy_package_id' => $payment_package_id,
                 'actual' => $actual,
+                'update_order' => $this->update_order($params['order_id'], $params['package_id']),
+                'promotions' => $promotions,
+                'promotions_inserted' => $promotions_inserted,
+                'addons_inserted' => $addons_inserted,
             ]
         ));
     }
 
     /**
-     * Create an order with a _listing_id in the post meta. If and order with this _listing_id already exists, don't create it again, but return the ID
-     *
-     * @param $post_id
-     * @return false|int
+     * @param $lisfinity_package_id
+     * @param $package_id
+     * @param $listing_id
+     * @param $user_id
+     * @param $promotions
+     * @param $order_id
+     * @param $products_duration
+     * @return array
      */
-    public function order_exists_with_listing_id($post_id) {
-        $args = array(
-            'post_type'   => 'shop_order',
-            'post_status' => 'any',
-            'meta_key'    => '_listing_id',
-            'meta_value'  => $post_id,
-            'numberposts' => 1,
-        );
+    public function insert_promotions($lisfinity_package_id, $package_id, $listing_id, $user_id, $promotions, $order_id, $products_duration = 30){
+        $promotion_model = new PromotionsModel();
+        $duration = carbon_get_post_meta($package_id, 'package-products-duration') ?? $products_duration;
+        $expiration_date = date('Y-m-d H:i:s', strtotime("+ {$duration} days", current_time('timestamp')));
+        $model = new PromotionsModel();
+        $promotions_inserted = [];
 
-        $orders = get_posts($args);
+        if (!empty($promotions)) {
+            foreach ($promotions as $promotion) {
+                $promotion_object = $model->get_promotion_product($promotion);
+                $promotion_product_id = $promotion_object[0]->ID;
+                $promotions_values = [
+                    // payment package id.
+                    $lisfinity_package_id ?? 0,
+                    // wc order id.
+                    $order_id ?? 0,
+                    // wc product id, id of this WooCommerce product.
+                    $promotion_product_id,
+                    // id of the user that made order.
+                    $user_id,
+                    // id of the product that this promotion has been activated.
+                    $listing_id,
+                    // limit or duration number depending on the type of the promotion.
+                    $products_duration,
+                    // count of addon promotions, this cannot be higher than value.
+                    0,
+                    // position of promotion on the site.
+                    $promotion,
+                    // type of the promotion.
+                    'product',
+                    // status of the promotion
+                    'active',
+                    // activation date of the promotion
+                    current_time('mysql'),
+                    // expiration date of the promotion if needed.
+                    $expiration_date,
+                ];
 
-        if (!empty($orders)) {
-            return $orders[0]->ID;  // Return the ID of the first order found
-        } else {
-            return false;  // No order found with the given listing ID
+
+
+                // save promotion data in the database.
+                $promotion_model->store($promotions_values);
+
+                array_push($promotions_inserted, $promotions_values);
+            }
         }
+
+        return $promotions_inserted;
     }
 
     /**
-     * Create a woocommerce order for a listing
-     *
-     * @param $user_id
-     * @param $product_id
-     * @return int
+     * @param $package_id
+     * @param $order_id
+     * @param $customer_id
+     * @return array
      */
-    public function create_woo_order($user_id, $package_id, $listing_id) {
-        if( ! $user_id || ! $package_id ) {
-            return null;
+    public function insert_addons($payment_package_id, $package_id, $order_id, $customer_id, $post_id) {
+        // store promotions if there's any
+        $addons_inserted = [];
+        $promotions = carbon_get_post_meta( $package_id, "package-promotions" );
+
+        if ( ! empty( $promotions ) ) {
+            $promotion_model = new PromotionsModel();
+            foreach ( $promotions as $promotion ) {
+                $promotion_type     = ! empty( $promotion['_type'] ) ? $promotion['_type'] : '';
+                $promotion_position = ! empty( $promotion['package-promotions-product'] ) ? $promotion['package-promotions-product'] : '';
+                $promotion_value    = ! empty( $promotion['package-promotions-product-value'] ) ? $promotion['package-promotions-product-value'] : '';
+
+                // prepare wp_query args.
+                // todo currently is only querying addons.
+                $args                   = [];
+                $args['meta_query'][]   = [
+                    'key'     => 'promotion-addon-type',
+                    'value'   => $promotion_position,
+                    'compare' => '=',
+                ];
+                $args['fields']         = 'ids';
+                $args['posts_per_page'] = 1;
+                $wc_product_id          = $promotion_model->get_promotion_products( 'promotion', 'addon', $args );
+                // bail if there is no WooCommerce product set or promotions is not an addon.
+                // todo remove addon check when we provide a functionality for it.
+                if ( ! empty( $wc_product_id ) && false !== strpos( $promotion_position, 'addon' ) ) {
+                    $promotions_values = [
+                        // payment package id.
+                        $payment_package_id,
+                        // wc order id.
+                        $order_id,
+                        // wc product id, id of this WooCommerce product.
+                        $wc_product_id[0],
+                        // id of the user that made order.
+                        $customer_id,
+                        // id of the product that this promotion has been activated.
+                        $post_id,
+                        // limit or duration number depending on the type of the promotion.
+                        $promotion_value,
+                        // count of addon promotions, this cannot be higher than value.
+                        0,
+                        // position of promotion on the site.
+                        $promotion_position,
+                        // type of the promotion.
+                        $promotion_type,
+                        // status of the promotion
+                        'pending',
+                        // activation date of the promotion
+                        '',
+                        // expiration date of the promotion if needed.
+                        '',
+                    ];
+
+                    // save promotion data in the database.
+                    $promotion_model->store( $promotions_values );
+
+                    array_push($addons_inserted, $promotions_values);
+                }
+            }
         }
 
-        $product_id = $package_id;
+        return $addons_inserted;
+    }
 
-        // Fetch user billing and shipping details.
-        $user_info = get_userdata($user_id);
+    public function get_payment_package(\WP_REST_Request $request) {
+        $params = $request->get_params();
+        if(!$params['post_id']) {
+            new \WP_Error(
+                'get_payment_package',
+                'missing post id'
+            );
+        }
 
-        $billing_address = array(
-            'first_name' => $this->get_user_meta_fallback($user_id, 'billing_first_name', $user_info->first_name),
-            'last_name'  => $this->get_user_meta_fallback($user_id, 'billing_last_name', $user_info->last_name),
-            'company'    => $this->get_user_meta_fallback($user_id, 'billing_company'),
-            'email'      => $user_info->user_email,
-            'phone'      => $this->get_user_meta_fallback($user_id, 'billing_phone'),
-            'address_1'  => $this->get_user_meta_fallback($user_id, 'billing_address_1'),
-            'address_2'  => $this->get_user_meta_fallback($user_id, 'billing_address_2'),
-            'city'       => $this->get_user_meta_fallback($user_id, 'billing_city'),
-            'state'      => $this->get_user_meta_fallback($user_id, 'billing_state'),
-            'postcode'   => $this->get_user_meta_fallback($user_id, 'billing_postcode'),
-            'country'    => $this->get_user_meta_fallback($user_id, 'billing_country', 'US'), // Default to US
+        $payment_package_id = get_post_meta($params['post_id'], '_payment-package') ?? null;
+
+        if(!$payment_package_id) {
+            return new \WP_Error(
+                'get_payment_package',
+                'There is no payment package for that given post id ' .$params['post_id']
+            );
+        }
+
+        return new \WP_REST_Response(
+            [
+                'payment_package_id' => $payment_package_id
+            ]
         );
+    }
 
-        $shipping_address = array(
-            'first_name' => $this->get_user_meta_fallback($user_id, 'shipping_first_name', $user_info->first_name),
-            'last_name'  => $this->get_user_meta_fallback($user_id, 'shipping_last_name', $user_info->last_name),
-            'company'    => $this->get_user_meta_fallback($user_id, 'shipping_company'),
-            'address_1'  => $this->get_user_meta_fallback($user_id, 'shipping_address_1'),
-            'address_2'  => $this->get_user_meta_fallback($user_id, 'shipping_address_2'),
-            'city'       => $this->get_user_meta_fallback($user_id, 'shipping_city'),
-            'state'      => $this->get_user_meta_fallback($user_id, 'shipping_state'),
-            'postcode'   => $this->get_user_meta_fallback($user_id, 'shipping_postcode'),
-            'country'    => $this->get_user_meta_fallback($user_id, 'shipping_country', 'US'), // Default to US
-        );
+    public function update_order($order_id, $package_id) {
+        if($order_id || $package_id) {
+            return new \WP_Error(
+                'update_order',
+                'missing order or package id'
+            );
+        }
 
-        $order = wc_create_order(array(
-            'status'        => apply_filters('woocommerce_default_order_status', 'pending'),
-            'customer_id'   => $user_id,
-            'customer_note' => '',
-        ));
+        $order = wc_get_order($order_id);
 
-        $product = wc_get_product($product_id);
-        $order->add_product($product, 1); // Add one quantity of the product, adjust as needed.
+        foreach ($order->get_items() as $item_id => $item) {
+            $order->remove_item($item_id);
+        }
 
-        $order->set_address($billing_address, 'billing');
-        $order->set_address($shipping_address, 'shipping');
+        $product = wc_get_product($package_id);
+        $order->add_product($product, 1); // Add one quantity of the product
 
         $order->calculate_totals();
         $order->save();
 
-        $order_id = $order->get_id();
-        if (!empty($post_id)) {  // Assuming $listing_id contains the ID of the listing
-            update_post_meta($order_id, '_listing_id', $post_id);
-        }
-        return $order_id;
-    }
-
-    // Helper function to safely retrieve user meta with a fallback.
-    public function get_user_meta_fallback($user_id, $key, $default = '') {
-        $value = get_user_meta($user_id, $key, true);
-        return !empty($value) ? $value : $default;
-    }
-
-    /**
-     * Update the Lisfinity packages
-     *
-     * @param int $payment_package_id - the id column in wp_lisfinity_packages
-     * @param int $listing_id - the id of the actual post or listing
-     * @param int $order_id - the id of the order
-     * @param string $user_id - the id of the user
-     * @param int $products_duration - the products duration
-     * @param int $products_limit - the products limit
-     * @return bool|mixed|string|void
-     */
-    public function update_lisfinity_packages(int $payment_package_id, int $listing_id, int $order_id, string $user_id, int $products_duration = 90, int $products_limit = 1)
-    {
-        $customer_id = get_current_user_id();
-
-        $values = [
-            // id of the customer that made order.
-            $user_id,
-            // wc product id of this item.
-            $payment_package_id,
-            // wc order id for this item.
-            $order_id,
-            // limit amount of products in a package.
-            carbon_get_post_meta($payment_package_id, 'package-products-limit') ?? 1,
-            // current amount of submitted products in this package. (this should be only 1 for each post for new setup
-            1,
-            // duration of the submitted products.
-            $products_duration,
-            // type of the package.
-            'payment_package',
-            // status of the package.
-            'active',
-        ];
-
-        $package_controller = new PackageController();
-
-        $lisfinity_package_id = $package_controller->store($values);
-
-        if (!empty($lisfinity_package_id)) {
-            $promotions = carbon_get_post_meta($payment_package_id, 'package-free-promotions');
-
-            if (!empty($promotions)) {
-                $this->insert_promotions($lisfinity_package_id, $payment_package_id, $listing_id, $customer_id, $promotions, $order_id, $products_duration);
-            }
-        }
-
-        return $lisfinity_package_id;
-    }
-
-    /**
-     * Check if the product exists in the table
-     *
-     * @param $product_id
-     * @return bool
-     */
-    public function order_id_exists_in_wp_lisfinity_packages($order_id) {
-        global $wpdb;
-
-        // Your custom table name
-        $table_name = $wpdb->prefix . 'lisfinity_packages';
-
-        $query = $wpdb->prepare("SELECT EXISTS (SELECT 1 FROM $table_name WHERE order_id = %d LIMIT 1)", $order_id);
-
-        // Execute the query. If the order ID exists, $result will be 1 (TRUE), otherwise it will be NULL.
-        $result = $wpdb->get_var($query);
-
-        return $result ? true : false;
+        return array(
+            'status' => 'success',
+            'message' => 'Order items successfully updated!',
+            'order_id' => $order_id
+        );
     }
 }
