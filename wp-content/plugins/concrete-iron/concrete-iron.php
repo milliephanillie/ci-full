@@ -44,6 +44,7 @@ use ConcreteIron\Import\UpdateMakes;
 use ConcreteIron\Import\UpdatePrice;
 use ConcreteIron\Import\UpdateYear;
 use ConcreteIron\Import\CreateOrder;
+use ConcreteIron\Import\GetUser;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -60,6 +61,7 @@ function load_my_plugin() {
         $rapidDashRoute = new RapidDashRoute();
         $userImports = new UserImport();
         $createOrder = new CreateOrder();
+        $getUser = new GetUser();
 
 
         $createPost = new CreatePost();
