@@ -46,14 +46,13 @@ class Headless_GravityForms
         if ($form) {
             // Loop through each field in the form to find the hidden field with ID 5
             foreach ($form['fields'] as &$field) {
-                if ($field['id'] == 5 && $field['type'] == 'hidden') {
+                if ($field['defaultValue'] == 'ci_post_id' && $field['type'] == 'hidden') {
                     $field['defaultValue'] = $post_id; // Set the defaultValue to postID
                 }
 
-                if ($field['id'] == 6 && $field['type'] == 'hidden') {
+                if ($field['defaultValue'] == 'listing_url' && $field['type'] == 'hidden') {
                     $link = get_permalink($post_id);
-                    $linkHTML = $link;
-                    $field['defaultValue'] = $linkHTML; // Set the defaultValue to postID
+                    $field['defaultValue'] = $link; // Set the defaultValue to postID
                 }
             }
 
