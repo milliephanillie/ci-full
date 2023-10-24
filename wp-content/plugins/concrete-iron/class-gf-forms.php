@@ -38,7 +38,9 @@ class Headless_GravityForms
     {
         $form_id = $request['form_id'];
         $post_id = $request['postID'];
+        $post_permalink = $request['postPermalink'];
 
+        $title = get_the_title($post_id);
         $form = GFAPI::get_form($form_id);
 
         if ($form) {
@@ -47,7 +49,14 @@ class Headless_GravityForms
                 if ($field['id'] == 5 && $field['type'] == 'hidden') {
                     $field['defaultValue'] = $post_id; // Set the defaultValue to postID
                 }
+
+                if ($field['id'] == 6 && $field['type'] == 'hidden') {
+                    $link = get_permalink($post_id);
+                    $linkHTML = $link;
+                    $field['defaultValue'] = $linkHTML; // Set the defaultValue to postID
+                }
             }
+
             unset($field);  // Unset the reference to prevent unexpected behavior
 
             // Strip data we do not want to share
