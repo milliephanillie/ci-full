@@ -31,7 +31,7 @@ class ListingsImport {
     const ACF_PREFIX = 'ci_';
     const SINGLE_IMAGE_ROUTE = 'ci/v1/one_image';
     const PRODUCT_IMAGES_ROUTE = "ci/v1/product_images";
-    const ORIGINAL_SOURCE_BASE_URL = 'https://concreteiron.com/concrete-equipment/';
+    const ORIGINAL_SOURCE_BASE_URL = 'https://old.concreteiron.com/concrete-equipment/';
     const DEFAULT_BUSINESS_PROFILE_PREFIX = 'Seller: %s';
 
     private $post_stati;
@@ -127,8 +127,8 @@ class ListingsImport {
      * @param $alternate_contact_name
      * @return void|\WP_User
      */
-    public function validateUser($username, $alternate_contact_name) {
-        $user = get_user_by_email($username);
+    public function validateUser($email, $username) {
+        $user = get_user_by_email($email);
         if (!$user) {
             $user = get_user_by('login', $username);
             if(!$user) {
@@ -279,6 +279,9 @@ class ListingsImport {
         require_once(ABSPATH . 'wp-admin/includes/media.php');
         require_once(ABSPATH . 'wp-admin/includes/file.php');
         require_once(ABSPATH . 'wp-admin/includes/image.php');
+
+        $gallery_images = $this->replace_domain('https://concreteiron.com', 'https://old.concreteiron.com', $gallery_images);
+
         // Convert gallery_images to array of URLs
         $urls = array_map('trim', str_getcsv($gallery_images));
 
@@ -384,6 +387,7 @@ class ListingsImport {
         $res = ["Nothing yet."];
         $headers = [];
         $fix_cats = [];
+        $package_id = null;
 
         $this->makes = get_terms('concrete-equipment-makes', [
             'hide_empty' => false,
@@ -430,6 +434,7 @@ class ListingsImport {
 
                     $import_id = $row;
                     $username = $column[$headers['Username']] ?? null;
+                    $email = $column[$headers['Email']] ?? null;
                     $date = $column[$headers['Date']] ?? null;
                     $status = null; //not in this spreadsheet
                     $title = null;
@@ -440,6 +445,11 @@ class ListingsImport {
                     $gallery_images  = $column[$headers['Picture URL']] ?? null;
 
                     $status = $this->getStatusFromDate($date);
+
+//                    if($status !== 'active') {
+//                        var_dump($status);
+//                        die();
+//                    }
 
                     $whitelist = [
                         10,
@@ -453,9 +463,27 @@ class ListingsImport {
                         30,
                         436,
                         680,
+                        11,
+                        449,
+                        8,
+                        70,
+                        57,
+                        40,
+                        8,
+                        15,
+                        16,
+                        22,
+                        37,
+                        39,
+                        92,
+                        122,
+                        138,
+                        145,
+                        208,
+                        200
                     ];
 
-                    if ($status != 'active' && !in_array($row, $whitelist)) {
+                    if ($status == 'active' || in_array($row, $whitelist)) {
                         continue;
                     }
 
@@ -463,7 +491,7 @@ class ListingsImport {
                         break;
                     }
 
-                    $user = $this->validateUser($username, null);
+                    $user = $this->validateUser($email, $username);
 
                     if (!$user) {
                         $user = get_user_by_email('me+assign@philiparudy.com');
@@ -531,6 +559,19 @@ class ListingsImport {
                         }
                     }
 
+                    $query = new \WP_Query(
+                        [
+                            'post_type' => 'product',
+                            'title' => $title,
+                            'posts_per_page' => -1,
+                            'post_status' => 'publish'
+                        ]
+                    );
+
+                    if($query->found_posts) {
+                        continue;
+                    }
+
                     if(!empty($subcategory_lvl_3)) {
                         if (strpos($subcategory_lvl_3, 'Volumetric Mixers') || $subcategory_lvl_3 === 'Cementech Mobile Volumetric Mixers' || $subcategory_lvl_3 === 'Concrete Mobile Mixers' || $subcategory_lvl_3 === 'Concrete Volumetric Mixers') {
                             $subcategory_lvl_3 = 'Volumetric Mixers';
@@ -539,8 +580,18 @@ class ListingsImport {
                         if (strpos($subcategory_lvl_3,'Diversion Valves') || strpos($subcategory_lvl_3,'Line Pumps') || strpos($subcategory_lvl_3,'City Pumps') || strpos($subcategory_lvl_3,'Line Pump') || $subcategory_lvl_3 === 'Concrete Trailer Line Pumps' || $subcategory_lvl_3 === 'Concrete City Pumps') {
                             $subcategory_lvl_3 = 'Line Pumps';
                         }
+
+                        if (strpos($subcategory_lvl_3,'Diversion Valves') || strpos($subcategory_lvl_3,'Line Pumps') || strpos($subcategory_lvl_3,'City Pumps') || strpos($subcategory_lvl_3,'Line Pump') || $subcategory_lvl_3 === 'Concrete Trailer Line Pumps' || $subcategory_lvl_3 === 'Concrete City Pumps') {
+                            $subcategory_lvl_3 = 'Line Pumps';
+                        }
                     }
 
+                    if(strpos($subcategory_lvl_3, 'Slipform Pavers') || strpos($subcategory_lvl_3, 'Curbers')) {
+                        $subcategory_lvl_3 = 'Pavers and Curb Machines';
+                    }
+                    if(strpos($subcategory_lvl_3, 'Forms')) {
+                        $subcategory_lvl_3 = 'Concrete Forms';
+                    }
 
                     $auth_business_name = \Redux::getOption('lisfinity-options', '_auth-business-name') ?? self::DEFAULT_BUSINESS_PROFILE_PREFIX;
                     $user_id = $user->ID;
@@ -586,10 +637,17 @@ class ListingsImport {
                     $business_update = update_post_meta($post_id, '_product-business', $business_id);
                     $update_business_email = update_post_meta($business_id, '_profile-email', $user->user_email);
 
-                    $use_current_date_for_expiration = true; // Set to true if needed
+                    $use_current_date_for_expiration = false; // Set to true if needed
+
+
 
                     $current_time = current_time('timestamp');
                     $active_date = strtotime($date); // Active date is the given date
+
+                    // Ensure the active date does not exceed Jan 1, 2023
+                    if ($active_date > strtotime('2023-01-01')) {
+                        $active_date = strtotime('2023-01-01');
+                    }
 
                     if ($use_current_date_for_expiration) {
                         $expired_date = strtotime('+90 days', $current_time); // Expired date is 90 days from the current time
@@ -600,32 +658,32 @@ class ListingsImport {
                     $this->updated_listed = update_post_meta($post_id, '_product-listed', $active_date);
                     $this->updated_expired = update_post_meta($post_id, '_product-expiration', $expired_date);
 
-                    $updated_payment_package = null;
-                    $package_id = \Redux::getOption('lisfinity-options', '_auth-default-packages');
-                    $package_id = $package_id[0];
-                    if (!empty($package_id)) {
-                        //Intro payment package
-                        $updated_payment_package = update_post_meta($post_id, 'payment-package', $package_id);
-
-                        $order_id = $this->order_exists_with_listing_id($post_id);
-                        if ( $order_id == false) {
-                            // Order with this listing ID already exists. Don't create a new one.
-                            $order_id = $this->create_woo_order($user_id, $package_id, $post_id);
-                        }
-
-                        if ( ! $order_id ) {
-                            $this->add_to_row_skipped($row, 'missing_order_id');
-                            continue;
-                        }
-
-                        /*
-                         * Check to see if there is a package in wp_lisfinity_packages already for a single post type. Since this is an import, there should only be one entry
-                         */
-                        $lisfintiy_package_id = 'not created';
-                        if( ! $this->order_id_exists_in_wp_lisfinity_packages($order_id)) {
-                            $lisfintiy_package_id = $this->update_lisfinity_packages($package_id, $post_id, $order_id, $user_id, 90, 1);
-                        }
-                    }
+//                    $updated_payment_package = null;
+//                    $package_id = \Redux::getOption('lisfinity-options', '_auth-default-packages');
+//                    $package_id = $package_id[0];
+//                    if (!empty($package_id)) {
+//                        //Intro payment package
+//                        $updated_payment_package = update_post_meta($post_id, 'payment-package', $package_id);
+//
+//                        $order_id = $this->order_exists_with_listing_id($post_id);
+//                        if ( $order_id == false) {
+//                            // Order with this listing ID already exists. Don't create a new one.
+//                            $order_id = $this->create_woo_order($user_id, $package_id, $post_id);
+//                        }
+//
+//                        if ( ! $order_id ) {
+//                            $this->add_to_row_skipped($row, 'missing_order_id');
+//                            continue;
+//                        }
+//
+//                        /*
+//                         * Check to see if there is a package in wp_lisfinity_packages already for a single post type. Since this is an import, there should only be one entry
+//                         */
+//                        $lisfintiy_package_id = 'not created';
+//                        if( ! $this->order_id_exists_in_wp_lisfinity_packages($order_id)) {
+//                            $lisfintiy_package_id = $this->update_lisfinity_packages($package_id, $post_id, $order_id, $user_id, 90, 1);
+//                        }
+//                    }
 
                     //TAXONOMY UPDATES
                     $category_update = update_post_meta($post_id, '_product-category', 'concrete-equipment');
@@ -670,7 +728,7 @@ class ListingsImport {
                         }
                     }
 
-                    $this->update_third_cat($post_id, $subcategory_lvl_3, $subcategory_lvl_2, $make);
+                   // $this->update_third_cat($post_id, $subcategory_lvl_3, $subcategory_lvl_2, $make);
 
                     if( $make ) {
                         $make_update = $this->update_makes($post_id, $make);
@@ -712,9 +770,9 @@ class ListingsImport {
                         "username" => $username,
                         "user_id" => $user_id,
                         "post_id" => $post_id,
-                        "order_id" => $order_id,
+                      //  "order_id" => $order_id,
                         "business_id" => $business_id,
-                        "lisfinity_package_id" => $lisfintiy_package_id,
+                       // "lisfinity_package_id" => $lisfintiy_package_id,
                         "title" => $title,
                         "stocknumber" => $stocknumber,
                         "auth_business_name" => $auth_business_name,
@@ -740,7 +798,7 @@ class ListingsImport {
                             "updated_business_email" => $update_business_email,
                             "updated_active_date" => $this->updated_listed,
                             "updated_expiration_date" => $this->updated_expired,
-                            "updated_payment_package" => $updated_payment_package,
+                          //  "updated_payment_package" => $updated_payment_package,
                             "updated_subcategory_lvl_3" => $subcategory_lvl_3_update ?? '',
                             //"updated_type_term" => $type_term_update->slug,
                             "updated_make" => $make_update,
@@ -753,6 +811,7 @@ class ListingsImport {
                         ]
                     ];
 
+
                     array_push($imports, [$post_id => $data[$post_id]]);
 
 //                    if($count == 4) {
@@ -764,6 +823,8 @@ class ListingsImport {
 
                 $res = new \WP_REST_Response(["top", $this->skipped_rows, $imports]);
             }
+
+
 
             return rest_ensure_response([["count" => $count], $imports, $this->skipped_rows]);
         }
@@ -903,32 +964,6 @@ class ListingsImport {
         return $lisfinity_package_id;
     }
 
-    public function update_third_cat($post_id, $third_cat, $second_cat, $make) {
-        if(!$this->third_cats) {
-            return null;
-        }
-
-//        var_dump($this->third_cats);
-//        die();
-
-        foreach ($this->third_cats as $third_cat) {
-            var_dump($third_cat);
-            if($this->findSubstring($make, $third_cat->name)) {
-                $parent = get_term_by('term_id', $third_cat->parent, 'concrete-equipment-type');
-                var_dump($parent);
-                die();
-            }
-        }
-
-        var_dump($this->third_cats);
-        die();
-
-        wp_set_object_terms($post_id, $filter[$key], 'concrete-equipment-subcategory', false);
-
-        $term = get_term_by('term_taxonomy_id', $subcategory_lvl_3_update[0], 'concrete-equipment-subcategory');
-
-        //check if the parent is the second category
-    }
 
     function findSubstring($haystack, $needle) {
         $words = explode(' ', $needle);
@@ -1293,5 +1328,9 @@ class ListingsImport {
     public function get_user_meta_fallback($user_id, $key, $default = '') {
         $value = get_user_meta($user_id, $key, true);
         return !empty($value) ? $value : $default;
+    }
+
+    public function replace_domain($old_domain, $new_domain, $url_string) {
+        return str_replace($old_domain, $new_domain, $url_string);
     }
 }
