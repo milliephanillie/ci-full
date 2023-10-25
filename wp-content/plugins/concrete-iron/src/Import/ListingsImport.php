@@ -384,6 +384,7 @@ class ListingsImport {
         $fileName = $params["file"]['tmp_name'];
         $images = $request->get_params()['images'];
         $limit= $params["limit"] ?? 1000;
+        $start = $params["start"] ?? null;
         $res = ["Nothing yet."];
         $headers = [];
         $fix_cats = [];
@@ -480,9 +481,16 @@ class ListingsImport {
                         138,
                         145,
                         208,
-                        200
+                        200,
+                        34,
+                        1045
                     ];
 
+                    if($start) {
+                        if($row < $start) {
+                            continue;
+                        }
+                    }
                     if ($status == 'active' || in_array($row, $whitelist)) {
                         continue;
                     }
