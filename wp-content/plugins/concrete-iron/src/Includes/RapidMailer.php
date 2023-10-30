@@ -50,23 +50,30 @@ class RapidMailer {
 
             $seller_id = get_post_meta( $post_id, '_product-agent', true );
 
-            // Get the email of the seller/user
+            $business_owner = get_post_meta($post_id, '_business-owner', true);
+            $profile_email = get_post_meta($business_owner, '_profile-email', true);
+
             $seller_info = get_userdata($seller_id);
             $seller_email = $seller_info->user_email;
 
             error_log(print_r('The seller email is: ', true));
             error_log(print_r($seller_email, true));
 
-            // Append the seller's email to the existing "to" email addresses
-            if ($seller_email) { // Check that email exists
+            if ($seller_email && strpos($notification['to'], $seller_email) === false) {
                 if (!empty($notification['to'])) {
                     $notification['to'] .= ', ';
                 }
                 $notification['to'] .= $seller_email;
             }
+
+            if ($profile_email && strpos($notification['to'], $profile_email) === false) {
+                if (!empty($notification['to'])) {
+                    $notification['to'] .= ', ';
+                }
+                $notification['to'] .= $profile_email;
+            }
         }
-
-
+        
         return $notification;
     }
 }
