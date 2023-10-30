@@ -73,7 +73,7 @@ class RapidMailer {
                 $notification['to'] .= $profile_email;
             }
         }
-        
+
         return $notification;
     }
 }
