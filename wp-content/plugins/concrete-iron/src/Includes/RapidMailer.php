@@ -37,11 +37,13 @@ class RapidMailer {
             'phone' => '',
             'message' => '',
             'listing_url' => '',
-            'name' => ''
+            'name' => '',
+            'title' => '',
         ];
 
         // Check if the notification name matches
         if ( $notification['name'] == 'Contact Seller' ) {
+            $notification['headers']['Content-Type'] = 'Content-type: text/html; charset=UTF-8';
             $template_path = plugin_dir_path( CONCRETEIRON ) . 'templates/lead.php';
 
             foreach ($form['fields'] as $field) {
@@ -87,6 +89,7 @@ class RapidMailer {
                 return $notification; // Return if post_id is not found
             }
 
+            $title          = get_the_tite($post_id);
             $seller_id      = get_post_meta( $post_id, '_product-agent', true );
             $seller_info    = get_userdata($seller_id);
             $seller_email   = $seller_info->user_email;
@@ -118,6 +121,7 @@ class RapidMailer {
                 $notification['to'] .= $profile_email;
             }
 
+            $data['title'] = $title;
 
 
             $content = $this->get_template_content($template_path, $data);
