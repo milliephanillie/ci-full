@@ -29,11 +29,24 @@ class RapidMailer {
      */
     public function add_to_email( $notification, $form, $entry ) {
 
-
+        error_log(print_r('An email has been sent. The notification is: ', true));
+        error_log(print_r($notification['name'], true));
 
         // Check if the notification name matches
         if ( $notification['name'] == 'Contact Seller' ) {
-            $post_id = $entry[5];
+            foreach ($form['fields'] as $field) {
+                if (isset($field['inputName']) && $field['inputName'] == 'ci_post_id') {
+                    $field_id = (string)$field['id'];
+                    if (isset($entry[$field_id])) {
+                        $post_id = $entry[$field_id];
+                        break;
+                    }
+                }
+            }
+
+            if (!$post_id) {
+                return $notification; // Return if post_id is not found
+            }
 
             $seller_id = get_post_meta( $post_id, '_product-agent', true );
 
@@ -41,7 +54,8 @@ class RapidMailer {
             $seller_info = get_userdata($seller_id);
             $seller_email = $seller_info->user_email;
 
-
+            error_log(print_r('The seller email is: ', true));
+            error_log(print_r($seller_email, true));
 
             // Append the seller's email to the existing "to" email addresses
             if ($seller_email) { // Check that email exists
