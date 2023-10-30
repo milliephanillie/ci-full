@@ -89,7 +89,7 @@ class RapidMailer {
                 return $notification; // Return if post_id is not found
             }
 
-            $title          = get_the_tite($post_id);
+            $data['title']          = get_the_title($post_id);
             $seller_id      = get_post_meta( $post_id, '_product-agent', true );
             $seller_info    = get_userdata($seller_id);
             $seller_email   = $seller_info->user_email;
