@@ -38,14 +38,14 @@
 </head>
 <body style="margin: 0; width: 100%; padding: 0; -webkit-font-smoothing: antialiased; word-break: break-word">
 <div style="display: none">
-    New Message: ConcreteIron
+    <?php echo $title; ?> - New Message
 </div>
 <div role="article" aria-roledescription="email" aria-label="ConcreteIron.com: New Message" lang="en">
     <div class="sm-px-4" style="font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif">
         <table align="center" cellpadding="0" cellspacing="0" role="none">
             <tr>
                 <td style="width: 552px; max-width: 100%">
-                    <div class="sm-my-8" style="margin-top: 48px; margin-bottom: 48px; text-align: center">
+                    <div class="sm-my-8" style="margin-top: 14px; margin-bottom: 14px; text-align: center">
                         <a href="https://concreteiron.com">
                             <img src="https://concreteiron.com/wp-content/uploads/elementor/thumbs/concrete-iron-logo-2x-1-q5oxxwsobvhmqk595lykghr0jydthgjqac4hri4l1w.png" width="170" alt="ConcreteIron" style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
                         </a>
@@ -58,36 +58,38 @@
                             </td>
                         </tr>
                         <tr role="separator">
-                            <td style="line-height: 15px">&zwj;</td>
+                            <td height="14" style="line-height: 14px">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td style="padding: 4px">
-                                <table>
-                                    <tr>
-                                        <td style="padding: 5px 10px;"><strong>Full Name:</strong></td>
-                                        <td><?php echo $full_name; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 5px 10px;"><strong>Email:</strong></td>
-                                        <td><?php echo $email_address; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 5px 10px;"><strong>Phone:</strong></td>
-                                        <td><?php echo $phone; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 5px 10px;"><strong>Message:</strong></td>
-                                        <td><?php echo $message; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 5px 10px;"><strong>Listing:</strong></td>
-                                        <td><?php echo $listing_url; ?></td>
-                                    </tr>
+                            <td>
+                                <table align="center">
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding: 5px 10px;"><strong>Full Name:</strong></td>
+                                            <td><?php echo $full_name; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 5px 10px;"><strong>Email:</strong></td>
+                                            <td><?php echo $email_address; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 5px 10px;"><strong>Phone:</strong></td>
+                                            <td><?php echo $phone; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 5px 10px;"><strong>Message:</strong></td>
+                                            <td><?php echo $message; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 5px 10px;"><strong>Listing:</strong></td>
+                                            <td><?php echo $listing_url; ?></td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </td>
                         </tr>
                         <tr role="separator">
-                            <td style="line-height: 15px">&zwj;</td>
+                            <td height="14" style="line-height: 15px"></td>
                         </tr>
                     </table>
                     <table style="width: 100%;" cellpadding="0" cellspacing="0" role="none">
