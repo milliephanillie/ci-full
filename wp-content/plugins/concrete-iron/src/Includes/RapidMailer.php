@@ -83,20 +83,29 @@ class RapidMailer {
                         $data['listing_url'] = $entry[$field_id];
                     }
                 }
+
+                if (isset($field['inputName']) && $field['inputName'] == 'listing_title') {
+                    if (isset($entry[$field_id])) {
+                        $data['title'] = $data['listing_title'] = $entry[$field_id];
+                    }
+                }
             }
 
             if (!$post_id) {
                 return $notification; // Return if post_id is not found
             }
 
-            $data['title']          = get_the_title($post_id);
+            $data['post_id'] = $post_id;
+            $data['title']  = $data['title'] ?? get_the_title($post_id);
             $seller_id      = get_post_meta( $post_id, '_product-agent', true );
             $seller_info    = get_userdata($seller_id);
             $seller_email   = $seller_info->user_email;
 
             $business_owner = get_post_meta($post_id, '_product-business', true);
+
             error_log(print_r('_product-business', true));
             error_log(print_r($business_owner, true));
+
             $business  = get_post($business_owner);
             $business_author = get_userdata($business->post_author);
             if($business_author) {
@@ -120,9 +129,6 @@ class RapidMailer {
                 }
                 $notification['to'] .= $profile_email;
             }
-
-            $data['title'] = $title;
-
 
             $content = $this->get_template_content($template_path, $data);
             error_log(print_r("the content of the template", true));
