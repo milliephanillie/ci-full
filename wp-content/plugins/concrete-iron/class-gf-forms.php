@@ -54,6 +54,11 @@ class Headless_GravityForms
                     $link = get_permalink($post_id);
                     $field['defaultValue'] = $link; // Set the defaultValue to postID
                 }
+
+                if ($field['defaultValue'] == 'listing_title' && $field['type'] == 'hidden') {
+                    $title = get_the_title($post_id);
+                    $field['defaultValue'] = $title; // Set the defaultValue to postID
+                }
             }
 
             unset($field);  // Unset the reference to prevent unexpected behavior
