@@ -59,6 +59,14 @@ class Headless_GravityForms
                     $title = get_the_title($post_id);
                     $field['defaultValue'] = $title; // Set the defaultValue to postID
                 }
+
+                if ($field['defaultValue'] == 'seller_email' && $field['type'] == 'hidden') {
+                    $seller_id      = get_post_meta( $post_id, '_product-agent', true );
+                    $seller_info    = get_userdata($seller_id);
+                    $seller_email   = $seller_info->user_email;
+
+                    $field['defaultValue'] = $seller_email;
+                }
             }
 
             unset($field);  // Unset the reference to prevent unexpected behavior
