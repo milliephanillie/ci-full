@@ -123,11 +123,13 @@ class RapidMailer {
                 $notification['to'] .= $seller_email;
             }
 
-            if ($profile_email && strpos($notification['to'], $profile_email) === false) {
-                if (!empty($notification['to'])) {
-                    $notification['to'] .= ', ';
+            if ($profile_email && strpos($notification['to'], $profile_email) === false && (empty($notification['cc']) || strpos($notification['cc'], $profile_email) === false)) {
+                if (!empty($notification['cc'])) {
+                    $notification['cc'] .= ', ';
+                } else {
+                    $notification['cc'] = '';
                 }
-                $notification['to'] .= $profile_email;
+                $notification['cc'] .= $profile_email;
             }
 
             $content = $this->get_template_content($template_path, $data);
