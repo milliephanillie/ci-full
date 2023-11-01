@@ -270,11 +270,11 @@ class Package_Products
         foreach ($packages->posts as $post) {
             if( get_field('administrative_package', $post->ID) && ! current_user_can('manage_options') ) {
                 continue;
+            } else {
+                $package = $this->prepare_meta($post);
+                //$package_extra_meta = get_post_meta($post->ID);
+                array_push($data, array_merge(['package_id' => $post->ID], $package));
             }
-
-            $package = $this->prepare_meta($post);
-            //$package_extra_meta = get_post_meta($post->ID);
-            array_push($data, array_merge(['package_id' => $post->ID], $package));
         }
 
         return rest_ensure_response(new WP_REST_Response($data));
