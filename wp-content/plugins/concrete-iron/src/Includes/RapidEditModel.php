@@ -1,30 +1,11 @@
 <?php
-
 namespace ConcreteIron\Includes;
 
 
 class RapidEditModel
 {
-    private $redirect = false;
-
-    protected $data = [];
-
-    protected $is_edit = false;
-
-    protected $packages_enabled = false;
-
-    protected $has_promotions = false;
-
-    protected $has_commission = false;
-
-    protected $is_business = false;
-
-    protected $additional_payment = false;
-
-    protected $submission_commission = false;
-
     /**
-     * CustomImport constructor
+     * RapidEditModel constructor
      */
     public function __construct()
     {
@@ -36,12 +17,40 @@ class RapidEditModel
      */
     public function boot()
     {
-        add_filter('https_ssl_verify', '__return_false');
-//        add_filter('lisfinity__submit_form_fields', [$this, 'set_edit_fields']);
-//        add_filter('lisfinity__product_fields', [$this, 'edit_product_fields'], 10, 2);
+        add_filter('lisfinity__submit_form_fields', [$this, 'set_fields_for_edit_route'], 10, 2);
         add_filter('lisfinity__submit_form_fields', [$this, 'remove_costs'], 10, 2);
     }
 
+    /**
+     * Unset the package field if it's an edit and not expired.
+     *
+     * @param $fields
+     * @return mixed
+     */
+    public function set_fields_for_edit_route($fields) {
+        if(strpos($_SERVER['HTTP_REFERER'], 'my-account/edit') !== false) {
+            $post_id = intval(basename($_SERVER['HTTP_REFERER']));
+
+            if(0 !== $post_id) {
+                $listing_status = get_post_meta($post_id, '_product-status', true);
+
+                if('expired' !== $listing_status) {
+                    if(isset($fields['package'])) {
+                       unset($fields['package']);
+                    }
+                }
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Remove the costs and calculations from the media field
+     *
+     * @param $fields
+     * @return mixed
+     */
     public function remove_costs($fields) {
         if (isset($fields['media'])) {
             if (array_key_exists('media_calculation', $fields['media'])) {
@@ -50,28 +59,6 @@ class RapidEditModel
             if (array_key_exists('total_calculation', $fields['media'])) {
                 unset($fields['media']['total_calculation']);
             }
-        }
-
-
-        return $fields;
-    }
-
-    public function edit_product_fields($titles, bool $is_edit = false) {
-//        error_log(print_r("what is the edit?", true));
-//        error_log(print_r($is_edit, true));
-//        error_log(print_r($titles, true));
-        if (array_key_exists('packages', $titles) && ! empty($is_edit) && $is_edit === true ) {
-            //unset($titles['packages']);
-        }
-
-        return $titles;
-    }
-
-    public function set_edit_fields($fields)
-    {
-        // if the route is an edit
-        if (!array_key_exists('package', $fields)) {
-            return $fields;
         }
 
         return $fields;
