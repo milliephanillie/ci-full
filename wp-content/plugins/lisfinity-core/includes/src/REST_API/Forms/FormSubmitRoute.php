@@ -116,9 +116,9 @@ class FormSubmitRoute extends Route {
 //        error_log(print_r($is_expired, true));
 //        error_log(print_r("hope", true));
 
-        if( ! empty($is_edit) && boolval($is_edit) === true && ! $is_expired ) {
-            unset($form_fields['package']);
-        }
+//        if( ! empty($is_edit) && boolval($is_edit) === true && ! $is_expired ) {
+//            unset($form_fields['package']);
+//        }
 
         $titles = [
             'general'  => esc_html__( 'General', 'lisfinity-core' ),
