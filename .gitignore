@@ -3,3 +3,5 @@
 node_modules
 wp-content/debug.log
 wp-content/uploads
+
+wp-content/plugins/forms-for-lisfinity
