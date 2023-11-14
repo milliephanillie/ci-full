@@ -34,7 +34,7 @@ if($dev_host === 'localhost') {
     define( 'WP_DEBUG_DISPLAY', true );
 } else {
     $db_name = 'uznkukehnn';
-    $db_user = 'tukknskgzw';
+    $db_user = 'uznkukehnn';
     $db_password = 'rVeYDbR28s';
     $db_host = 'localhost';
     define( 'WP_DEBUG', true );

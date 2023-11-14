@@ -19,12 +19,8 @@ require_once WP_PLUGIN_DIR . '/lisfinity-core/vendor/autoload.php';
 // Include the Composer autoload file from your plugin
 require_once plugin_dir_path( CONCRETEIRON ) . 'vendor/autoload.php';
 
-// Include your class file
-require_once plugin_dir_path( CONCRETEIRON ) . 'src/Includes/RapidFormSubmitModel.php';
 require_once plugin_dir_path( CONCRETEIRON ) . 'src/Includes/RapidProductSubmit.php';
 
-
-use ConcreteIron\Includes\RapidFormSubmitModel;
 use ConcreteIron\Includes\RapidProductSubmit;
 use ConcreteIron\Includes\RapidEditModel;
 use ConcreteIron\Includes\RapidHooks;
@@ -45,6 +41,7 @@ use ConcreteIron\Import\UpdatePrice;
 use ConcreteIron\Import\UpdateYear;
 use ConcreteIron\Import\CreateOrder;
 use ConcreteIron\Import\GetUser;
+use ConcreteIron\Import\GetTerms;
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -62,6 +59,7 @@ function load_my_plugin() {
         $userImports = new UserImport();
         $createOrder = new CreateOrder();
         $getUser = new GetUser();
+        $getTerms = new GetTerms();
 
 
         $createPost = new CreatePost();
@@ -72,16 +70,12 @@ function load_my_plugin() {
         $udpateYear = new UpdateYear();
 
         $updatePaymentPackage = new UpdatePaymentPackage();
-        $rapidTitleTags = new RapidTitleTags();
 
+        if(is_plugin_active('wordpress-seo/wp-seo.php')) {
+            $rapidTitleTags = new RapidTitleTags();
+        }
 
         $listingsImport = new ListingsImport();
-
-//        if ( class_exists( 'GFAPI' ) ) {
-//            error_log( "Gravity Forms is active." );
-//        } else {
-//            error_log( "Gravity Forms is not active." );
-//        }
 
         add_action('rest_api_init', [$rapidProductSubmit, 'register_routes']);
     } else {
