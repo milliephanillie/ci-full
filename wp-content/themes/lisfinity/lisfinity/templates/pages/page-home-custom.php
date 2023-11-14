@@ -68,8 +68,9 @@
                 <?php $banner_text = lisfinity_get_option( 'home-banner-text' ); ?>
                 <?php if ( ! empty( $banner_text ) ) : ?>
                     <!-- Banner | Home -->
-                    <div class="banner--home">
+                    <div class=banner--home">
                         <?php echo wp_kses_post( $banner_text ); ?>
+                        <p style="font-size: 24px; line-height: 32px; font-weight: bold; text-align: center;">Basic Listings (Normally $30) Free for a Limited Time!</p>
                     </div>
                 <?php endif; ?>
 
