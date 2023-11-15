@@ -463,8 +463,10 @@ class RapidProductSubmit
         $is_business = false;
         $result['store'] = $form_submit_model->store_data($id, $fields, $data, $user_id, $duration, $is_business);
 
-        // store agent.
-        carbon_set_post_meta($id, 'product-agent', $agent->user_id ?? get_current_user_id());
+        if($user_id) {
+            // store agent.
+            carbon_set_post_meta($id, 'product-agent', $user_id);
+        }
 
         if (\lisfinity_is_enabled(\lisfinity_get_option('vendors-only'))) {
             carbon_set_post_meta($id, 'product-price-sell-on-site', 1);
