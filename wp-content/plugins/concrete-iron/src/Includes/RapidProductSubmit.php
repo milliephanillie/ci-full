@@ -228,6 +228,8 @@ class RapidProductSubmit
 
         $package_controller = new PackageController();
 
+        $products_duration = get_post_meta($listing_id, '_products-duration', true);
+
         $lisfinity_package_id = $package_controller->store($values);
 
         if (!empty($lisfinity_package_id)) {
@@ -514,8 +516,8 @@ class RapidProductSubmit
     {
         $promotion_model = new PromotionsModel();
         $products_duration = carbon_get_post_meta($product_id, 'package-products-duration');
-        $duration = 7;
-        $expiration_date = date('Y-m-d H:i:s', strtotime("+ {$duration} days", current_time('timestamp')));
+        $products_duration = $products_duration ?? 30;
+        $expiration_date = date('Y-m-d H:i:s', strtotime("+ {$products_duration} days", current_time('timestamp')));
         $model = new PromotionsModel();
         if (!empty($promotions)) {
             foreach ($promotions as $promotion) {
