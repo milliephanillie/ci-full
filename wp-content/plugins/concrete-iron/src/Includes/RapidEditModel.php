@@ -28,7 +28,7 @@ class RapidEditModel
      * @return mixed
      */
     public function set_fields_for_edit_route($fields) {
-        if(strpos($_SERVER['HTTP_REFERER'], 'my-account/edit') !== false) {
+        if(array_key_exists('HTTP_REFERER', $_SERVER) && (strpos($_SERVER['HTTP_REFERER'], 'my-account/edit') !== false)) {
             $post_id = intval(basename($_SERVER['HTTP_REFERER']));
 
             if(0 !== $post_id) {
