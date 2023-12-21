@@ -33,6 +33,7 @@ use ConcreteIron\Includes\RapidMailer;
 use ConcreteIron\Includes\RapidMemberSince;
 use ConcreteIron\Includes\RapidDashRoute;
 use ConcreteIron\Includes\RapidTitleTags;
+use ConcreteIron\Includes\RapidSEO;
 
 use ConcreteIron\Import\ListingsImport;
 use ConcreteIron\Import\UserImport;
@@ -45,6 +46,7 @@ use ConcreteIron\Import\UpdatePrice;
 use ConcreteIron\Import\UpdateYear;
 use ConcreteIron\Import\CreateOrder;
 use ConcreteIron\Import\GetUser;
+
 
 add_action('plugins_loaded', 'load_my_plugin');
 
@@ -73,6 +75,7 @@ function load_my_plugin() {
 
         $updatePaymentPackage = new UpdatePaymentPackage();
         $rapidTitleTags = new RapidTitleTags();
+        $rapidSEO = new RapidSEO();
 
 
         $listingsImport = new ListingsImport();
@@ -125,4 +128,11 @@ function ci_scripts() {
 
 class ConcreteCore {
     private $instance = null;
+}
+
+use Carbon_Fields\Carbon_Fields;
+
+add_action('after_setup_theme', 'crb_load');
+function crb_load() {
+    Carbon_Fields::boot();
 }
