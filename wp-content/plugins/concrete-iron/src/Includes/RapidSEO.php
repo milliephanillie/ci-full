@@ -1,10 +1,6 @@
 <?php
 namespace ConcreteIron\Includes;
 
-use Carbon_Fields\Carbon_Fields;
-use Carbon_Fields\Container;
-use Carbon_Fields\Field;
-
 class RapidSEO {
     const PAGE_TEMPLATE = 'concrete-iron-seo';
     const PAGE_IDENTIFIER = 'rapid-seo';
@@ -461,7 +457,7 @@ class RapidSEO {
 
     public function boot() {
         add_action('wpseo_title', [$this, 'lisfintiy_query_param_title_tags']);
-        add_action('wpseo_title', [$this, 'lisfintiy_query_param_meta_desc']);
+        add_action('wpseo_metadesc', [$this, 'lisfintiy_query_param_meta_desc']);
     }
 
     public function lisfintiy_query_param_title_tags($title) {
