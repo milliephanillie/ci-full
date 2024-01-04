@@ -34,6 +34,7 @@ use ConcreteIron\Includes\RapidMemberSince;
 use ConcreteIron\Includes\RapidDashRoute;
 use ConcreteIron\Includes\RapidTitleTags;
 use ConcreteIron\Includes\RapidSEO;
+use ConcreteIron\Includes\RapidDebugging;
 
 use ConcreteIron\Import\ListingsImport;
 use ConcreteIron\Import\UserImport;
@@ -64,7 +65,7 @@ function load_my_plugin() {
         $userImports = new UserImport();
         $createOrder = new CreateOrder();
         $getUser = new GetUser();
-
+        $rapidDebugging = new RapidDebugging();
 
         $createPost = new CreatePost();
         $updateTerms = new UpdateTerms();
@@ -76,7 +77,6 @@ function load_my_plugin() {
         $updatePaymentPackage = new UpdatePaymentPackage();
         $rapidTitleTags = new RapidTitleTags();
         $rapidSEO = new RapidSEO();
-
 
         $listingsImport = new ListingsImport();
 
