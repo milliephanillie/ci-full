@@ -71,13 +71,8 @@ class CreatePost {
         $params = $request->get_params();
         $title = $params['title'] ?? null;
 
-        if(!$title || !$params['username'] || (!$params['model'] && !$params['year'] && !$params['make'] && !$params['model'] && $params['condition'])) {
-            return new \WP_Error(
-                    [
-                       'create_post',
-                       'missing_title'
-                    ]
-            );
+        if(!$params['username']) {
+            return new \WP_Error('create_post', 'Missing User Name ');
         }
 
         $user = $this->validateUser($params['username'], '');
@@ -89,10 +84,14 @@ class CreatePost {
             );
         }
 
-        if(!$title) {
+        if(!$params['title']) {
+            if(!$params['model'] && !$params['year'] && !$params['make']) {
+                return new \WP_Error('create_post', 'missing all required fields to make a title');
+            }
+
             $title = $this->generate_title(null, $params['year'], $params['make'], $params['model'], $params['condition']);
         }
-
+        
         $post_id = $this->update_post(null, $title, $user->ID);
 
         $this->update_product_type($post_id);
