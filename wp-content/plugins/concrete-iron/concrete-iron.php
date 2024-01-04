@@ -65,7 +65,6 @@ function load_my_plugin() {
         $userImports = new UserImport();
         $createOrder = new CreateOrder();
         $getUser = new GetUser();
-        $rapidDebugging = new RapidDebugging();
 
         $createPost = new CreatePost();
         $updateTerms = new UpdateTerms();
