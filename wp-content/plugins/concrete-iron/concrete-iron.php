@@ -108,6 +108,8 @@ require plugin_dir_path( CONCRETEIRON ) . 'class-purchase-package.php';
 add_action( 'wp_enqueue_scripts', 'ci_scripts' );
 
 function ci_scripts() {
+    wp_enqueue_style('ci-css', plugin_dir_path( CONCRETEIRON ) . 'assets/css/ci-css', null, '1.0.0');
+
     $localized_vars = [
         "ci_payment_package" => get_site_url() . '/wp-json/ci/v1/get_packages',
         "ci_single_package" => get_site_url() . '/wp-json/ci/v1/get_single_package',
