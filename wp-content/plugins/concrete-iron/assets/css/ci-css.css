@@ -1,0 +1,18 @@
+@media screen and (max-width: 800px) {
+    .posts .w-full {
+        width: 100% !important;
+    }
+    .elementor-1881 .elementor-element.elementor-element-1225475 .posts .container .row .px-col.w-full
+    {
+        width: 100% !important;
+    }
+}
+
+.product--actions a:nth-child(3),
+.product--actions button {
+    display: none;
+}
+
+.product-single--actions button:last-child div {
+    display: none;
+}
