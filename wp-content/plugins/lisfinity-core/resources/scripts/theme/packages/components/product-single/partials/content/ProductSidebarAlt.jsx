@@ -5,6 +5,7 @@
 import { useState, useEffect, Fragment } from 'react';
 import Advertisement from '../sidebar/Advertisement';
 import SafetyTips from '../sidebar/SafetyTips';
+import FinanceCalculator from '../sidebar/FinanceCalculator';
 import Calculator from '../sidebar/Calculator';
 import OwnerAlt from '../sidebar/OwnerAlt';
 
@@ -18,10 +19,11 @@ function ProductSidebarAlt(props) {
             </div>
         }
 
-      {options.calculator_position !== 'content' && product.product_meta.price > 0 && product.calculator && product.calculator.display &&
-      <div className="profile--calculator mt-30 py-20 px-20 bg-white rounded shadow-theme">
-        <Calculator product={product} currentUser={currentUser}/>
-      </div>}
+      {true === true &&
+        <div className='calc-wrapper'>
+              <FinanceCalculator product={product} currentUser={currentUser} />
+            </div>
+      }
 
       {'0' !== options.safety_tips && (options['membership-safety-tips'] === 'always' || (options['membership-safety-tips'] === 'logged_in' && lc_data.logged_in === '1')) &&
       <div className="profile--tips mt-30 py-30 px-20 bg-white rounded shadow-theme">

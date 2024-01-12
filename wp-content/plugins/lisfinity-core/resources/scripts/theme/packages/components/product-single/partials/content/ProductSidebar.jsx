@@ -11,6 +11,7 @@ import { __ } from '@wordpress/i18n';
 import Owner from '../sidebar/Owner';
 import Advertisement from '../sidebar/Advertisement';
 import SafetyTips from '../sidebar/SafetyTips';
+import FinanceCalculator from '../sidebar/FinanceCalculator';
 import Calculator from '../sidebar/Calculator';
 
 function ProductSidebar(props) {
@@ -30,6 +31,8 @@ function ProductSidebar(props) {
       <div className="profile--calculator mt-20 py-20 px-20 bg-white rounded shadow-theme">
         <Calculator product={product} currentUser={currentUser}/>
       </div>}
+
+      <FinanceCalculator product={product} currentUser={currentUser} />
 
       {'0' !== options.safety_tips &&
       <div className="profile--tips mt-20 py-30 px-20 bg-white rounded shadow-theme">
