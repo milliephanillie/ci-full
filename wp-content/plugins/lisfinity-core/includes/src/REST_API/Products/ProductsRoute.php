@@ -361,6 +361,7 @@ class ProductsRoute extends Route {
 		$wc_product = wc_get_product( $product->ID );
 
 		$advertisements          = $this->get_product_advertisements( $product->ID );
+        $advertisements          = apply_filters('concreteiron__ads', $advertisements, $product->ID);
 		$product->advertisements = $advertisements;
 		$product->guid           = get_permalink( $product->ID );
 		$expires                 = carbon_get_post_meta( $product->ID, 'product-expiration' );
@@ -408,6 +409,7 @@ class ProductsRoute extends Route {
 		} else {
 			$phone = carbon_get_post_meta( $product->ID, 'phone' );
 		}
+
 		$premium_profile->location_formatted = 'business' === $account_type ? lisfinity_format_location( $premium_profile->ID, 'full' === $location_format, false, explode( ',', $premium_profile->location['address'] ) ) : carbon_get_post_meta( $product->ID, 'product-location' )['address'];
 		$premium_profile->store_referral     = lisfinity_is_enabled( lisfinity_get_option( 'enable-store-referral' ) ) ? get_post_meta( $product->ID, '_product-store-referral', true ) : false;
 		$premium_profile->thumbnail          = has_post_thumbnail( $premium_profile->ID ) ? get_the_post_thumbnail_url( $premium_profile->ID, 'big' ) : false;

@@ -120,15 +120,6 @@ const Gallery = (props) => {
       <div className="mb-40">
         <div className="flex flex-col mb-20">
           <div className="relative flex mb-10">
-            { console.log("we are here inside the gallery") }
-            { console.log(field) }
-            { console.log(media) }
-            {console.log(payment_package)}
-
-            {console.log("useEffect")}
-            {console.log(promotion)}
-            {console.log("formData")}
-            {console.log(formData)}
           <span
             className="text-sm text-grey-500"
             dangerouslySetInnerHTML={{
@@ -246,10 +237,6 @@ const Gallery = (props) => {
                       </div>
                     </div>
                   </div>
-
-                  {console.log("media and images all the rest of em")}
-                  {console.log(media)}
-                  {console.log(images)}
 
                   {media &&
                   <div className="flex justify-between items-center mt-20 text-sm text-grey-500">
