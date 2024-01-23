@@ -94,6 +94,8 @@ class RapidTitleTags {
      * @return string
      */
     public function lisfinity_meta_desc($description) {
+        $meta_dec_alt ='';
+
         if (strpos($_SERVER['REQUEST_URI'], '/ad-category/') !== false) {
             $description = "Your project requires top-quality concrete equipment, and we've got it all. From mixing to demolition, browse our full range to find the tools that will keep your site running smoothly.";
             $meta_dec_alt = "For every concrete task, there's a tool to match in our extensive equipment category. Choose from a variety of mixers, pumps, and finishing tools to ensure your construction success.";

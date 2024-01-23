@@ -107,6 +107,9 @@ require plugin_dir_path( CONCRETEIRON ) . 'class-purchase-package.php';
 
 add_action( 'wp_enqueue_scripts', 'ci_scripts' );
 
+use ConcreteIron\Includes\RapidAds;
+$rapidAds = new RapidAds();
+
 function ci_scripts() {
     wp_enqueue_style('ci-css', plugin_dir_url( CONCRETEIRON ) . 'assets/css/ci-css.css', array(), '1.0.1');
 
