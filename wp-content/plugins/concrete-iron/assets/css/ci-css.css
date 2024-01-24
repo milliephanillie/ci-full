@@ -35,3 +35,20 @@
     text-align: center;
     margin-top: 10px;
 }
+
+div.is-sold-wrapper {
+    display: flex;
+  flex-wrap: wrap-reverse;
+}
+
+div.is-sold-wrapper > div {
+    width: 100%;
+}
+
+.is-sold-wrapper .listing-sold {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}

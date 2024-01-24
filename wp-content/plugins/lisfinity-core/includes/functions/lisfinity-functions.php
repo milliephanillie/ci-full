@@ -218,7 +218,7 @@ if ( ! function_exists( 'lisfinity_format_post_select' ) ) {
 	 *
 	 * @return array
 	 */
-	function lisfinity_format_post_select( $args = [] ) {
+	function lisfinity_format_post_select( $args = [], $uasort = null ) {
 		$posts   = lisfinity_get_posts( $args );
 		$options = [];
 
@@ -227,6 +227,10 @@ if ( ! function_exists( 'lisfinity_format_post_select' ) ) {
 				$options[ $post->ID ] = $post->post_title;
 			}
 		}
+
+        if($uasort) {
+            uasort($options, 'strcasecmp');
+        }
 
 		return $options;
 	}
@@ -264,6 +268,29 @@ if ( ! function_exists( 'lisfinity_get_users' ) ) {
 }
 
 if ( ! function_exists( 'lisfinity_format_users_select' ) ) {
+    /**
+     * Format and prepare users to display in select field
+     * ---------------------------------------------------
+     *
+     * @param array $args
+     *
+     * @return array
+     */
+    function lisfinity_format_users_select($args = [])
+    {
+        $users = lisfinity_get_users($args);
+        $options = [];
+
+        foreach ($users as $user) {
+            $options[$user->ID] = $user->display_name;
+        }
+
+        return $options;
+    }
+}
+
+
+if ( ! function_exists( 'lisfinity_format_users_select_asort' ) ) {
 	/**
 	 * Format and prepare users to display in select field
 	 * ---------------------------------------------------
@@ -272,13 +299,15 @@ if ( ! function_exists( 'lisfinity_format_users_select' ) ) {
 	 *
 	 * @return array
 	 */
-	function lisfinity_format_users_select( $args = [] ) {
+	function lisfinity_format_users_select_asort( $args = [] ) {
 		$users   = lisfinity_get_users( $args );
 		$options = [];
 
 		foreach ( $users as $user ) {
 			$options[ $user->ID ] = $user->display_name;
 		}
+
+        uasort($options, 'strcasecmp');
 
 		return $options;
 	}

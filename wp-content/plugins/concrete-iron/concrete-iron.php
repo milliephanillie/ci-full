@@ -111,7 +111,7 @@ use ConcreteIron\Includes\RapidAds;
 $rapidAds = new RapidAds();
 
 function ci_scripts() {
-    wp_enqueue_style('ci-css', plugin_dir_url( CONCRETEIRON ) . 'assets/css/ci-css.css', array(), '1.0.1');
+    wp_enqueue_style('ci-css', plugin_dir_url( CONCRETEIRON ) . 'assets/css/ci-css.css', array(), '1.0.2');
 
 
     $localized_vars = [

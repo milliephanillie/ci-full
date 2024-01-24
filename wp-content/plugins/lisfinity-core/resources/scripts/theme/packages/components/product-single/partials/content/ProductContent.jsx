@@ -51,6 +51,7 @@ function ProductContent(props) {
   }, []);
 
 
+
   return (
     <div ref={el}>
 
@@ -60,8 +61,9 @@ function ProductContent(props) {
                 className="new-orange py-10 px-20 rounded border border-red-300 bg-red-100 text-xl text-red-500">{lc_data.jst[711]}</span>
             </div>
         }
-        <div className="product---header-custom flex">
-          <div className="leading-snug"><h1 className="-mb-10 font-bold text-5xl text-grey-1000 leading-snug"
+        <div className={`product---header-custom ${product.post_status == 'sold' ? 'is-sold-wrapper' : ''}  flex`}>
+          <div className="leading-snug">
+              <h1 className="-mb-10 font-bold text-5xl text-grey-1000 leading-snug"
                                             dangerouslySetInnerHTML={{ __html: he.decode(product.post_title) }}/></div>
 
           {/*<div className="product--id text-grey-1000 text-13 font-light">{sprintf(lc_data.jst[504], product.ID)}</div>*/}

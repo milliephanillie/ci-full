@@ -63,11 +63,11 @@ Container::make( 'post_meta', 'product_information1', __( 'Product Information',
 				     ->set_width( '33%' )
 				     ->set_help_text( __( 'Choose the owner of the product. When the owner is set then that user will be able to edit product from its own dashboard.', 'lisfinity-core' ) ),
 				Field::make( 'select', 'product-agent', __( 'Product Agent', 'lisfinity-core' ) )
-				     ->set_options( 'lisfinity_format_users_select' )
+				     ->set_options( 'lisfinity_format_users_select_asort' )
 				     ->set_width( '33%' )
 				     ->set_help_text( __( 'Choose the owner of the product. When the owner is set then that user will be able to edit product from its own dashboard.', 'lisfinity-core' ) ),
 				Field::make( 'select', 'product-business', __( 'Product Business Owner', 'lisfinity-core' ) )
-				     ->set_options( call_user_func( 'lisfinity_format_post_select', [ 'post_type' => 'premium_profile' ] ) )
+				     ->set_options( call_user_func( 'lisfinity_format_post_select', [ 'post_type' => 'premium_profile' ], true ) )
 				     ->set_width( '33%' )
 				     ->set_help_text( __( 'Choose the owner of the product. When the owner is set then that user will be able to edit product from its own dashboard.', 'lisfinity-core' ) ),
 				Field::make( 'date_time', 'product-listed', __( 'Listed Date', 'lisfinity-core' ) )
