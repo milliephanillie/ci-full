@@ -39,28 +39,17 @@ class RapidAds {
         if ('promoted' === lisfinity_get_option('display-sidebar-promotion')) {
             $promoted_products = lisfinity_get_promoted_products('single-ad');
 
-            error_log(print_r("promoted products", true));
-            error_log(print_r($promoted_products, true));
-
             $matching_promoted_ids = [];
-
-            $promoted_product_terms_slugs = [];
 
             foreach ($promoted_products as $promoted_product) {
                 $promoted_terms_slugs = $this->get_term_slugs($promoted_product->product_id, 'concrete-equipment-subcategory');
                 if (empty($promoted_terms_slugs)) {
-                    $promoted_terms_slug = $this->get_term_slugs($promoted_product->product_id, 'concrete-equipment-type');
+                    $promoted_terms_slugs = $this->get_term_slugs($promoted_product->product_id, 'concrete-equipment-type');
                 }
 
-                array_push($promoted_product_terms_slugs, $promoted_terms_slugs);
-            }
-
-            $flattened_promoted_product_terms_slugs = array_reduce($promoted_product_terms_slugs, function ($carry, $item) {
-                return array_merge($carry, $item);
-            }, []);
-
-            if (!empty(array_intersect($term_slugs, $flattened_promoted_product_terms_slugs))) {
-                $matching_promoted_ids[] = $promoted_product->product_id;
+                if (!empty(array_intersect($term_slugs, $promoted_terms_slugs)) && $promoted_product->product_id != $product_id) {
+                    $matching_promoted_ids[] = $promoted_product->product_id;
+                }
             }
 
             if ( ! empty( $matching_promoted_ids ) ) {
@@ -73,15 +62,13 @@ class RapidAds {
 
         $products = (new ProductModel())->get_products_query($args);
 
-        error_log(print_r($products, true));
-        error_log(print_r("matching_promoted_ids", true));
-        error_log(print_r($matching_promoted_ids, true));
-
         $search_route = new SearchRoute();
 
         $product_category = carbon_get_post_meta($product_id, 'product-category');
 
-        return $search_route->prepare_products_for_display( $products->posts, false, $product_category );
+        $prepared_products = $search_route->prepare_products_for_display( $products->posts, false, $product_category );
+
+        return $prepared_products;
     }
 
     /**

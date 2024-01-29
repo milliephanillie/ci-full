@@ -27,7 +27,6 @@ const HeaderKeyword = (props) => {
 
   const keywordValueHandle = (value) => {
     setKeywordValue(value);
-    console.log(value)
   };
 
   const goToSingleAd = (id) => {

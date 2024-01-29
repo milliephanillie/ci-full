@@ -215,7 +215,7 @@ const Promotions = (props) => {
           const days = val && get(value[productType], 'days');
           const fieldId = productType.replace('ad', 'product');
           let defaultPrice = product?.price * parseFloat(product?.duration);
-          {console.log(product)}
+
           return (
             productType !== 'bump-up' && (!props?.package?.free_promotions || !props?.package?.free_promotions.includes(productType)) &&
             <article key={index}

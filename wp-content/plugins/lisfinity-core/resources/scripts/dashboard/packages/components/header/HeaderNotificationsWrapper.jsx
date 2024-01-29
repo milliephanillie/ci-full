@@ -37,7 +37,6 @@ const HeaderNotificationsWrapper = (props) => {
     const id = document.getElementById('main-menu-ul');
     if (id) {
       const options = JSON.parse(id.dataset.options);
-      console.log(options);
       setOptions(options);
     }
     const wrapper = el.current.closest('.notifications--wrapper');

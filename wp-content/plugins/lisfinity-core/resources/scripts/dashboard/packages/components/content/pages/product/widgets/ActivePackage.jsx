@@ -64,9 +64,6 @@ const ActivePackage = (props) => {
     <div
       className="dashboard-widget--active-package flex flex-col mb-20 p-20 bg-white rounded shadow-theme w-full sm:w-1/2 xl:w-full">
 
-      {console.log("the payment package")}
-      {console.log(paymentPackage)}
-
       {paymentPackage?.product?.is_expired &&
           <div className={"is-expired-sidebar"}>
             <article className="flex mb-10 p-30 bg-yellow-100 rounded">

@@ -36,10 +36,6 @@ const ChoosePackage  = (props) => {
     }, []);
 
     const handleChosenPackage = (pkg, index, fieldId) => (e) => {
-        console.log("on to handle package payment")
-        console.log("the package first tho")
-        console.log(pkg)
-
         const enabled = e.target.checked;
 
         if(enabled && !isEmpty(packages)) {
@@ -60,13 +56,7 @@ const ChoosePackage  = (props) => {
             id: lc_data.current_user_id,
           };
 
-          console.log("post_data")
-            console.log(post_data)
-
           const response = actions.fetchData(url, post_data)
-
-          console.log("Is this response even working")
-          console.log(response)
 
           response.then(result => {
             data['payment_package'] = result.data;
@@ -75,16 +65,10 @@ const ChoosePackage  = (props) => {
             fields['media']['_product-files']['limit'] = result.data.docs_limit;
             fields['media']['_product-videos']['limit'] = result.data.video_limit;
             dispatch(actions.setupFieldGroups(groups))
-
-            console.log(data)
-            console.log("are we even in the tehn statement")
           })
         }
 
         handlePaymentPackage(pkg);
-
-        console.log("after handlePaymentPackage")
-
     }
 
     const checkPackage = async (pkg) => {
@@ -107,15 +91,8 @@ const ChoosePackage  = (props) => {
                 data,
             })
 
-            console.log("response.data")
-            console.log(response.data)
-
             if(response.data) {
                 data['payment_package'] = response.data;
-
-
-                console.log("response.data")
-                console.log(data)
             }
 
             return response.data

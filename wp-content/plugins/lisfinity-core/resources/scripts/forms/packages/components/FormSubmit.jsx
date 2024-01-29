@@ -158,18 +158,13 @@ class FormSubmit extends Component {
     const { dispatch } = this.props;
     const response = this.getProductInfo();
 
-    console.log(this.props.edit)
-    console.log("this props edit")
     response.then(data => {
-      console.log("here is the data")
-      console.log(data)
       if (data.data) {
         this.setState({ payment_package: data.data.payment_package });
         this.setState({ productEditInfo: data.data.product });
         dispatch(actions.setupPackage(data.data));
       }
-      console.log("this.state")
-      console.log(this.state)
+
       this.setState({ loading: false });
       this.fetchFormFields();
     });
@@ -225,9 +220,6 @@ class FormSubmit extends Component {
   }
 
   setPackages = () => {
-    console.log("we are inside setPackages")
-    console.log(this.props.edit)
-    console.log(this.state.productEditInfo)
     // if (this.props.edit) {
     //   this.setState({ loading: false });
     //   return false;
@@ -353,8 +345,6 @@ class FormSubmit extends Component {
     return new Promise((resolve, reject) => {
       const form = document.getElementById('form-fields');
       const url = new URL(form ? lc_data[form.value] : lc_data.product_fields);
-      console.log("is this really an edit?")
-      console.log(this.props.edit)
       const is_edit =  (this.props.edit != undefined) ? this.props.edit : false;
       url.searchParams.append('is_edit', is_edit);
       url.searchParams.append('product_id', this.props.match.params.id);
@@ -786,13 +776,6 @@ class FormSubmit extends Component {
   ciBuyPackage = async (id, formData, product_id) => {
     const url = ci_data.ci_purchase_package;
 
-    console.log("inside ciBuyPackage and we are figuring out what's going on")
-    console.log("inside ciBuyPackage and we are figuring out what's going on")
-    console.log(id)
-
-    console.log("inside ciBuyPackage and we are figuring out the formData")
-    console.log(formData)
-
     const headers = new Headers();
     headers.append('X-WP-Nonce', lc_data.nonce);
 
@@ -837,8 +820,6 @@ class FormSubmit extends Component {
     submitProduct
         .then((res) => res.json())
         .then((data) => {
-          console.log("this is where the data should be my friend");
-          console.log(data);
           return data; // data from submitProduct
         })
         .then((dataFromSubmitProduct) => {
@@ -899,11 +880,6 @@ class FormSubmit extends Component {
     // submit form
     const data = this.props.formData;
 
-    console.log("lets see the data")
-    console.log(data)
-    console.log("lets see the state")
-    console.log(this.state)
-
     const formData = jsonForm(data);
     formData.append('toPay', true);
     if( ! this.props.edit || (this.props.edit && this.state.productEditInfo.is_expired)  ) {
@@ -959,8 +935,6 @@ class FormSubmit extends Component {
     let dontPay = false;
 
     if (this.props.edit &&  ! this.state.productEditInfo.is_expired) {
-      console.log("this.state.productEditInfo.is_expired")
-      console.log(this.state.productEditInfo.is_expired);
       dontPay = true;
       formData.append('toPay', false);
       formData.append('action', 'edit');
@@ -970,9 +944,6 @@ class FormSubmit extends Component {
     if ((finalCost > 0) && ! dontPay) {
       formData.append('toPay', true);
     }
-
-    console.log("formdata right before the request")
-    console.log(formData)
 
     return fetch(url, {
       method: 'POST',

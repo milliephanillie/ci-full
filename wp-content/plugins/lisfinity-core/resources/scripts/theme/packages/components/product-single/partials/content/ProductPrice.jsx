@@ -36,8 +36,6 @@ function ProductPrice(props) {
   };
 
   function loadPriceType() {
-    console.log("product price?")
-    console.log(product)
     switch (product?.product_meta?.price_type) {
       case 'auction':
         return <Auction product={product} currentUser={currentUser} fromSticky={fromSticky} options={props.options}

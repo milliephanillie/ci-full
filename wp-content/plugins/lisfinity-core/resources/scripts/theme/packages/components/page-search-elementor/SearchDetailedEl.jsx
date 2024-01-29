@@ -91,7 +91,7 @@ const SearchDetailedEl = (props) => {
   const btnText = settings?.button_text_header_button ? settings.button_text_header_button : lc_data.jst[457];
 
   const btnTextStickyHeader = settings?.button_text_sticky_header_button ? settings.button_text_sticky_header_button : lc_data.jst[457];
-console.log(items)
+
   return (
     <div className={`container mx-auto ${props.page === 'business' ? '' : 'pt-40 sm:pt-86 pb-86 sm:pb-128'}`}
          ref={wrapper}>

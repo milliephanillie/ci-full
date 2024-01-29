@@ -74,8 +74,6 @@ class CustomFields extends Component {
     const fieldsByGroup = this.props.customFields;
     const data = this.props.formData;
 
-    console.log("let's populate the cf data")
-
     // populate taxonomies
     let taxonomies = {};
     if (this.props.options.common_first) {
@@ -92,10 +90,6 @@ class CustomFields extends Component {
       }
     }
     this.setState({ cf_taxonomies: taxonomies });
-
-    console.log(taxonomies)
-    console.log("taxonomies")
-    console.log("taxonomies")
 
     // populate terms
     let terms = [];
@@ -209,6 +203,10 @@ class CustomFields extends Component {
 
     let elValue = isString(e) ? e : e.target.value;
 
+    console.log("evalue")
+    console.log(elValue)
+    console.log(group)
+
     if (type === 'select') {
       const child = document.querySelectorAll(`[data-parent=${name}]`)[0];
       setTimeout(() => {
@@ -319,8 +317,6 @@ class CustomFields extends Component {
                 choices = filter(this.props.terms, { taxonomy: taxonomy.slug, slug: 'custom' });
               }
 
-              console.log(cf_terms);
-
               return (
                 <div key={index}>
                   {taxonomy.type === 'select' && !isEmpty(choices) &&
@@ -342,8 +338,8 @@ class CustomFields extends Component {
                       taxonomy.type === 'text' && (
                           <React.Fragment>
                             {
-                              // Log the desired value and return null to avoid rendering anything
-                              (console.log(formData[taxonomy.field_group][taxonomy.slug])?.[0]?.name, null)
+                              // // Log the desired value and return null to avoid rendering anything
+                              // (console.log(formData[taxonomy.field_group][taxonomy.slug])?.[0]?.name, null)
                             }
                             <Input
                                 display
@@ -351,10 +347,8 @@ class CustomFields extends Component {
                                 id={taxonomy.slug}
                                 name={taxonomy.slug}
                                 label={sprintf(lc_data.jst[335], taxonomy.single_name)}
-                                handleChange={e => this.handleChangeCF(e, taxonomy.slug, taxonomy.field_group, 'input', prefix, suffix)}
-                                value={
-                                    filter(cf_terms, term => term.taxonomy === taxonomy.slug && term.slug === formData[taxonomy.field_group][taxonomy.slug])?.[0]?.name || ''
-                                }
+                                handleChange={e => this.handleChangeCF(e, taxonomy.slug, taxonomy.field_group, 'text', prefix, suffix)}
+                                value={formData[taxonomy.field_group][taxonomy.slug]}
                                 parent={taxonomy.parent}
                                 additional={{ class: 'xs:mb-20' }}
                                 type="text"

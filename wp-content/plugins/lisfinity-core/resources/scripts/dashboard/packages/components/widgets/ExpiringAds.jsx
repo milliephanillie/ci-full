@@ -62,10 +62,6 @@ const ExpiringAds = (props) => {
       'Content-Type': 'application/json',  // Important when sending JSON data
     };
 
-    console.log("post request for the ad and id")
-    console.log(ad)
-    console.log(id)
-
     const data = {
       product_id: ad.id
     };

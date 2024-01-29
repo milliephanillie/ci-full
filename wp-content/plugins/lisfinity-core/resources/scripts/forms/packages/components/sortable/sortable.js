@@ -71,7 +71,6 @@ class Sortable extends Component {
     const newIndex = ui.item.index();
 
     ui.item.removeData( 'index' );
-    console.log(ui)
 
     window.jQuery( forwardedRef.current ).sortable( 'cancel' );
 
