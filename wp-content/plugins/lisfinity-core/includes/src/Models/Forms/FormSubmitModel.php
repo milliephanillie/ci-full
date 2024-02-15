@@ -557,6 +557,10 @@ class FormSubmitModel
             ];
         }
 
+        if(false !== strpos($_SERVER['HTTP_REFERER'], 'my-account/edit')) {
+            unset($fields['promotions']);
+        }
+
         if (lisfinity_is_enabled(lisfinity_get_option('ad-title-hide'))) {
             unset($fields['general']['title']);
         }

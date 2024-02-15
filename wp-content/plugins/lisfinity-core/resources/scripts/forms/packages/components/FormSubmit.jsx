@@ -329,9 +329,7 @@ class FormSubmit extends Component {
     map(formFields, (fields, name) => {
       groups.push(name);
     });
-    if (this.props.edit && this.props.options.promotions) {
-      groups.splice(-1, 1);
-    }
+
     this.setState({ fieldGroups: groups });
   }
 
