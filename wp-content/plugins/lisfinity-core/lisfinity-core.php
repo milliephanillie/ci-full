@@ -3,7 +3,7 @@
  * Plugin Name: Lisfinity Core
  * Plugin URI: https://www.themeforest.net/user/pebas/lisfinity-core
  * Description: Lisfinity Core plugin used for pebas® Lisfinity WordPress theme
- * Version: 1.3.7
+ * Version: 1.3.9
  * Author: pebas
  * Author URI: https://www.themeforest.net/user/pebas
  * Requires at least: 5.0
