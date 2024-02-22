@@ -43,6 +43,9 @@ const SearchDefault = (props) => {
   useEffect(() => {
     const toShowMap = props.options.show_map;
 
+    console.log("super props")
+    console.log(props)
+
     if (toShowMap === 'on' || toShowMap === 'maybe_on') {
       setShowMap(true);
       dispatch(actions.updateShowMap(true));
@@ -282,7 +285,7 @@ const SearchDefault = (props) => {
             <Breadcrumb options={props.options}/>
             <SearchChosenFilters options={props.options}/>
             <Content filtersOpen={filtersOpen} showMap={showMap} filtersLoading={props.loading}
-                     options={props.options}/>
+                  categoryContent={props.categoryContent}   options={props.options}/>
           </div>
           <SearchMap forwardedRef={map} results={results} showMap={showMap} handleShowMap={handleShowMap}
                      filtersOpen={filtersOpen}/>
