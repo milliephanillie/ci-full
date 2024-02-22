@@ -32,6 +32,9 @@ class PageSearchContent extends Component {
     window.addEventListener('resize', this.productWidth);
     window.addEventListener('resize', this.imageWidth);
     window.addEventListener('resize', this.fontSize);
+
+    console.log("page search props")
+    console.log
   }
 
   /**
@@ -132,7 +135,7 @@ class PageSearchContent extends Component {
    */
   render() {
     const { loading, height } = this.state;
-    const { results, isFetching, filtersOpen, searchData } = this.props;
+    const { results, isFetching, filtersOpen, searchData, categoryContent } = this.props;
     let productClasses = this.productWidth();
     let imageClasses = this.imageWidth();
     let titleClasses = this.fontSize();
@@ -221,7 +224,13 @@ class PageSearchContent extends Component {
         </Fragment>
         }
       </div>,
-
+      <div id="customCategoryContent">
+        <div className='catContentTitleWrapper'>
+          {categoryContent &&
+            <div dangerouslySetInnerHTML={{ __html: categoryContent.content }} />
+          }
+        </div>
+      </div>,
     ];
   }
 }

@@ -557,7 +557,7 @@ class FormSubmitModel
             ];
         }
 
-        if(false !== strpos($_SERVER['HTTP_REFERER'], 'my-account/edit')) {
+        if(isset($_SERVER['HTTP_REFERER']) && false !== strpos($_SERVER['HTTP_REFERER'], 'my-account/edit')) {
             unset($fields['promotions']);
         }
 

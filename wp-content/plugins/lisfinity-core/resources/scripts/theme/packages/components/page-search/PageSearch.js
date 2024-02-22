@@ -49,15 +49,20 @@ class PageSearch extends Component {
     } else {
       data['category-type'] = 'common';
     }
+
     // update search data with url query params.
     map(parsed, (param, name) => {
       if (!parsed.t && !isEmpty(param)) {
         data[name] = param;
       }
     });
+
+    console.log("parsed")
+    console.log(parsed)
     dispatch(updateSearchData(data));
     dispatch(updateSearchDataChosen(data));
     this.fetchSearchFields();
+    this.fetchCategoryContent(data);
     dispatch(setIsDetailed(parsed && parsed.p === 'detailed'));
   }
 
@@ -95,6 +100,41 @@ class PageSearch extends Component {
     }
   };
 
+  fetchCategoryContent = async (data) => {
+    this.setState({ categoryContent: null });
+
+    const currentQueryString = window.location.search;
+
+    let url = ci_data.ci_category_content + currentQueryString;
+
+    console.log("fetchCategoryContent");
+    console.log(url);
+    console.log(data);
+    console.log("fetchCategoryContent");
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "same-origin"
+        });
+
+        let data = await response.json(); // 'data' is now the resolved value, not a Promise
+
+        // Directly use 'data' without '.then()'
+        this.setState({ categoryContent: data });
+        console.log("fetchCategoryContent call");
+        console.log(data);
+    } catch (error) {
+        // Error handling
+        console.log(error);
+        console.log(error.message);
+        console.error(error);
+    }
+}
+
   /**
    * Handle change of the view
    * -------------------------
@@ -130,7 +170,7 @@ class PageSearch extends Component {
         results={results} options={this.state.options}
         loading={loading}/>;
     } else {
-      return <SearchDefault onChange={e => this.handleChange(e, true)} results={results} options={this.state.options}
+      return <SearchDefault categoryContent={this.state.categoryContent} onChange={e => this.handleChange(e, true)} results={results} options={this.state.options}
                             loading={loading}/>;
     }
   };

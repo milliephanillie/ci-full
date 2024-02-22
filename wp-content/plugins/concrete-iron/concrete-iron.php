@@ -25,6 +25,7 @@ require_once plugin_dir_path( CONCRETEIRON ) . 'src/Includes/RapidProductSubmit.
 
 
 use ConcreteIron\Includes\RapidFormSubmitModel;
+use ConcreteIron\Includes\RapidCategoryContent;
 use ConcreteIron\Includes\RapidProductSubmit;
 use ConcreteIron\Includes\RapidEditModel;
 use ConcreteIron\Includes\RapidHooks;
@@ -65,6 +66,7 @@ function load_my_plugin() {
         $userImports = new UserImport();
         $createOrder = new CreateOrder();
         $getUser = new GetUser();
+        $rapidCatContent = new RapidCategoryContent();
 
         $createPost = new CreatePost();
         $updateTerms = new UpdateTerms();
@@ -120,6 +122,7 @@ function ci_scripts() {
         "ci_purchase_package" => get_site_url() . '/wp-json/ci/v1/purchase-package',
         "ci_product_store" => get_site_url() . '/wp-json/ci/v1/product/store',
         "ci_rapid_renew" => get_site_url() . '/wp-json/ci/v1/rapid_renew',
+        "ci_category_content" => get_site_url() . '/wp-json/ci/v1/category-content',
         "ci_post_id" => get_the_ID(),
     ];
 
