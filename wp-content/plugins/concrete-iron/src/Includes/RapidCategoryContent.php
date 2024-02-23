@@ -29,7 +29,7 @@ class RapidCategoryContent {
         $type = $data['concrete-equipment-type'] = $params['tax']['concrete-equipment-type'] ?? null;
         $subcategory = $data['concrete-equipment-subcategory'] = $params['tax']['concrete-equipment-subcategory'] ?? null;
 
-        if ($type) {
+        if ($type && !$subcategory) {
             switch ($type) {
                 case 'concrete-batching-equipment':
                     $template_path = 'concrete-batching-equipment/index.php';
@@ -55,6 +55,10 @@ class RapidCategoryContent {
                     $template_path = 'concrete-mixers-for-sale/index.php';
                     break;
             }
+        }
+
+        if(!$type && !$subcategory) {
+            $template_path= 'concrete-equipment/index.php';
         }
 
         $content_file = $this->dir . $template_path;
