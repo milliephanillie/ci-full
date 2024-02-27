@@ -21,9 +21,11 @@ class RapidCategoryContent {
 
     public function get_category_content(\WP_REST_Request $request) {
         $params = $request->get_params();
+
         $data = [
-            "params" => $params
+            "params" => $params,
         ];
+
         $template_path = '';
 
         $type = $data['concrete-equipment-type'] = $params['tax']['concrete-equipment-type'] ?? null;
