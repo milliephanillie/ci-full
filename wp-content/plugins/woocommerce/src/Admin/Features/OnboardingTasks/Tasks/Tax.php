@@ -14,6 +14,12 @@ use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 class Tax extends Task {
 
 	/**
+	 * Used to cache is_complete() method result.
+	 * @var null
+	 */
+	private $is_complete_result = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param TaskList $task_list Parent task list.
@@ -56,9 +62,6 @@ class Tax extends Task {
 	 * @return string
 	 */
 	public function get_title() {
-		if ( count( $this->task_list->get_sections() ) > 0 && ! $this->is_complete() ) {
-			return __( 'Get taxes out of your mind', 'woocommerce' );
-		}
 		if ( $this->get_parent_option( 'use_completed_title' ) === true ) {
 			if ( $this->is_complete() ) {
 				return __( 'You added tax rates', 'woocommerce' );
@@ -74,12 +77,9 @@ class Tax extends Task {
 	 * @return string
 	 */
 	public function get_content() {
-		if ( count( $this->task_list->get_sections() ) > 0 ) {
-			return __( 'Have sales tax calculated automatically, or add the rates manually.', 'woocommerce' );
-		}
 		return self::can_use_automated_taxes()
 			? __(
-				'Good news! WooCommerce Services and Jetpack can automate your sales tax calculations for you.',
+				'Good news! WooCommerce Tax can automate your sales tax calculations for you.',
 				'woocommerce'
 			)
 			: __(
@@ -114,9 +114,16 @@ class Tax extends Task {
 	 * @return bool
 	 */
 	public function is_complete() {
-		return get_option( 'wc_connect_taxes_enabled' ) ||
-			count( TaxDataStore::get_taxes( array() ) ) > 0 ||
-			get_option( 'woocommerce_no_sales_tax' ) !== false;
+		if ( $this->is_complete_result === null ) {
+			$wc_connect_taxes_enabled = get_option( 'wc_connect_taxes_enabled' );
+			$is_wc_connect_taxes_enabled = ( $wc_connect_taxes_enabled === 'yes' ) || ( $wc_connect_taxes_enabled === true ); // seems that in some places boolean is used, and other places 'yes' | 'no' is used
+
+			$this->is_complete_result = $is_wc_connect_taxes_enabled ||
+				count( TaxDataStore::get_taxes( array() ) ) > 0 ||
+				get_option( 'woocommerce_no_sales_tax' ) !== false;
+		}
+
+		return $this->is_complete_result;
 	}
 
 	/**

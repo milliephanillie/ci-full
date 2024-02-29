@@ -327,11 +327,11 @@ jQuery( function ( $ ) {
 		return false;
 	}
 
-	$( 'body.post-type-shop_subscription #post' ).on( 'submit', function () {
+	$( 'body.post-type-shop_subscription #post, body.woocommerce_page_wc-orders--shop_subscription #order' ).on( 'submit', function () {
 		if (
 			'wcs_process_renewal' ==
 			$(
-				"body.post-type-shop_subscription select[name='wc_order_action']"
+				'body.post-type-shop_subscription select[name="wc_order_action"], body.woocommerce_page_wc-orders--shop_subscription select[name="wc_order_action"]'
 			).val()
 		) {
 			return confirm(
@@ -340,7 +340,7 @@ jQuery( function ( $ ) {
 		}
 	} );
 
-	$( 'body.post-type-shop_subscription #post' ).on( 'submit', function () {
+	$( 'body.post-type-shop_subscription #post, body.woocommerce_page_wc-orders--shop_subscription #order' ).on( 'submit', function () {
 		if (
 			typeof wcs_admin_meta_boxes.change_payment_method_warning !=
 				'undefined' &&
@@ -349,6 +349,19 @@ jQuery( function ( $ ) {
 			return confirm(
 				wcs_admin_meta_boxes.change_payment_method_warning
 			);
+		}
+	} );
+
+	/**
+	 * When the auto-renewal is toggled on or off, show or hide the chosen payment methods meta fields.
+	 */
+	$( '#wc-subscription-auto-renew' ).on( 'change', function() {
+		var $payment_method_meta_elements = $( '#wcs_' + $( '#_payment_method' ).val() + '_fields' );
+
+		if ( $( this ).is( ':checked' ) ) {
+			$payment_method_meta_elements.fadeIn();
+		} else {
+			$payment_method_meta_elements.fadeOut();
 		}
 	} );
 } );

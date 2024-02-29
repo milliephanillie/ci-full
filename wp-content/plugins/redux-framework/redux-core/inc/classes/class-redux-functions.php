@@ -36,7 +36,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		public static $_parent; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
-		 * Check for existence of class name via array of class names.
+		 * Check for the existence of class name via an array of class names.
 		 *
 		 * @param array $class_names Array of class names.
 		 *
@@ -53,7 +53,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		}
 
 		/**
-		 * Check for existence of file name via array of file names.
+		 * Check for the existence of file name via an array of file names.
 		 *
 		 * @param array $file_names Array of file names.
 		 *
@@ -74,47 +74,6 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		 * $value = field values
 		 * $core = Redux instance
 		 * $mode = pro field init mode */
-
-		/**
-		 * Load fields from Redux Pro.
-		 *
-		 * @param array $data Pro field data.
-		 *
-		 * @return bool
-		 */
-		public static function load_pro_field( array $data ): bool {
-			$field = null;
-			$value = null;
-			$core  = null;
-			$mode  = null;
-
-			// phpcs:ignore WordPress.PHP.DontExtract
-			extract( $data );
-
-			if ( Redux_Core::$pro_loaded ) {
-				$field_filter = '';
-				$field_type   = str_replace( '_', '-', $field['type'] );
-
-				if ( class_exists( 'Redux_Pro' ) ) {
-					$field_filter = Redux_Pro::$dir . 'core/inc/fields/' . $field['type'] . '/class-redux-pro-' . $field_type . '.php';
-				}
-
-				if ( file_exists( $field_filter ) ) {
-					require_once $field_filter;
-
-					$filter_class_name = 'Redux_Pro_' . $field['type'];
-
-					if ( class_exists( $filter_class_name ) ) {
-						$extend = new $filter_class_name( $field, $value, $core );
-						$extend->init( $mode );
-
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
 
 		/**
 		 * Parse args to handle deep arrays.  The WP one does not.
@@ -190,7 +149,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		}
 
 		/**
-		 * Parse CSS from output/compiler array
+		 * Parse CSS from an output/compiler array
 		 *
 		 * @param array  $css_array CSS data.
 		 * @param string $style     CSS style.
@@ -286,8 +245,8 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		 * @return      void
 		 */
 		public static function initWpFilesystem() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
-			// TODO: Activate after Redux Pro is discontinued.
-			// _deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.0', 'init_wp_filesystem()' );
+			// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
+			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.0', __CLASS__ . '::init_wp_filesystem()' );
 
 			self::init_wp_filesystem();
 		}
@@ -369,7 +328,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		}
 
 		/**
-		 * Sanitize camelCase keys in array, makes then snake_case.
+		 * Sanitize camelCase keys in an array, makes then snake_case.
 		 *
 		 * @param array $arr Array of keys.
 		 *
@@ -391,7 +350,7 @@ if ( ! class_exists( 'Redux_Functions', false ) ) {
 		}
 
 		/**
-		 * Converts an array into a html data string.
+		 * Converts an array into an html data string.
 		 *
 		 * @param array $data example input: array('id'=>'true').
 		 *

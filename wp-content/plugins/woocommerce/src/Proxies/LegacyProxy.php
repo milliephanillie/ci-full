@@ -6,7 +6,7 @@
 namespace Automattic\WooCommerce\Proxies;
 
 use Automattic\WooCommerce\Internal\DependencyManagement\Definition;
-use \Psr\Container\ContainerInterface;
+use Automattic\WooCommerce\Vendor\Psr\Container\ContainerInterface;
 
 /**
  * Proxy class to access legacy WooCommerce functionality.
@@ -105,5 +105,16 @@ class LegacyProxy {
 	 */
 	public function get_global( string $global_name ) {
 		return $GLOBALS[ $global_name ];
+	}
+
+	/**
+	 * Terminates execution of the script.
+	 *
+	 * @param int|string $status An error code to be returned, or an error message to be shown.
+	 * @return void
+	 */
+	public function exit( $status = '' ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		exit( $status );
 	}
 }

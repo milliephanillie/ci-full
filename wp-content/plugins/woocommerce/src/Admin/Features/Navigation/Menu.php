@@ -223,13 +223,16 @@ class Menu {
 		}
 
 		if ( isset( self::$menu_items[ $args['id'] ] ) ) {
-			error_log(  // phpcs:ignore
+			wc_doing_it_wrong(
+				__METHOD__,
 				sprintf(
 					/* translators: 1: Duplicate menu item path. */
 					esc_html__( 'You have attempted to register a duplicate item with WooCommerce Navigation: %1$s', 'woocommerce' ),
 					'`' . $args['id'] . '`'
-				)
+				),
+				'6.5.0'
 			);
+
 			return;
 		}
 
@@ -463,10 +466,10 @@ class Menu {
 			? "&post_type={$taxonomy_object->object_type[0]}"
 			: '';
 		$match_expression   = 'term.php';                               // Match term.php pages.
-		$match_expression  .= "(?=.*[?|&]taxonomy=${taxonomy}(&|$|#))"; // Lookahead to match a taxonomy URL param.
+		$match_expression  .= "(?=.*[?|&]taxonomy={$taxonomy}(&|$|#))"; // Lookahead to match a taxonomy URL param.
 		$match_expression  .= '|';                                      // Or.
 		$match_expression  .= 'edit-tags.php';                          // Match edit-tags.php pages.
-		$match_expression  .= "(?=.*[?|&]taxonomy=${taxonomy}(&|$|#))"; // Lookahead to match a taxonomy URL param.
+		$match_expression  .= "(?=.*[?|&]taxonomy={$taxonomy}(&|$|#))"; // Lookahead to match a taxonomy URL param.
 
 		return array(
 			'default' => array_merge(

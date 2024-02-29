@@ -128,13 +128,11 @@ if ( ! class_exists( 'Redux_Datetime', false ) ) {
 					$this->value['time'] = '';
 					$this->value['date'] = '';
 				}
-			} else {
-				if ( is_array( $this->value ) ) {
+			} elseif ( is_array( $this->value ) ) {
 					$this->value = '';
-				}
 			}
 
-			// dummy check, in case something other than select or slider
+			// Dummy check, in case something other than select or slider
 			// is entered.
 			switch ( $control_type ) {
 				case 'select':
@@ -153,7 +151,7 @@ if ( ! class_exists( 'Redux_Datetime', false ) ) {
 			}
 
 			// Output defaults to div, so JS can read it.
-			// Broken up for readability, coz I'm the one who has to debug it!
+			// Broken up for readability; coz I'm the one who has to debug it!
 			echo '<div id="' . esc_attr( $field_id ) . '" class="redux-datetime-container"
                        data-dev-mode="' . esc_attr( $this->parent->args['dev_mode'] ) . '"
                        data-version="' . esc_attr( Redux_Extension_Datetime::$version ) . '"
@@ -179,7 +177,7 @@ if ( ! class_exists( 'Redux_Datetime', false ) ) {
 			// If split mode is on, output two text boxes.
 			if ( true === $split ) {
 				echo '<div class="redux-date-input input_wrapper">';
-				echo '<label class="redux-date-input-label">' . esc_html( $date_placeholder ) . '</label>';
+				echo '<label for="' . esc_attr( $field_id ) . '-date" class="redux-date-input-label">' . esc_html( $date_placeholder ) . '</label>';
 				echo ' <input
 							data-id="' . esc_attr( $field_id ) . '"
 							type="text"
@@ -192,10 +190,11 @@ if ( ! class_exists( 'Redux_Datetime', false ) ) {
 				echo '</div>';
 
 				echo '<div class="redux-time-input input_wrapper">';
-				echo '<label class="redux-time-input-label">' . esc_html( $time_placeholder ) . '</label>';
+				echo '<label for="' . esc_attr( $field_id ) . '-time" class="redux-time-input-label">' . esc_html( $time_placeholder ) . '</label>';
 				echo ' <input
 							data-id="' . esc_attr( $field_id ) . '"
-							type="text" id="' . esc_attr( $field_id ) . '-time"
+							type="text"
+							id="' . esc_attr( $field_id ) . '-time"
 							name="' . esc_attr( $field_name ) . '[time]"
 							placeholder="' . esc_attr( $time_placeholder ) . '"
 							value="' . esc_attr( $this->value['time'] ) . '"
@@ -204,10 +203,11 @@ if ( ! class_exists( 'Redux_Datetime', false ) ) {
 				// Otherwise, just one.
 			} else {
 				echo '<div class="redux-datetime-input single_wrapper">';
-				echo '<label class="redux-datetime-input-label">' . esc_attr( $date_placeholder ) . '</label>';
+				echo '<label for="' . esc_attr( $field_id ) . '-date" class="redux-datetime-input-label">' . esc_attr( $date_placeholder ) . '</label>';
 				echo ' <input
 							data-id="' . esc_attr( $field_id ) . '"
-							type="text" id="' . esc_attr( $field_id ) . '-date"
+							type="text"
+							id="' . esc_attr( $field_id ) . '-date"
 							name="' . esc_attr( $field_name ) . '"
 							placeholder="' . esc_attr( $date_placeholder ) . '"
 							value="' . esc_attr( $this->value ) . '"
@@ -233,7 +233,7 @@ if ( ! class_exists( 'Redux_Datetime', false ) ) {
 			$min = Redux_Functions::is_min();
 
 			wp_enqueue_script(
-				'redux-datetime-slider-js',
+				'redux-datetime-slider',
 				$this->url . 'vendor/jquery-ui-sliderAccess' . $min . '.js',
 				array( 'jquery' ),
 				'0.3',
@@ -241,23 +241,23 @@ if ( ! class_exists( 'Redux_Datetime', false ) ) {
 			);
 
 			wp_enqueue_script(
-				'redux-datetime-js',
+				'redux-datetime',
 				$this->url . 'vendor/jquery-ui-timepicker-addon' . $min . '.js',
 				array(
 					'jquery',
 					'jquery-ui-datepicker',
 					'jquery-ui-widget',
 					'jquery-ui-slider',
-					'redux-datetime-slider-js',
+					'redux-datetime-slider',
 				),
 				'1.6.3',
 				true
 			);
 
 			wp_enqueue_script(
-				'redux-field-datetime-js',
+				'redux-field-datetime',
 				$this->url . 'redux-datetime' . $min . '.js',
-				array( 'jquery', 'redux-datetime-js', 'redux-js' ),
+				array( 'jquery', 'redux-datetime', 'redux-js' ),
 				Redux_Extension_Datetime::$version,
 				true
 			);
@@ -267,7 +267,7 @@ if ( ! class_exists( 'Redux_Datetime', false ) ) {
 					'redux-field-datetime',
 					$this->url . 'redux-datetime.css',
 					array(),
-					time()
+					Redux_Extension_Datetime::$version,
 				);
 			}
 		}

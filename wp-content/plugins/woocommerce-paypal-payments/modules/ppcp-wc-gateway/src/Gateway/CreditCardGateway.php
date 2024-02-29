@@ -11,14 +11,15 @@ namespace WooCommerce\PayPalCommerce\WcGateway\Gateway;
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use WC_Customer;
 use WC_Order;
+use WC_Payment_Tokens;
 use WooCommerce\PayPalCommerce\ApiClient\Endpoint\PaymentsEndpoint;
 use WooCommerce\PayPalCommerce\ApiClient\Exception\PayPalApiException;
 use WooCommerce\PayPalCommerce\ApiClient\Exception\RuntimeException;
 use WooCommerce\PayPalCommerce\Onboarding\State;
 use WooCommerce\PayPalCommerce\Session\SessionHandler;
-use WooCommerce\PayPalCommerce\Subscription\Helper\SubscriptionHelper;
+use WooCommerce\PayPalCommerce\WcGateway\Processor\TransactionIdHandlingTrait;
+use WooCommerce\PayPalCommerce\WcSubscriptions\Helper\SubscriptionHelper;
 use WooCommerce\PayPalCommerce\Vaulting\PaymentTokenRepository;
 use WooCommerce\PayPalCommerce\Vaulting\VaultedCreditCardHandler;
 use WooCommerce\PayPalCommerce\WcGateway\Exception\GatewayGenericException;
@@ -32,7 +33,7 @@ use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
  */
 class CreditCardGateway extends \WC_Payment_Gateway_CC {
 
-	use ProcessPaymentTrait, GatewaySettingsRendererTrait;
+	use ProcessPaymentTrait, GatewaySettingsRendererTrait, TransactionIdHandlingTrait;
 
 	const ID = 'ppcp-credit-card-gateway';
 
@@ -180,22 +181,26 @@ class CreditCardGateway extends \WC_Payment_Gateway_CC {
 				'products',
 			);
 
-			if (
-				( $this->config->has( 'vault_enabled_dcc' ) && $this->config->get( 'vault_enabled_dcc' ) )
-				|| ( $this->config->has( 'subscriptions_mode' ) && $this->config->get( 'subscriptions_mode' ) === 'subscriptions_api' )
-			) {
-				array_push(
+			if ( $this->config->has( 'vault_enabled_dcc' ) && $this->config->get( 'vault_enabled_dcc' ) ) {
+				$supports = apply_filters(
+					'woocommerce_paypal_payments_credit_card_gateway_vault_supports',
+					array(
+						'subscriptions',
+						'subscription_cancellation',
+						'subscription_suspension',
+						'subscription_reactivation',
+						'subscription_amount_changes',
+						'subscription_date_changes',
+						'subscription_payment_method_change',
+						'subscription_payment_method_change_customer',
+						'subscription_payment_method_change_admin',
+						'multiple_subscriptions',
+					)
+				);
+
+				$this->supports = array_merge(
 					$this->supports,
-					'subscriptions',
-					'subscription_cancellation',
-					'subscription_suspension',
-					'subscription_reactivation',
-					'subscription_amount_changes',
-					'subscription_date_changes',
-					'subscription_payment_method_change',
-					'subscription_payment_method_change_customer',
-					'subscription_payment_method_change_admin',
-					'multiple_subscriptions'
+					$supports
 				);
 			}
 		}
@@ -361,12 +366,26 @@ class CreditCardGateway extends \WC_Payment_Gateway_CC {
 			);
 		}
 
+		$saved_payment_card = WC()->session->get( 'ppcp_saved_payment_card' );
+		if ( $saved_payment_card ) {
+			if ( $saved_payment_card['payment_source'] === 'card' && $saved_payment_card['status'] === 'COMPLETED' ) {
+				$wc_order->update_meta_data( PayPalGateway::ORDER_ID_META_KEY, $saved_payment_card['order_id'] );
+				$wc_order->save_meta_data();
+
+				$this->update_transaction_id( $saved_payment_card['order_id'], $wc_order );
+				$wc_order->payment_complete();
+				WC()->session->set( 'ppcp_saved_payment_card', null );
+
+				return $this->handle_payment_success( $wc_order );
+			}
+		}
+
 		/**
-		 * If customer has chosen a saved credit card payment.
+		 * If customer has chosen a saved credit card payment from checkout page.
 		 */
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$saved_credit_card = wc_clean( wp_unslash( $_POST['saved_credit_card'] ?? '' ) );
-		if ( $saved_credit_card ) {
+		if ( $saved_credit_card && is_checkout() ) {
 			try {
 				$wc_order = $this->vaulted_credit_card_handler->handle_payment(
 					$saved_credit_card,
@@ -381,6 +400,40 @@ class CreditCardGateway extends \WC_Payment_Gateway_CC {
 		}
 
 		/**
+		 * If customer is changing subscription payment.
+		 */
+		if (
+			// phpcs:disable WordPress.Security.NonceVerification.Missing
+			isset( $_POST['woocommerce_change_payment'] )
+			&& $this->subscription_helper->has_subscription( $wc_order->get_id() )
+			&& $this->subscription_helper->is_subscription_change_payment()
+		) {
+			$saved_credit_card = wc_clean( wp_unslash( $_POST['wc-ppcp-credit-card-gateway-payment-token'] ?? '' ) );
+			if ( ! $saved_credit_card ) {
+				$saved_credit_card = wc_clean( wp_unslash( $_POST['saved_credit_card'] ?? '' ) );
+				// phpcs:enable WordPress.Security.NonceVerification.Missing
+			}
+
+			if ( $saved_credit_card ) {
+				$payment_token = WC_Payment_Tokens::get( $saved_credit_card );
+				if ( $payment_token ) {
+					$wc_order->add_payment_token( $payment_token );
+					$wc_order->save();
+
+					return $this->handle_payment_success( $wc_order );
+				}
+			}
+
+			wc_add_notice( __( 'Could not change payment.', 'woocommerce-paypal-payments' ), 'error' );
+
+			return array(
+				'result'       => 'failure',
+				'redirect'     => wc_get_checkout_url(),
+				'errorMessage' => __( 'Could not change payment.', 'woocommerce-paypal-payments' ),
+			);
+		}
+
+		/**
 		 * If the WC_Order is paid through the approved webhook.
 		 */
 		//phpcs:disable WordPress.Security.NonceVerification.Recommended
@@ -390,18 +443,9 @@ class CreditCardGateway extends \WC_Payment_Gateway_CC {
 		//phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		try {
-			if ( ! $this->order_processor->process( $wc_order ) ) {
-				return $this->handle_payment_failure(
-					$wc_order,
-					new Exception(
-						$this->order_processor->last_error()
-					)
-				);
-			}
+			$this->order_processor->process( $wc_order );
 
-			if ( $this->subscription_helper->has_subscription( $order_id ) ) {
-				$this->schedule_saved_payment_check( $order_id, $wc_order->get_customer_id() );
-			}
+			do_action( 'woocommerce_paypal_payments_before_handle_payment_success', $wc_order );
 
 			return $this->handle_payment_success( $wc_order );
 		} catch ( PayPalApiException $error ) {
@@ -413,7 +457,7 @@ class CreditCardGateway extends \WC_Payment_Gateway_CC {
 					$error
 				)
 			);
-		} catch ( RuntimeException $error ) {
+		} catch ( Exception $error ) {
 			return $this->handle_payment_failure( $wc_order, $error );
 		}
 	}

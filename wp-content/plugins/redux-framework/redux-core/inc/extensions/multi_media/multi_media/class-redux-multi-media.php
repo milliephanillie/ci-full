@@ -2,7 +2,7 @@
 /**
  * Redux Multi Media Field Class
  *
- * @package Redux Pro
+ * @package Redux
  * @author  Kevin Provance <kevin.provance@gmail.com>
  * @class   Redux_Multi_Media
  */
@@ -89,7 +89,7 @@ if ( ! class_exists( 'Redux_Multi_Media' ) ) {
 					type="button"
 					class="redux_upload_button button redux_upload_list"
 					name=""
-					id=""
+					id="' . esc_attr( $field_id ) . '-multi-media-upload"
 					value="' . esc_attr( $button_text ) . '" />';
 
 			// list container.
@@ -113,7 +113,7 @@ if ( ! class_exists( 'Redux_Multi_Media' ) ) {
                                     id="filelist-' . $id . '"
                                     class="" />';
 
-					// Check for valid image extension.
+					// Check for a valid image extension.
 					if ( $this->is_valid_img_ext( $url ) ) {
 
 						// Add image to array.
@@ -137,13 +137,13 @@ if ( ! class_exists( 'Redux_Multi_Media' ) ) {
 						$title      = '';
 						$part_count = count( $parts );
 
-						for ( $i = 0; $i < $part_count; ++ $i ) {
+						for ( $i = 0; $i < $part_count; ++$i ) {
 							$title = $parts[ $i ];
 						}
 
 						// Add file to array.
 						$html  = '<li>';
-						$html .= esc_html__( 'File: ', 'redux-framework' ) . $id_input . '</li>';
+						$html .= esc_html__( 'File: ', 'redux-framework' );
 						$html .= '<strong>' . $title . '</strong>&nbsp;&nbsp;&nbsp;';
 						$html .= '(<a href="' . $url . '" target="_blank" rel="external">' . esc_html__( 'Download', 'redux-framework' ) . '</a> / <a href="#" class="redux_remove_file_button">' . __( 'Remove', 'redux-framework' ) . '</a>)';
 						$html .= $id_input;
@@ -175,7 +175,7 @@ if ( ! class_exists( 'Redux_Multi_Media' ) ) {
 				}
 			}
 
-			// Close list.
+			// Close the list.
 			echo '</ul>';
 
 			// Close container.
@@ -201,7 +201,7 @@ if ( ! class_exists( 'Redux_Multi_Media' ) ) {
 		 *
 		 * @param  string $file File url.
 		 *
-		 * @return bool         Whether file has a valid image extension
+		 * @return bool         Whether the file has a valid image extension
 		 * @since  1.0.0
 		 */
 		private function is_valid_img_ext( string $file ): bool {
@@ -249,7 +249,7 @@ if ( ! class_exists( 'Redux_Multi_Media' ) ) {
 
 			// Field dependent JS.
 			wp_enqueue_script(
-				'redux-field-multi-media-js',
+				'redux-field-multi-media',
 				$this->url . 'redux-multi-media' . $min . '.js',
 				array( 'jquery', 'redux-js' ),
 				Redux_Extension_Multi_Media::$version,
@@ -258,7 +258,7 @@ if ( ! class_exists( 'Redux_Multi_Media' ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-multi-media-css',
+					'redux-field-multi-media',
 					$this->url . 'redux-multi-media.css',
 					array(),
 					Redux_Extension_Multi_Media::$version
@@ -278,7 +278,7 @@ if ( ! class_exists( 'Redux_Multi_Media' ) ) {
 			);
 
 			wp_localize_script(
-				'redux-field-multi-media-js',
+				'redux-field-multi-media',
 				'redux_multi_media_l10',
 				apply_filters( 'redux_multi_media_localized_data', $data_arr )
 			);

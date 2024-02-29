@@ -56,6 +56,8 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 		 * @return      void
 		 */
 		public function render() {
+			$unallowed = array( 'tabbed', 'social_profiles', 'color_scheme', 'repeater' );
+
 			if ( isset( $this->field['group_values'] ) && $this->field['group_values'] ) {
 				$this->repeater_values = '[' . $this->field['id'] . ']';
 			}
@@ -107,7 +109,7 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 								if ( isset( $field['options'] ) ) {
 
 									// Sorter data filter.
-									if ( 'sorter' === $field['type'] && isset( $field['data'] ) && ! empty( $field['data'] ) && is_array( $field['data'] ) ) {
+									if ( 'sorter' === $field['type'] && ! empty( $field['data'] ) && is_array( $field['data'] ) ) {
 										if ( ! isset( $field['args'] ) ) {
 											$field['args'] = array();
 										}
@@ -130,7 +132,7 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 									$repeater['title'] = ! isset( $this->parent->options[ $field['id'] ][ $x ] ) ? $default : $this->parent->options[ $field['id'] ][ $x ];
 								}
 
-								if ( isset( $field['options'] ) && is_array( $field['options'] ) && ! empty( $field['options'] ) ) {
+								if ( isset( $field['options'] ) && is_array( $field['options'] ) ) {
 									if ( isset( $field['options'][ $repeater['title'] ] ) ) {
 										$repeater['title'] = $field['options'][ $repeater['title'] ];
 									}
@@ -156,7 +158,7 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 							$field['class'] .= ' bind_title';
 						}
 
-						if ( 'repeater' === $field['type'] || 'social_profiles' === $field['type'] || 'color_scheme' === $field['type'] ) {
+						if ( in_array( $field['type'], $unallowed, true ) ) {
 							echo esc_html__( 'The', 'redux-framework' ) . ' <code>' . esc_html( $field['type'] ) . '</code> ' . esc_html__( 'field is not supported within the Repeater field.', 'redux-framework' );
 						} else {
 							$this->output_field( $field, $x );
@@ -164,7 +166,7 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 					}
 
 					if ( ! isset( $this->field['static'] ) && empty( $this->field['static'] ) ) {
-						echo '<a href="javascript:void(0);" class="button deletion redux-repeaters-remove">' . esc_html__( 'Delete', 'redux-framework' ) . ' ' . esc_html( $this->field['item_name'] ) . '</a>';
+						echo '<a href="javascript:void(0);" class="button deletion redux-warning-primary redux-repeaters-remove">' . esc_html__( 'Delete', 'redux-framework' ) . ' ' . esc_html( $this->field['item_name'] ) . '</a>';
 					}
 
 					echo '</div>';
@@ -172,7 +174,7 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 					echo '</table>';
 					echo '</div>';
 
-					$x ++;
+					++$x;
 				}
 			}
 
@@ -224,8 +226,8 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 					echo '</table>';
 					echo '</div>';
 
-					$x ++;
-					$loop --;
+					++$x;
+					--$loop;
 				}
 			}
 
@@ -258,7 +260,7 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 			$min = Redux_Functions::is_min();
 
 			wp_enqueue_script(
-				'redux-field-repeater-js',
+				'redux-field-repeater',
 				// phpcs:ignore WordPress.NamingConventions.ValidHookName
 				$this->url . 'redux-repeater' . $min . '.js',
 				array( 'jquery', 'jquery-ui-core', 'jquery-ui-accordion', 'jquery-ui-sortable', 'wp-color-picker', 'redux-js' ),
@@ -268,11 +270,11 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-repeater-css',
+					'redux-field-repeater',
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
 					$this->url . 'redux-repeater.css',
 					array(),
-					time()
+					Redux_Extension_Repeater::$version
 				);
 			}
 		}
@@ -311,7 +313,7 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 			if ( isset( $field['options'] ) ) {
 
 				// Sorter data filter.
-				if ( 'sorter' === $field['type'] && isset( $field['data'] ) && ! empty( $field['data'] ) && is_array( $field['data'] ) ) {
+				if ( 'sorter' === $field['type'] && ! empty( $field['data'] ) && is_array( $field['data'] ) ) {
 					if ( ! isset( $field['args'] ) ) {
 						$field['args'] = array();
 					}
@@ -372,7 +374,7 @@ if ( ! class_exists( 'Redux_Repeater' ) ) {
 				$value = array();
 			}
 
-			if ( isset( $field['fields'] ) && ! empty( $field['fields'] ) ) {
+			if ( ! empty( $field['fields'] ) ) {
 				ob_start();
 
 				foreach ( $field['fields'] as $f ) {

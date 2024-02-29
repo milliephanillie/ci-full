@@ -188,12 +188,14 @@ function envato_market_themes_column( $group = 'install' ) {
 					<div class="column-rating">
 						<?php
 						if ( ! empty( $theme['rating'] ) ) {
-							if ( is_array( $theme['rating'] ) && ! empty( $theme['rating']['count'] ) ) {
+							if ( is_array( $theme['rating'] ) ) {
+							    $count = ! empty( $theme['rating']['count'] ) ? $theme['rating']['count'] : 0;
+							    $rating = ! empty( $theme['rating']['rating'] ) ? (int) $theme['rating']['rating'] : 0;
 								wp_star_rating(
 									array(
-										'rating' => $theme['rating']['count'] > 0 ? ( $theme['rating']['rating'] / 5 * 100 ) : 0,
+										'rating' => $count > 0 ? ( $rating / 5 * 100 ) : 0,
 										'type'   => 'percent',
-										'number' => $theme['rating']['count'],
+										'number' => $count,
 									)
 								);
 							} else {
@@ -455,4 +457,22 @@ function envato_market_plugins_column( $group = 'install' ) {
 		</div>
 		<?php
 	endforeach;
+}
+
+/**
+ * A handy method for logging to the st_out / and or debug_log
+ * Use: write_log("My variable is {$variable}")
+ */
+if (!function_exists('write_log') && defined('ENVATO_LOCAL_DEVELOPMENT')) {
+
+	function write_log($log) {
+
+		if (is_array($log) || is_object($log)) {
+				error_log(print_r($log, true));
+		} else {
+				error_log($log);
+		}
+
+	}
+
 }

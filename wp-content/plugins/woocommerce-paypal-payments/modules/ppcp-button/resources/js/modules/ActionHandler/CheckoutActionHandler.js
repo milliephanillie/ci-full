@@ -2,6 +2,7 @@ import 'formdata-polyfill';
 import onApprove from '../OnApproveHandler/onApproveForPayNow.js';
 import {payerData} from "../Helper/PayerData";
 import {getCurrentPaymentMethod} from "../Helper/CheckoutMethodState";
+import validateCheckoutForm from "../Helper/CheckoutFormValidation";
 
 class CheckoutActionHandler {
 
@@ -13,7 +14,13 @@ class CheckoutActionHandler {
 
     subscriptionsConfiguration() {
         return {
-            createSubscription: (data, actions) => {
+            createSubscription: async (data, actions) => {
+                try {
+                    await validateCheckoutForm(this.config);
+                } catch (error) {
+                    throw {type: 'form-validation-error'};
+                }
+
                 return actions.subscription.create({
                     'plan_id': this.config.subscription_plan_id
                 });
@@ -50,13 +57,13 @@ class CheckoutActionHandler {
 
             const formSelector = this.config.context === 'checkout' ? 'form.checkout' : 'form#order_review';
             const formData = new FormData(document.querySelector(formSelector));
-            // will not handle fields with multiple values (checkboxes, <select multiple>), but we do not care about this here
-            const formJsonObj = Object.fromEntries(formData.entries());
 
             const createaccount = jQuery('#createaccount').is(":checked") ? true : false;
 
             const paymentMethod = getCurrentPaymentMethod();
             const fundingSource = window.ppcpFundingSource;
+
+            const savePaymentMethod = !!document.getElementById('wc-ppcp-credit-card-gateway-new-payment-method')?.checked;
 
             return fetch(this.config.ajax.create_order.endpoint, {
                 method: 'POST',
@@ -72,8 +79,10 @@ class CheckoutActionHandler {
                     order_id:this.config.order_id,
                     payment_method: paymentMethod,
                     funding_source: fundingSource,
-                    form: formJsonObj,
-                    createaccount: createaccount
+                    // send as urlencoded string to handle complex fields via PHP functions the same as normal form submit
+                    form_encoded: new URLSearchParams(formData).toString(),
+                    createaccount: createaccount,
+                    save_payment_method: savePaymentMethod
                 })
             }).then(function (res) {
                 return res.json();
@@ -102,6 +111,9 @@ class CheckoutActionHandler {
                         } else {
                             errorHandler.message(data.data.message);
                         }
+
+                        // fire WC event for other plugins
+                        jQuery( document.body ).trigger( 'checkout_error' , [ errorHandler.currentHtml() ] );
                     }
 
                     throw {type: 'create-order-error', data: data.data};

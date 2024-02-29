@@ -80,7 +80,7 @@ if ( ! class_exists( 'Redux_Framework_Plugin', false ) ) {
 			if ( function_exists( 'get_plugin_data' ) && file_exists( $path ) ) {
 				$data = get_plugin_data( $path );
 
-				if ( isset( $data ) && isset( $data['Version'] ) && '' !== $data['Version'] ) {
+				if ( isset( $data['Version'] ) && '' !== $data['Version'] ) {
 					$res = version_compare( $data['Version'], '4', '<' );
 				}
 
@@ -159,22 +159,12 @@ if ( ! class_exists( 'Redux_Framework_Plugin', false ) ) {
 		public function includes() {
 
 			// Include Redux_Core.
-			if ( file_exists( dirname( __FILE__ ) . '/redux-core/framework.php' ) ) {
-				require_once dirname( __FILE__ ) . '/redux-core/framework.php';
+			if ( file_exists( __DIR__ . '/redux-core/framework.php' ) ) {
+				require_once __DIR__ . '/redux-core/framework.php';
 			}
 
-			Redux_Core::$extendify_templates_enabled = (bool) get_option( 'use_extendify_templates', true );
-
-			// Including extendify sdk.
-			if ( true === (bool) get_option( 'use_extendify_templates', true ) ) {
-				if ( file_exists( dirname( __FILE__ ) . '/extendify-sdk/loader.php' ) ) {
-					$GLOBALS['extendify_sdk_partner'] = 'Redux';
-					require_once dirname( __FILE__ ) . '/extendify-sdk/loader.php';
-				}
-			}
-
-			if ( file_exists( dirname( __FILE__ ) . '/redux-templates/redux-templates.php' ) ) {
-				require_once dirname( __FILE__ ) . '/redux-templates/redux-templates.php';
+			if ( file_exists( __DIR__ . '/redux-templates/redux-templates.php' ) ) {
+				require_once __DIR__ . '/redux-templates/redux-templates.php';
 			}
 
 			if ( isset( Redux_Core::$as_plugin ) ) {
@@ -182,7 +172,6 @@ if ( ! class_exists( 'Redux_Framework_Plugin', false ) ) {
 			}
 
 			add_action( 'setup_theme', array( $this, 'load_sample_config' ) );
-
 		}
 
 		/**
@@ -194,8 +183,8 @@ if ( ! class_exists( 'Redux_Framework_Plugin', false ) ) {
 		 */
 		public function load_sample_config() {
 			// Include demo config, if demo mode is active.
-			if ( $this->options['demo'] && file_exists( dirname( __FILE__ ) . '/sample/sample-config.php' ) ) {
-				require_once dirname( __FILE__ ) . '/sample/sample-config.php';
+			if ( $this->options['demo'] && file_exists( __DIR__ . '/sample/sample-config.php' ) ) {
+				require_once __DIR__ . '/sample/sample-config.php';
 			}
 		}
 
@@ -210,7 +199,7 @@ if ( ! class_exists( 'Redux_Framework_Plugin', false ) ) {
 			add_action( 'activated_plugin', array( $this, 'load_first' ) );
 			add_action( 'wp_loaded', array( $this, 'options_toggle_check' ) );
 
-			// Activate plugin when new blog is added.
+			// Activate plugin when a new blog is added.
 			add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
 			// Display admin notices.
@@ -226,11 +215,11 @@ if ( ! class_exists( 'Redux_Framework_Plugin', false ) ) {
 		}
 
 		/**
-		 * Pushes Redux to top of plugin load list, so it initializes before any plugin that may use it.
+		 * Pushes Redux to the top of plugin load list, so it initializes before any plugin that may use it.
 		 */
 		public function load_first() {
 			if ( ! class_exists( 'Redux_Functions_Ex' ) ) {
-				require_once dirname( __FILE__ ) . '/redux-core/inc/classes/class-redux-functions-ex.php';
+				require_once __DIR__ . '/redux-core/inc/classes/class-redux-functions-ex.php';
 			}
 
 			$plugin_dir = Redux_Functions_Ex::wp_normalize_path( WP_PLUGIN_DIR ) . '/';
@@ -248,21 +237,6 @@ if ( ! class_exists( 'Redux_Framework_Plugin', false ) ) {
 					array_splice( $plugins, $key, 1 );
 					array_unshift( $plugins, $path );
 					update_option( 'active_plugins', $plugins );
-				}
-
-				if ( class_exists( 'Redux_Pro' ) ) {
-					$self_file = Redux_Functions_Ex::wp_normalize_path( Redux_Pro::$dir );
-					$path      = str_replace( $plugin_dir, '', $self_file );
-
-					// phpcs:ignore WordPress.NamingConventions.ValidHookName
-					$basename = apply_filters( 'redux/pro/basename', 'redux-pro.php' );
-
-					$key = array_search( $path . '/' . $basename, $plugins, true );
-					if ( false !== $key ) {
-						array_splice( $plugins, $key, 1 );
-						array_unshift( $plugins, $path . '/' . $basename );
-						update_option( 'active_plugins', $plugins );
-					}
 				}
 			}
 		}
@@ -446,73 +420,7 @@ if ( ! class_exists( 'Redux_Framework_Plugin', false ) ) {
 		 * @since 1.0
 		 */
 		public function add_settings_link( array $links, string $file ): array {
-			if ( basename( plugin_dir_path( __FILE__ ) ) . '/redux-framework.php' !== $file ) {
-				return $links;
-			}
-
-			$links[] = sprintf(
-				'<a href="%1$s" target="_blank">%2$s</a>',
-				esc_url( $this->get_site_utm_url( '', 'plugins-page', '', 'go-pro' ) ),
-				sprintf(
-					'<span style="font-weight: bold;">%s</span>',
-					__( 'Go Pro', 'redux-framework' )
-				)
-			);
-
 			return $links;
-		}
-
-		/**
-		 * Get the url where the Admin Columns website is hosted
-		 *
-		 * @param string $path Path to add to url.
-		 *
-		 * @return string
-		 */
-		private function get_site_url( string $path = '' ): string {
-			$url = 'https://extendify.com/pricing/';
-
-			if ( ! empty( $path ) ) {
-				$url .= '/' . trim( $path, '/' ) . '/';
-			}
-
-			return $url;
-		}
-
-		/**
-		 * Url with utm tags
-		 *
-		 * @param string      $path         Path on site.
-		 * @param string      $utm_medium   Medium var.
-		 * @param string|null $utm_content  Content var.
-		 * @param string|bool $utm_campaign Campaign var.
-		 *
-		 * @return string
-		 */
-		public function get_site_utm_url( string $path, string $utm_medium, string $utm_content = null, $utm_campaign = false ): string {
-			$url = self::get_site_url( $path );
-
-			if ( ! $utm_campaign ) {
-				$utm_campaign = 'plugin-installation';
-			}
-
-			$args = array(
-				// Referrer: plugin.
-				'utm_source'   => 'redux',
-
-				// Specific promotions or sales.
-				'utm_campaign' => $utm_campaign,
-
-				// Marketing medium: banner, documentation or email.
-				'utm_medium'   => $utm_medium,
-
-				// Used for differentiation of medium.
-				'utm_content'  => $utm_content,
-			);
-
-			$args = array_map( 'sanitize_key', array_filter( $args ) );
-
-			return add_query_arg( $args, $url );
 		}
 
 		/**
@@ -527,9 +435,9 @@ if ( ! class_exists( 'Redux_Framework_Plugin', false ) ) {
 		 * @since       3.0.0
 		 */
 		public function plugin_metalinks( array $links, string $file ): array {
-/*			if ( strpos( $file, 'redux-framework.php' ) !== false && is_plugin_active( $file ) ) {
+			if ( strpos( $file, 'redux-framework.php' ) !== false && is_plugin_active( $file ) ) {
 				$links[] = '<a href="' . esc_url( admin_url( add_query_arg( array( 'page' => 'redux-framework' ), 'options-general.php' ) ) ) . '">' . esc_html__( 'What is this?', 'redux-framework' ) . '</a>';
-			}*/
+			}
 
 			return $links;
 		}

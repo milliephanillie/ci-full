@@ -63,7 +63,7 @@ export const paypalAddressToWc = (address) => {
  * @returns {Object}
  */
 export const paypalShippingToWc = (shipping) => {
-    const [firstName, lastName] = splitFullName(shipping.name.full_name);
+    const [firstName, lastName] = (shipping.name ? splitFullName(shipping.name.full_name) : ['','']);
     return {
         ...paypalAddressToWc(shipping.address),
         first_name: firstName,
@@ -76,14 +76,30 @@ export const paypalShippingToWc = (shipping) => {
  * @returns {Object}
  */
 export const paypalPayerToWc = (payer) => {
-    const firstName = payer.name.given_name;
-    const lastName = payer.name.surname;
+    const firstName = payer?.name?.given_name ?? '';
+    const lastName = payer?.name?.surname ?? '';
     const address = payer.address ? paypalAddressToWc(payer.address) : {};
     return {
         ...address,
         first_name: firstName,
         last_name: lastName,
         email: payer.email_address,
+    }
+}
+
+/**
+ * @param {Object} subscriber
+ * @returns {Object}
+ */
+export const paypalSubscriberToWc = (subscriber) => {
+    const firstName = subscriber?.name?.given_name ?? '';
+    const lastName = subscriber?.name?.surname ?? '';
+    const address = subscriber.address ? paypalAddressToWc(subscriber.shipping_address.address) : {};
+    return {
+        ...address,
+        first_name: firstName,
+        last_name: lastName,
+        email: subscriber.email_address,
     }
 }
 
@@ -100,10 +116,12 @@ export const paypalOrderToWcShippingAddress = (order) => {
     const res = paypalShippingToWc(shipping);
 
     // use the name from billing if the same, to avoid possible mistakes when splitting full_name
-    const billingAddress = paypalPayerToWc(order.payer);
-    if (`${res.first_name} ${res.last_name}` === `${billingAddress.first_name} ${billingAddress.last_name}`) {
-        res.first_name = billingAddress.first_name;
-        res.last_name = billingAddress.last_name;
+    if (order.payer) {
+        const billingAddress = paypalPayerToWc(order.payer);
+        if (`${res.first_name} ${res.last_name}` === `${billingAddress.first_name} ${billingAddress.last_name}`) {
+            res.first_name = billingAddress.first_name;
+            res.last_name = billingAddress.last_name;
+        }
     }
 
     return res;
@@ -116,11 +134,51 @@ export const paypalOrderToWcShippingAddress = (order) => {
  */
 export const paypalOrderToWcAddresses = (order) => {
     const shippingAddress = paypalOrderToWcShippingAddress(order);
-    let billingAddress = paypalPayerToWc(order.payer);
-    // no billing address, such as if billing address retrieval is not allowed in the merchant account
-    if (!billingAddress.address_line_1) {
-        billingAddress = {...shippingAddress, ...paypalPayerToWc(order.payer)};
+    let billingAddress = shippingAddress;
+    if (order.payer) {
+        billingAddress = paypalPayerToWc(order.payer);
+        // no billing address, such as if billing address retrieval is not allowed in the merchant account
+        if (!billingAddress.address_line_1) {
+            billingAddress = {...shippingAddress, ...paypalPayerToWc(order.payer)};
+        }
     }
 
     return {billingAddress, shippingAddress};
+}
+
+/**
+ *
+ * @param subscription
+ * @returns {{shippingAddress: Object, billingAddress: Object}}
+ */
+export const paypalSubscriptionToWcAddresses = (subscription) => {
+    const shippingAddress = paypalSubscriberToWc(subscription.subscriber);
+    let billingAddress = shippingAddress;
+    return {billingAddress, shippingAddress};
+}
+
+/**
+ * Merges two WC addresses.
+ * The objects can contain either the WC form fields or billingAddress, shippingAddress objects.
+ *
+ * @param {Object} address1
+ * @param {Object} address2
+ * @returns {any}
+ */
+export const mergeWcAddress = (address1, address2) => {
+    if ('billingAddress' in address1) {
+        return {
+            billingAddress: mergeWcAddress(address1.billingAddress, address2.billingAddress),
+            shippingAddress: mergeWcAddress(address1.shippingAddress, address2.shippingAddress),
+        }
+    }
+
+    let address2WithoutEmpty = {...address2};
+    Object.keys(address2).forEach(key => {
+        if (address2[key] === '') {
+            delete address2WithoutEmpty[key];
+        }
+    });
+
+    return {...address1, ...address2WithoutEmpty};
 }

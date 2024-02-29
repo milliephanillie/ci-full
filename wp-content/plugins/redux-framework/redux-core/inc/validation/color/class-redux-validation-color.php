@@ -24,7 +24,7 @@ if ( ! class_exists( 'Redux_Validation_Color', false ) ) {
 		 */
 		public function validate() {
 
-			if ( empty( $this->value ) || ( 'transparent' === $this->value ) ) {
+			if ( empty( $this->value ) || ( 'transparent' === $this->value ) || is_array( $this->value ) ) {
 				return;
 			}
 
@@ -37,6 +37,10 @@ if ( ! class_exists( 'Redux_Validation_Color', false ) ) {
 				$this->value   = '';
 
 				return;
+			} else {
+				$this->field['msg'] = '';
+				$this->warning      = $this->field;
+
 			}
 
 			$sanitized_value = Redux_Colors::sanitize_color( $this->value );

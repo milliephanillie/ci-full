@@ -5,7 +5,8 @@ import CheckoutBootstap from './modules/ContextBootstrap/CheckoutBootstap';
 import PayNowBootstrap from "./modules/ContextBootstrap/PayNowBootstrap";
 import Renderer from './modules/Renderer/Renderer';
 import ErrorHandler from './modules/ErrorHandler';
-import CreditCardRenderer from "./modules/Renderer/CreditCardRenderer";
+import HostedFieldsRenderer from "./modules/Renderer/HostedFieldsRenderer";
+import CardFieldsRenderer from "./modules/Renderer/CardFieldsRenderer";
 import MessageRenderer from "./modules/Renderer/MessageRenderer";
 import Spinner from "./modules/Helper/Spinner";
 import {
@@ -13,12 +14,15 @@ import {
     ORDER_BUTTON_SELECTOR,
     PaymentMethods
 } from "./modules/Helper/CheckoutMethodState";
-import {hide, setVisible, setVisibleByClass} from "./modules/Helper/Hiding";
+import {setVisibleByClass} from "./modules/Helper/Hiding";
 import {isChangePaymentPage} from "./modules/Helper/Subscriptions";
 import FreeTrialHandler from "./modules/ActionHandler/FreeTrialHandler";
 import FormSaver from './modules/Helper/FormSaver';
 import FormValidator from "./modules/Helper/FormValidator";
 import {loadPaypalScript} from "./modules/Helper/ScriptLoading";
+import buttonModuleWatcher from "./modules/ButtonModuleWatcher";
+import MessagesBootstrap from "./modules/ContextBootstrap/MessagesBootstap";
+import {apmButtonsInit} from "./modules/Helper/ApmButtons";
 
 // TODO: could be a good idea to have a separate spinner for each gateway,
 // but I think we care mainly about the script loading, so one spinner should be enough.
@@ -28,12 +32,13 @@ const cardsSpinner = new Spinner('#ppcp-hosted-fields');
 const bootstrap = () => {
     const checkoutFormSelector = 'form.woocommerce-checkout';
 
+    const context = PayPalCommerceGateway.context;
+
     const errorHandler = new ErrorHandler(
         PayPalCommerceGateway.labels.error.generic,
         document.querySelector(checkoutFormSelector) ?? document.querySelector('.woocommerce-notices-wrapper')
     );
     const spinner = new Spinner();
-    const creditCardRenderer = new CreditCardRenderer(PayPalCommerceGateway, errorHandler, spinner);
 
     const formSaver = new FormSaver(
         PayPalCommerceGateway.ajax.save_checkout_form.endpoint,
@@ -58,13 +63,12 @@ const bootstrap = () => {
         }
     });
 
-    const onSmartButtonClick = (data, actions) => {
-        window.ppcpFundingSource = data.fundingSource;
-        const requiredFields = jQuery('form.woocommerce-checkout .validate-required:visible :input');
-        requiredFields.each((i, input) => {
-            jQuery(input).trigger('validate');
-        });
+    const hasMessages = () => {
+        return PayPalCommerceGateway.messages.is_hidden === false
+            && document.querySelector(PayPalCommerceGateway.messages.wrapper);
+    }
 
+    const doBasicCheckoutValidation = () => {
         if (PayPalCommerceGateway.basic_checkout_validation_enabled) {
             // A quick fix to get the errors about empty form fields before attempting PayPal order,
             // it should solve #513 for most of the users, but it is not a proper solution.
@@ -102,8 +106,25 @@ const bootstrap = () => {
                     errorHandler.message(PayPalCommerceGateway.labels.error.required.generic);
                 }
 
-                return actions.reject();
+                return false;
             }
+        }
+        return true;
+    };
+
+    const onCardFieldsBeforeSubmit = () => {
+        return doBasicCheckoutValidation();
+    };
+
+    const onSmartButtonClick = async (data, actions) => {
+        window.ppcpFundingSource = data.fundingSource;
+        const requiredFields = jQuery('form.woocommerce-checkout .validate-required:visible :input');
+        requiredFields.each((i, input) => {
+            jQuery(input).trigger('validate');
+        });
+
+        if (!doBasicCheckoutValidation()) {
+            return actions.reject();
         }
 
         const form = document.querySelector(checkoutFormSelector);
@@ -116,38 +137,59 @@ const bootstrap = () => {
         }
 
         const isFreeTrial = PayPalCommerceGateway.is_free_trial_cart;
-        if (isFreeTrial && data.fundingSource !== 'card') {
+        if (isFreeTrial && data.fundingSource !== 'card' && ! PayPalCommerceGateway.subscription_plan_id) {
             freeTrialHandler.handle();
             return actions.reject();
         }
+
+        if (context === 'checkout') {
+            try {
+                await formSaver.save(form);
+            } catch (error) {
+                console.error(error);
+            }
+        }
     };
+
     const onSmartButtonsInit = () => {
+        jQuery(document).trigger('ppcp-smart-buttons-init', this);
         buttonsSpinner.unblock();
     };
-    const renderer = new Renderer(creditCardRenderer, PayPalCommerceGateway, onSmartButtonClick, onSmartButtonsInit);
-    const messageRenderer = new MessageRenderer(PayPalCommerceGateway.messages);
-    const context = PayPalCommerceGateway.context;
-    if (context === 'mini-cart' || context === 'product') {
-        if (PayPalCommerceGateway.mini_cart_buttons_enabled === '1') {
-            const miniCartBootstrap = new MiniCartBootstap(
-                PayPalCommerceGateway,
-                renderer,
-                errorHandler,
-            );
 
-            miniCartBootstrap.init();
-        }
+    let creditCardRenderer = new HostedFieldsRenderer(PayPalCommerceGateway, errorHandler, spinner);
+    if (typeof paypal.CardFields !== 'undefined') {
+        creditCardRenderer = new CardFieldsRenderer(PayPalCommerceGateway, errorHandler, spinner, onCardFieldsBeforeSubmit);
     }
 
-    if (context === 'product' && PayPalCommerceGateway.single_product_buttons_enabled === '1') {
+    const renderer = new Renderer(creditCardRenderer, PayPalCommerceGateway, onSmartButtonClick, onSmartButtonsInit);
+    const messageRenderer = new MessageRenderer(PayPalCommerceGateway.messages);
+
+    if (PayPalCommerceGateway.mini_cart_buttons_enabled === '1') {
+        const miniCartBootstrap = new MiniCartBootstap(
+            PayPalCommerceGateway,
+            renderer,
+            errorHandler,
+        );
+
+        miniCartBootstrap.init();
+        buttonModuleWatcher.registerContextBootstrap('mini-cart', miniCartBootstrap);
+    }
+
+    if (
+        context === 'product'
+        && (
+            PayPalCommerceGateway.single_product_buttons_enabled === '1'
+            || hasMessages()
+        )
+    ) {
         const singleProductBootstrap = new SingleProductBootstap(
             PayPalCommerceGateway,
             renderer,
-            messageRenderer,
             errorHandler,
         );
 
         singleProductBootstrap.init();
+        buttonModuleWatcher.registerContextBootstrap('product', singleProductBootstrap);
     }
 
     if (context === 'cart') {
@@ -158,40 +200,47 @@ const bootstrap = () => {
         );
 
         cartBootstrap.init();
+        buttonModuleWatcher.registerContextBootstrap('cart', cartBootstrap);
     }
 
     if (context === 'checkout') {
         const checkoutBootstap = new CheckoutBootstap(
             PayPalCommerceGateway,
             renderer,
-            messageRenderer,
             spinner,
             errorHandler,
         );
 
         checkoutBootstap.init();
+        buttonModuleWatcher.registerContextBootstrap('checkout', checkoutBootstap);
     }
 
     if (context === 'pay-now' ) {
         const payNowBootstrap = new PayNowBootstrap(
             PayPalCommerceGateway,
             renderer,
-            messageRenderer,
             spinner,
             errorHandler,
         );
         payNowBootstrap.init();
+        buttonModuleWatcher.registerContextBootstrap('pay-now', payNowBootstrap);
     }
 
-    if (context !== 'checkout') {
-        messageRenderer.render();
-    }
+    const messagesBootstrap = new MessagesBootstrap(
+        PayPalCommerceGateway,
+        messageRenderer,
+    );
+    messagesBootstrap.init();
+
+    apmButtonsInit(PayPalCommerceGateway);
 };
+
 document.addEventListener(
     'DOMContentLoaded',
     () => {
         if (!typeof (PayPalCommerceGateway)) {
             console.error('PayPal button could not be configured.');
+            return;
             return;
         }
 
@@ -247,11 +296,12 @@ document.addEventListener(
         });
 
         let bootstrapped = false;
+        let failed = false;
 
         hideOrderButtonIfPpcpGateway();
 
         jQuery(document.body).on('updated_checkout payment_method_selected', () => {
-            if (bootstrapped) {
+            if (bootstrapped || failed) {
                 return;
             }
 
@@ -262,6 +312,12 @@ document.addEventListener(
             bootstrapped = true;
 
             bootstrap();
+        }, () => {
+            failed = true;
+
+            setVisibleByClass(ORDER_BUTTON_SELECTOR, true, 'ppcp-hidden');
+            buttonsSpinner.unblock();
+            cardsSpinner.unblock();
         });
     },
 );

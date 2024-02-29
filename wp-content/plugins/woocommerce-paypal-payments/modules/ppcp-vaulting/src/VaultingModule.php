@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace WooCommerce\PayPalCommerce\Vaulting;
 
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use WC_Payment_Token;
 use WC_Payment_Tokens;
@@ -16,9 +17,6 @@ use WooCommerce\PayPalCommerce\Vendor\Dhii\Container\ServiceProvider;
 use WooCommerce\PayPalCommerce\Vendor\Dhii\Modular\Module\ModuleInterface;
 use WooCommerce\PayPalCommerce\Vendor\Interop\Container\ServiceProviderInterface;
 use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
-use WC_Order;
-use WooCommerce\PayPalCommerce\Subscription\Helper\SubscriptionHelper;
 use WooCommerce\PayPalCommerce\WcGateway\Exception\NotFoundException;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\CreditCardGateway;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
@@ -53,10 +51,14 @@ class VaultingModule implements ModuleInterface {
 
 		$listener->listen();
 
-		$subscription_helper = $container->get( 'subscription.helper' );
+		$subscription_helper = $container->get( 'wc-subscriptions.helper' );
 		add_action(
 			'woocommerce_created_customer',
-			function( int $customer_id ) use ( $subscription_helper ) {
+			function( int $customer_id ) use ( $subscription_helper, $container ) {
+				if ( $container->has( 'save-payment-methods.eligible' ) && $container->get( 'save-payment-methods.eligible' ) ) {
+					return;
+				}
+
 				$session = WC()->session;
 				if ( ! $session ) {
 					return;
@@ -67,18 +69,6 @@ class VaultingModule implements ModuleInterface {
 				}
 			}
 		);
-
-		add_action(
-			'woocommerce_paypal_payments_check_saved_payment',
-			function ( int $order_id, int $customer_id, string $intent ) use ( $container ) {
-				$payment_token_checker = $container->get( 'vaulting.payment-token-checker' );
-				$payment_token_checker->check_and_update( $order_id, $customer_id, $intent );
-			},
-			10,
-			3
-		);
-
-		$this->filterFailedVaultingEmailsForSubscriptionOrders( $container );
 
 		add_filter(
 			'woocommerce_payment_token_class',
@@ -91,9 +81,48 @@ class VaultingModule implements ModuleInterface {
 				if ( $type === 'WC_Payment_Token_PayPal' ) {
 					return PaymentTokenPayPal::class;
 				}
+				if ( $type === 'WC_Payment_Token_Venmo' ) {
+					return PaymentTokenVenmo::class;
+				}
+				if ( $type === 'WC_Payment_Token_ApplePay' ) {
+					return PaymentTokenApplePay::class;
+				}
 
 				return $type;
 			}
+		);
+
+		add_filter(
+			'woocommerce_get_customer_payment_tokens',
+			/**
+			 * Filter available payment tokens depending on context.
+			 *
+			 * @psalm-suppress MissingClosureParamType
+			 * @psalm-suppress MissingClosureReturnType
+			 */
+			function( $tokens, $customer_id, $gateway_id ) {
+				if ( ! is_array( $tokens ) ) {
+					return $tokens;
+				}
+
+				$is_post = isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] === 'POST';
+
+				// Exclude ApplePay tokens from payment pages.
+				if (
+					( is_checkout() || is_cart() || is_product() )
+					&& ! $is_post // Don't check on POST so we have all payment methods on form submissions.
+				) {
+					foreach ( $tokens as $index => $token ) {
+						if ( $token instanceof PaymentTokenApplePay ) {
+							unset( $tokens[ $index ] );
+						}
+					}
+				}
+
+				return $tokens;
+			},
+			10,
+			3
 		);
 
 		add_filter(
@@ -108,10 +137,18 @@ class VaultingModule implements ModuleInterface {
 					return $item;
 				}
 
-				if ( strtolower( $payment_token->get_type() ) === 'paypal' ) {
-					assert( $payment_token instanceof PaymentTokenPayPal );
-					$item['method']['brand'] = $payment_token->get_email();
+				if ( $payment_token instanceof PaymentTokenPayPal ) {
+					$item['method']['brand'] = 'PayPal / ' . $payment_token->get_email();
+					return $item;
+				}
 
+				if ( $payment_token instanceof PaymentTokenVenmo ) {
+					$item['method']['brand'] = 'Venmo / ' . $payment_token->get_email();
+					return $item;
+				}
+
+				if ( $payment_token instanceof PaymentTokenApplePay ) {
+					$item['method']['brand'] = 'ApplePay #' . ( (string) $payment_token->get_id() );
 					return $item;
 				}
 
@@ -151,6 +188,8 @@ class VaultingModule implements ModuleInterface {
 					}
 
 					try {
+						do_action( 'woocommerce_paypal_payments_before_delete_payment_token', $token->get_token() );
+
 						$payment_token_endpoint = $container->get( 'api.endpoint.payment-token' );
 						$payment_token_endpoint->delete_token_by_id( $token->get_token() );
 					} catch ( RuntimeException $exception ) {
@@ -178,6 +217,9 @@ class VaultingModule implements ModuleInterface {
 			}
 		);
 
+		/**
+		 * Allows running migration externally via `do_action('pcp_migrate_payment_tokens')`.
+		 */
 		add_action(
 			'pcp_migrate_payment_tokens',
 			function() use ( $container ) {
@@ -200,9 +242,22 @@ class VaultingModule implements ModuleInterface {
 
 		add_filter(
 			'woocommerce_available_payment_gateways',
-			function( array $methods ): array {
+			/**
+			 * Param types removed to avoid third-party issues.
+			 *
+			 * @psalm-suppress MissingClosureParamType
+			 */
+			function( $methods ) {
 				global $wp;
-				if ( isset( $wp->query_vars['add-payment-method'] ) ) {
+
+				if ( ! is_array( $methods ) ) {
+					return $methods;
+				}
+
+				if (
+					isset( $wp->query_vars['add-payment-method'] )
+					&& apply_filters( 'woocommerce_paypal_payments_disable_add_payment_method', true )
+				) {
 					unset( $methods[ PayPalGateway::ID ] );
 				}
 
@@ -218,6 +273,10 @@ class VaultingModule implements ModuleInterface {
 	 * @return void
 	 */
 	public function migrate_payment_tokens( LoggerInterface $logger ): void {
+		$initialized = get_option( 'ppcp_payment_tokens_migration_initialized', null );
+		if ( $initialized ) {
+			return;
+		}
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		$customers = new WP_User_Query(
@@ -235,12 +294,19 @@ class VaultingModule implements ModuleInterface {
 			return;
 		}
 
-		$logger->info( 'Starting payment tokens migration for ' . (string) count( $customers ) . ' users' );
+		$logger->info( 'Identified ' . (string) count( $customers ) . ' users with payment tokens. Initiating token migration.' );
+		update_option( 'ppcp_payment_tokens_migration_initialized', true );
 
 		$interval_in_seconds = 5;
 		$timestamp           = time();
 
 		foreach ( $customers as $id ) {
+			$tokens                   = array_filter( get_user_meta( $id, 'ppcp-vault-token' ) );
+			$skip_empty_key_migration = apply_filters( 'ppcp_skip_payment_tokens_empty_key_migration', true );
+			if ( empty( $tokens ) && $skip_empty_key_migration ) {
+				continue;
+			}
+
 			/**
 			 * Function already exist in WooCommerce
 			 *
@@ -257,94 +323,7 @@ class VaultingModule implements ModuleInterface {
 	}
 
 	/**
-	 * Filters the emails when vaulting is failed for subscription orders.
-	 *
-	 * @param ContainerInterface $container A services container instance.
-	 * @throws NotFoundException When service could not be found.
-	 */
-	protected function filterFailedVaultingEmailsForSubscriptionOrders( ContainerInterface $container ):void {
-		add_action(
-			'woocommerce_email_before_order_table',
-			function( WC_Order $order ) use ( $container ) {
-				/**
-				 * The SubscriptionHelper.
-				 *
-				 * @var SubscriptionHelper $subscription_helper
-				 */
-				$subscription_helper = $container->get( 'subscription.helper' );
-
-				/**
-				 * The logger.
-				 *
-				 * @var LoggerInterface $logger
-				 */
-				$logger = $container->get( 'woocommerce.logger.woocommerce' );
-
-				$vault_failed = $order->get_meta( PaymentTokenChecker::VAULTING_FAILED_META_KEY );
-				if ( $subscription_helper->has_subscription( $order->get_id() ) && ! empty( $vault_failed ) ) {
-					$logger->info( "Adding vaulting failure info to email for order #{$order->get_id()}." );
-
-					if ( $vault_failed === 'void_auth' ) {
-						echo wp_kses_post( '<p>' . __( 'The subscription payment failed because the payment method could not be saved. Please try again with a different payment method.', 'woocommerce-paypal-payments' ) . '</p>' );
-					}
-
-					if ( $vault_failed === 'capture_auth' ) {
-						echo wp_kses_post( '<p>' . __( 'The subscription has been activated, but the payment method could not be saved. Please contact the merchant to save a payment method for automatic subscription renewal payments.', 'woocommerce-paypal-payments' ) . '</p>' );
-					}
-				}
-			}
-		);
-
-		add_action(
-			'woocommerce_email_after_order_table',
-			function( WC_Order $order ) use ( $container ) {
-				/**
-				 * The SubscriptionHelper.
-				 *
-				 * @var SubscriptionHelper $subscription_helper
-				 */
-				$subscription_helper = $container->get( 'subscription.helper' );
-
-				/**
-				 * The logger.
-				 *
-				 * @var LoggerInterface $logger
-				 */
-				$logger = $container->get( 'woocommerce.logger.woocommerce' );
-
-				$vault_failed = $order->get_meta( PaymentTokenChecker::VAULTING_FAILED_META_KEY );
-				if ( $subscription_helper->has_subscription( $order->get_id() ) && ! empty( $vault_failed ) ) {
-					$logger->info( "Changing subscription auto-renewal status for order #{$order->get_id()}." );
-
-					if ( $vault_failed === 'capture_auth' ) {
-						$subscriptions = function_exists( 'wcs_get_subscriptions_for_order' ) ? wcs_get_subscriptions_for_order( $order->get_id() ) : array();
-						foreach ( $subscriptions as $subscription ) {
-							$subscription->set_requires_manual_renewal( true );
-							$subscription->save();
-						}
-					}
-				}
-			}
-		);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function getKey() {  }
-
-	/**
-	 * Check if is payments page.
-	 *
-	 * @return bool Whethen page is payments or not.
-	 */
-	private function is_payments_page(): bool {
-		global $wp;
-		$request = explode( '/', wp_parse_url( $wp->request, PHP_URL_PATH ) );
-		if ( end( $request ) === 'ppcp-paypal-payment-tokens' ) {
-			return true;
-		}
-
-		return false;
-	}
 }

@@ -7,13 +7,13 @@
  * @author Prospress
  * @category Core
  * @package WooCommerce Subscriptions/Functions
- * @version     2.2.0
+ * @version     1.0.0 - Migrated from WooCommerce Subscriptions v2.2.0
  */
 
 /**
  * For a given product, and optionally price/qty, work out the sign-up with tax included, based on store settings.
  *
- * @since  2.2.0
+ * @since  1.0.0 - Migrated from WooCommerce Subscriptions v2.2.0
  * @param  WC_Product $product
  * @param  array $args
  * @return float
@@ -37,7 +37,7 @@ function wcs_get_price_including_tax( $product, $args = array() ) {
 /**
  * For a given product, and optionally price/qty, work out the sign-up fee with tax excluded, based on store settings.
  *
- * @since  2.2.0
+ * @since  1.0.0 - Migrated from WooCommerce Subscriptions v2.2.0
  * @param  WC_Product $product
  * @param  array $args
  * @return float
@@ -61,7 +61,7 @@ function wcs_get_price_excluding_tax( $product, $args = array() ) {
 /**
  * Returns a 'from' prefix if you want to show where prices start at.
  *
- * @since  2.2.0
+ * @since  1.0.0 - Migrated from WooCommerce Subscriptions v2.2.0
  * @return string
  */
 function wcs_get_price_html_from_text( $product = '' ) {
@@ -78,7 +78,7 @@ function wcs_get_price_html_from_text( $product = '' ) {
 /**
  * Get an array of the prices, used to help determine min/max values.
  *
- * @since 2.2.0
+ * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.0
  */
 function wcs_get_variation_prices( $variation, $variable_product ) {
 
@@ -95,7 +95,7 @@ function wcs_get_variation_prices( $variation, $variable_product ) {
  *
  * @param array $child_variation_ids the IDs of product variation children ids
  * @return array Array containing the min and max variation prices and billing data
- * @since 2.2.0
+ * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.0
  */
 function wcs_get_min_max_variation_data( $variable_product, $child_variation_ids = array() ) {
 
@@ -146,7 +146,7 @@ function wcs_get_min_max_variation_data( $variable_product, $child_variation_ids
  *
  * @param array $child_variation_ids the IDs of product variation children ids
  * @return array
- * @since 2.2.0
+ * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.0
  */
 function wcs_calculate_min_max_variations( $variations_data ) {
 
@@ -436,4 +436,67 @@ function wcs_calculate_min_max_variations( $variations_data ) {
 		),
 		'identical'    => $subscription_details_identical,
 	);
+}
+
+/**
+ * Generates a key for grouping subscription products with the same billing schedule.
+ *
+ * Used in a frontend cart and checkout context to group items by a recurring cart key for use in generating recurring carts.
+ * Used by the orders/<id>/subscriptions REST API endpoint to group order items into subscriptions.
+ *
+ * @see https://woocommerce.com/document/subscriptions/develop/multiple-subscriptions/#section-3
+ *
+ * @param WC_Product $product      The product to generate the key for.
+ * @param int        $renewal_time The timestamp of the first renewal payment.
+ *
+ * @return string The subscription product grouping key.
+ */
+function wcs_get_subscription_grouping_key( $product, $renewal_time = 0 ) {
+	$key = '';
+
+	$renewal_time = ! empty( $renewal_time ) ? $renewal_time : WC_Subscriptions_Product::get_first_renewal_payment_time( $product );
+	$interval     = WC_Subscriptions_Product::get_interval( $product );
+	$period       = WC_Subscriptions_Product::get_period( $product );
+	$length       = WC_Subscriptions_Product::get_length( $product );
+	$trial_period = WC_Subscriptions_Product::get_trial_period( $product );
+	$trial_length = WC_Subscriptions_Product::get_trial_length( $product );
+
+	if ( $renewal_time > 0 ) {
+		$key .= gmdate( 'Y_m_d_', $renewal_time );
+	}
+
+	// First start with the billing interval and period.
+	switch ( $interval ) {
+		case 1:
+			if ( 'day' === $period ) {
+				$key .= 'daily';
+			} else {
+				$key .= sprintf( '%sly', $period );
+			}
+			break;
+		case 2:
+			$key .= sprintf( 'every_2nd_%s', $period );
+			break;
+		case 3:
+			$key .= sprintf( 'every_3rd_%s', $period ); // or sometimes two exceptions it would seem
+			break;
+		default:
+			$key .= sprintf( 'every_%dth_%s', $interval, $period );
+			break;
+	}
+
+	if ( $length > 0 ) {
+		$key .= '_for_';
+		$key .= sprintf( '%d_%s', $length, $period );
+
+		if ( $length > 1 ) {
+			$key .= 's';
+		}
+	}
+
+	if ( $trial_length > 0 ) {
+		$key .= sprintf( '_after_a_%d_%s_trial', $trial_length, $trial_period );
+	}
+
+	return apply_filters( 'wcs_subscription_product_grouping_key', $key, $product, $renewal_time );
 }

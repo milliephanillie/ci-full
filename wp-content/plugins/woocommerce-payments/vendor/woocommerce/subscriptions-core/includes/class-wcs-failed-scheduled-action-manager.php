@@ -2,7 +2,7 @@
 /**
  * Failed Scheduled Action Manager for subscription events
  *
- * @version   2.2.19
+ * @version   1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
  * @package   WooCommerce Subscriptions
  * @category  Class
  * @author    Prospress
@@ -35,11 +35,18 @@ class WCS_Failed_Scheduled_Action_Manager {
 	protected $logger;
 
 	/**
+	 * Exceptions caught by WC while this class is listening to the `woocommerce_caught_exception` action.
+	 *
+	 * @var Exception[]
+	 */
+	protected $exceptions = [];
+
+	/**
 	 * Constructor.
 	 *
 	 * @param WC_Logger_Interface $logger The WC Logger instance.
 	 *
-	 * @since 2.2.19
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
 	 */
 	public function __construct( WC_Logger_Interface $logger ) {
 		$this->logger = $logger;
@@ -48,20 +55,21 @@ class WCS_Failed_Scheduled_Action_Manager {
 	/**
 	 * Attach callbacks.
 	 *
-	 * @since 2.2.19
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
 	 */
 	public function init() {
 		add_action( 'action_scheduler_failed_action', array( $this, 'log_action_scheduler_failure' ), 10, 2 );
 		add_action( 'action_scheduler_failed_execution', array( $this, 'log_action_scheduler_failure' ), 10, 2 );
 		add_action( 'action_scheduler_unexpected_shutdown', array( $this, 'log_action_scheduler_failure' ), 10, 2 );
 		add_action( 'admin_notices', array( $this, 'maybe_show_admin_notice' ) );
+		add_action( 'action_scheduler_begin_execute', array( $this, 'maybe_attach_exception_listener' ) );
 	}
 
 	/**
 	 * Log a message to the failed-scheduled-actions log.
 	 *
 	 * @param string $message the message to be written to the log.
-	 * @since 2.2.19
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
 	 */
 	protected function log( $message ) {
 		$this->logger->add( 'failed-scheduled-actions', $message );
@@ -72,7 +80,7 @@ class WCS_Failed_Scheduled_Action_Manager {
 	 *
 	 * @param int                 $action_id The ID of the action which failed.
 	 * @param int|Exception|array $error The number of seconds an action timeouts out after or the exception/error that caused the error/shutdown.
-	 * @since 2.2.19
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
 	 */
 	public function log_action_scheduler_failure( $action_id, $error ) {
 		$action = $this->get_action( $action_id );
@@ -106,12 +114,62 @@ class WCS_Failed_Scheduled_Action_Manager {
 		);
 
 		update_option( WC_Subscriptions_Admin::$option_prefix . '_failed_scheduled_actions', $failed_scheduled_actions );
+
+		// If there is an exception listener and it's caught exceptions, log them for additional debugging.
+		if ( ! empty( $this->exceptions ) ) {
+			foreach ( $this->exceptions as $exception ) {
+				$message = 'Exception: ' . $exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine();
+				$this->log( $message . PHP_EOL . $exception->getTraceAsString() );
+				ActionScheduler_Logger::instance()->log( $action_id, $message );
+			}
+
+			// Now that we've logged the exceptions, we can detach the exception listener.
+			$this->clear_exceptions_and_detach_listener();
+		}
+	}
+
+	/**
+	 * Creates a new exception listener when processing subscription-related scheduled actions.
+	 *
+	 * @param int $action_id The ID of the scheduled action being ran.
+	 */
+	public function maybe_attach_exception_listener( $action_id ) {
+		$action = $this->get_action( $action_id );
+
+		if ( ! $action || ! isset( $this->tracked_scheduled_actions[ $action->get_hook() ] ) ) {
+			return;
+		}
+
+		// Add an action to detach the exception listener and clear the caught exceptions after the scheduled action has been executed.
+		add_action( 'action_scheduler_after_execute', [ $this, 'clear_exceptions_and_detach_listener' ] );
+
+		// Attach the exception listener.
+		add_action( 'woocommerce_caught_exception', [ $this, 'handle_exception' ] );
+	}
+
+	/**
+	 * Adds an exception to the list of exceptions caught by WC.
+	 *
+	 * @param Exception $exception The exception that was caught.
+	 */
+	public function handle_exception( $exception ) {
+		$this->exceptions[] = $exception;
+	}
+
+	/**
+	 * Clears the list of exceptions caught by WC and detaches the listener.
+	 *
+	 * This function is called directly and attached to an action that runs after a scheduled action has finished being executed.
+	 */
+	public function clear_exceptions_and_detach_listener() {
+		$this->exceptions = [];
+		remove_action( 'woocommerce_caught_exception', [ $this, 'handle_exception' ] );
 	}
 
 	/**
 	 * Display an admin notice when a scheduled action failure has occurred.
 	 *
-	 * @since 2.2.19
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
 	 */
 	public function maybe_show_admin_notice() {
 
@@ -139,7 +197,7 @@ class WCS_Failed_Scheduled_Action_Manager {
 			}
 
 			if ( $id ) {
-				$subject = '<a href="' . get_edit_post_link( $id ) . '">#' . $id . '</a>';
+				$subject = '<a href="' . wcs_get_edit_post_link( $id ) . '">#' . $id . '</a>';
 			} else {
 				$subject = 'unknown';
 			}
@@ -171,7 +229,7 @@ class WCS_Failed_Scheduled_Action_Manager {
 	/**
 	 * Handle requests to disable the failed scheduled actions admin notice.
 	 *
-	 * @since 2.2.19
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
 	 */
 	protected function maybe_disable_admin_notice() {
 		if ( isset( $_GET['_wcsnonce'] ) && wp_verify_nonce( $_GET['_wcsnonce'], 'wcs_scheduled_action_timeout_error_notice' ) && isset( $_GET['wcs_scheduled_action_timeout_error_notice'] ) ) {
@@ -184,7 +242,7 @@ class WCS_Failed_Scheduled_Action_Manager {
 	 *
 	 * @param string $hook the scheduled action hook
 	 * @return string
-	 * @since 2.2.19
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
 	 */
 	protected function get_action_hook_label( $hook ) {
 		return str_replace( array( 'woocommerce_scheduled_', '_' ), array( '', ' ' ), $hook );
@@ -195,7 +253,7 @@ class WCS_Failed_Scheduled_Action_Manager {
 	 *
 	 * @param mixed $args the scheduled action args
 	 * @return string
-	 * @since 2.2.19
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
 	 */
 	protected function get_action_args_string( $args ) {
 		$args_string = $separator = '';
@@ -215,7 +273,7 @@ class WCS_Failed_Scheduled_Action_Manager {
 	 *
 	 * @param int $action_id the scheduled action ID
 	 * @return ActionScheduler_Action
-	 * @since 2.2.19
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.19
 	 */
 	protected function get_action( $action_id ) {
 		$store = ActionScheduler_Store::instance();

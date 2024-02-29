@@ -2,11 +2,11 @@
 /**
  * Redux Date/Time Extension Class
  *
- * @package Redux Pro
+ * @package Redux
  * @author  Kevin Provance <kevin.provance@gmail.com>
  * @class   Redux_Extension_Datetime
  *
- * @version 2.0.0
+ * @version 4.3.15
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,7 +24,7 @@ if ( ! class_exists( 'Redux_Extension_Datetime', false ) ) {
 		 *
 		 * @var string
 		 */
-		public static $version = '2.0.0';
+		public static $version = '4.3.15';
 
 		/**
 		 * Extension friendly name.
@@ -36,10 +36,10 @@ if ( ! class_exists( 'Redux_Extension_Datetime', false ) ) {
 		/**
 		 * Redux_Extension_Datetime constructor.
 		 *
-		 * @param object $parent ReduxFramework pointer.
+		 * @param object $redux ReduxFramework pointer.
 		 */
-		public function __construct( $parent ) {
-			parent::__construct( $parent, __FILE__ );
+		public function __construct( $redux ) {
+			parent::__construct( $redux, __FILE__ );
 
 			$this->add_field( 'datetime' );
 		}

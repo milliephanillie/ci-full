@@ -3,6 +3,7 @@
  * Redux Helper Class
  *
  * @noinspection PhpUndefinedFieldInspection
+ * @noinspection PhpUnused
  *
  * @class   Redux_Helpers
  * @version 3.0.0
@@ -30,7 +31,7 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		public static $array_units = array( '', '%', 'in', 'cm', 'mm', 'em', 'rem', 'ex', 'pt', 'pc', 'px', 'vh', 'vw', 'vmin', 'vmax', 'ch' );
 
 		/**
-		 * Retrieve section array from field ID.
+		 * Retrieve the section array from field ID.
 		 *
 		 * @param string $opt_name Panel opt_name.
 		 * @param string $field_id Field ID.
@@ -44,7 +45,7 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 
 					if ( is_array( $sections ) && ! empty( $sections ) ) {
 						foreach ( $sections as $section ) {
-							if ( isset( $section['fields'] ) && ! empty( $section['fields'] ) ) {
+							if ( ! empty( $section['fields'] ) ) {
 								foreach ( $section['fields'] as $field ) {
 									if ( is_array( $field ) && ! empty( $field ) ) {
 										if ( isset( $field['id'] ) && $field['id'] === $field_id ) {
@@ -73,39 +74,39 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 				return false;
 			}
 
-			return is_float( $val ) ? false : preg_match( '~^((?:\+|-)?[0-9]+)$~', $val );
+			return is_float( $val ) ? false : preg_match( '~^([+\-]?[0-9]+)$~', $val );
 		}
 
 		/**
-		 * Deprecated. Gets panel tab number from specified field.
+		 * Deprecated. Gets panel tab number from the specified field.
 		 *
-		 * @param object       $parent ReduxFramework object.
+		 * @param object       $redux ReduxFramework object.
 		 * @param array|string $field  Field array.
 		 *
 		 * @return int|string
 		 * @deprecated No longer using camelCase naming convention.
 		 */
-		public static function tabFromField( $parent, $field ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
+		public static function tabFromField( $redux, $field ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
 			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, 'Redux 4.0', 'Redux_Helpers::tab_from_field( $parent, $field )' );
 
-			return self::tab_from_field( $parent, $field );
+			return self::tab_from_field( $redux, $field );
 		}
 
 		/**
-		 * Gets panel tab number from specified field.
+		 * Gets panel tab number from the specified field.
 		 *
-		 * @param object       $parent ReduxFramework object.
+		 * @param object       $redux ReduxFramework object.
 		 * @param array|string $field  Field array.
 		 *
 		 * @return int|string
 		 */
-		public static function tab_from_field( $parent, $field ) {
-			foreach ( $parent->sections as $k => $section ) {
+		public static function tab_from_field( $redux, $field ) {
+			foreach ( $redux->sections as $k => $section ) {
 				if ( ! isset( $section['title'] ) ) {
 					continue;
 				}
 
-				if ( isset( $section['fields'] ) && ! empty( $section['fields'] ) ) {
+				if ( ! empty( $section['fields'] ) ) {
 					if ( self::recursive_array_search( $field, $section['fields'] ) ) {
 						return $k;
 					}
@@ -116,7 +117,7 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		}
 
 		/**
-		 * Deprecated. Verifies if specified field type is in use.
+		 * Deprecated. Verifies if a specified field type is in use.
 		 *
 		 * @param array $fields Field arrays.
 		 * @param array $field  Field array.
@@ -131,7 +132,7 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		}
 
 		/**
-		 * Verifies if specified field type is in use.
+		 * Verifies if a specified field type is in use.
 		 *
 		 * @param array $fields Field arrays.
 		 * @param array $field  Field arrays to check.
@@ -151,37 +152,37 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		/**
 		 * Deprecated Verifies if field is in use.
 		 *
-		 * @param object $parent ReduxFramework object.
+		 * @param object $redux ReduxFramework object.
 		 * @param string $field  Field type.
 		 *
 		 * @return bool
 		 * @deprecated No longer using camelCase function names.
 		 */
-		public static function isFieldInUse( $parent, string $field ): bool { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
-			// phpcs:ignore Squiz.PHP.CommentedOutCode
-			// _deprecated_function( __CLASS__ . '::' . __FUNCTION__, 'Redux 4.0', 'Redux_Helpers::is_field_in_use( $parent, $field )' );
-			return self::is_field_in_use( $parent, $field );
+		public static function isFieldInUse( $redux, string $field ): bool { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
+			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, 'Redux 4.0', 'Redux_Helpers::is_field_in_use( $parent, $field )' );
+
+			return self::is_field_in_use( $redux, $field );
 		}
 
 		/**
 		 * Verifies if field is in use.
 		 *
-		 * @param object $parent ReduxFramework object.
+		 * @param object $redux ReduxFramework object.
 		 * @param string $field  Field type.
 		 *
 		 * @return bool
 		 */
-		public static function is_field_in_use( $parent, string $field ): bool {
-			if ( empty( $parent->sections ) ) {
+		public static function is_field_in_use( $redux, string $field ): bool {
+			if ( empty( $redux->sections ) ) {
 				return false;
 			}
 
-			foreach ( $parent->sections as $section ) {
+			foreach ( $redux->sections as $section ) {
 				if ( ! isset( $section['title'] ) ) {
 					continue;
 				}
 
-				if ( isset( $section['fields'] ) && ! empty( $section['fields'] ) ) {
+				if ( ! empty( $section['fields'] ) ) {
 					if ( self::recursive_array_search( $field, $section['fields'] ) ) {
 						return true;
 					}
@@ -343,7 +344,7 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		}
 
 		/**
-		 * Deprecated. Determines if theme is child.
+		 * Deprecated. Determines if the theme is child.
 		 *
 		 * @param string $file Path to file.
 		 *
@@ -357,7 +358,7 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		}
 
 		/**
-		 * Determines if theme is child.
+		 * Determines if the theme is child.
 		 *
 		 * @param string $file Path to theme dir.
 		 *
@@ -459,9 +460,8 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		 * @since      3.1.7
 		 */
 		public static function cleanFilePath( string $path ): string { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
-			// TODO: Uncomment this after Redux Pro is discontinued.
 			// phpcs:ignore Squiz.PHP.CommentedOutCode
-			// _deprecated_function( __CLASS__ . '::' . __FUNCTION__, 'Redux 4.0', 'Redux_Functions_Ex::wp_normalize_path( $path )' );
+			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, 'Redux 4.0', 'Redux_Functions_Ex::wp_normalize_path( $path )' );
 			return Redux_Functions_Ex::wp_normalize_path( $path );
 		}
 
@@ -473,33 +473,6 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		public static function get_hash(): string {
 			$remote_addr = Redux_Core::$server['REMOTE_ADDR'] ?? '127.0.0.1';
 			return md5( network_site_url() . '-' . $remote_addr );
-		}
-
-		/**
-		 * Return array of installed themes.
-		 *
-		 * @return array
-		 */
-		public static function get_wp_themes(): array {
-			global $wp_theme_paths;
-
-			$wp_theme_paths = array();
-			$themes         = wp_get_themes();
-
-			foreach ( $themes as $theme ) {
-				$path = Redux_Functions_Ex::wp_normalize_path( trailingslashit( $theme->get_theme_root() ) . $theme->get_template() );
-
-				if ( Redux_Functions_Ex::wp_normalize_path( realpath( $path ) ) !== $path ) {
-					$theme_paths[] = Redux_Functions_Ex::wp_normalize_path( realpath( $path ) );
-				}
-
-				$wp_theme_paths[ $path ] = Redux_Functions_Ex::wp_normalize_path( realpath( $path ) );
-			}
-
-			return array(
-				'full_paths'  => $wp_theme_paths,
-				'theme_paths' => $theme_paths,
-			);
 		}
 
 		/**
@@ -571,33 +544,6 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		}
 
 		/**
-		 * Take a path and delete it
-		 *
-		 * @param string $dir Dir to remove.
-		 *
-		 * @since    3.3.3
-		 */
-		public static function rmdir( string $dir ) {
-			if ( is_dir( $dir ) ) {
-				$objects = scandir( $dir );
-
-				foreach ( $objects as $object ) {
-					if ( '.' !== $object && '..' !== $object ) {
-						if ( filetype( $dir . '/' . $object ) === 'dir' ) {
-							rmdir( $dir . '/' . $object );
-						} else {
-							unlink( $dir . '/' . $object );
-						}
-					}
-				}
-
-				reset( $objects );
-
-				rmdir( $dir );
-			}
-		}
-
-		/**
 		 * Field Render Function.
 		 * Takes the color hex value and converts to a rgba.
 		 *
@@ -638,37 +584,37 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		/**
 		 * Deprecated. Returns string boolean value.
 		 *
-		 * @param mixed $var String to convert to true boolean.
+		 * @param mixed $variable String to convert to true boolean.
 		 *
 		 * @return mixed|array
 		 *
 		 * @deprecated No longer using camelCase naming convention.
 		 */
-		public static function makeBoolStr( $var ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
+		public static function makeBoolStr( $variable ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
 			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, 'Redux 4.0.0', 'Redux_Instances::make_bool_str( $var )' );
 
-			return self::make_bool_str( $var );
+			return self::make_bool_str( $variable );
 		}
 
 		/**
 		 * Returns string boolean value.
 		 *
-		 * @param mixed $var true|false to convert.
+		 * @param mixed $variable true|false to convert.
 		 *
 		 * @return mixed|array
 		 */
-		public static function make_bool_str( $var ) {
-			if ( 'false' === $var || empty( $var ) ) {
+		public static function make_bool_str( $variable ) {
+			if ( 'false' === $variable || empty( $variable ) ) {
 				return 'false';
-			} elseif ( true === $var || 'true' === $var || 1 === $var || '1' === $var ) {
+			} elseif ( true === $variable || 'true' === $variable || 1 === $variable || '1' === $variable ) {
 				return 'true';
 			} else {
-				return $var;
+				return $variable;
 			}
 		}
 
 		/**
-		 * Compile localized array.
+		 * Compile a localized array.
 		 *
 		 * @param array $localize Array of localized strings.
 		 *
@@ -692,82 +638,6 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 			}
 
 			return false;
-		}
-
-		/**
-		 * Returns array of Redux templates.
-		 *
-		 * @param string $custom_template_path The Path to template dir.
-		 *
-		 * @return array
-		 */
-		private static function get_redux_templates( string $custom_template_path ): array {
-			Redux_Filesystem::get_instance();
-
-			$template_paths     = array( 'ReduxFramework' => Redux_Core::$dir . 'templates/panel' );
-			$scanned_files      = array();
-			$found_files        = array();
-			$outdated_templates = false;
-
-			foreach ( $template_paths as $plugin_name => $template_path ) {
-				$scanned_files[ $plugin_name ] = self::scan_template_files( $template_path );
-			}
-
-			foreach ( $scanned_files as $plugin_name => $files ) {
-				foreach ( $files as $file ) {
-					if ( file_exists( $custom_template_path . '/' . $file ) ) {
-						$theme_file = $custom_template_path . '/' . $file;
-					} else {
-						$theme_file = false;
-					}
-
-					if ( $theme_file ) {
-						$core_version  = self::get_template_version( Redux_Core::$dir . 'templates/panel/' . $file );
-						$theme_version = self::get_template_version( $theme_file );
-
-						if ( $core_version && ( empty( $theme_version ) || version_compare( $theme_version, $core_version, '<' ) ) ) {
-							if ( ! $outdated_templates ) {
-								$outdated_templates = true;
-							}
-
-							$found_files[ $plugin_name ][] = sprintf( '<code>%s</code> ' . esc_html__( 'version', 'redux-framework' ) . ' <strong style="color:red">%s</strong> ' . esc_html__( 'is out of date. The core version is', 'redux-framework' ) . ' %s', str_replace( WP_CONTENT_DIR . '/themes/', '', $theme_file ), $theme_version ? $theme_version : '-', $core_version );
-						} else {
-							$found_files[ $plugin_name ][] = sprintf( '<code>%s</code>', str_replace( WP_CONTENT_DIR . '/themes/', '', $theme_file ) );
-						}
-					}
-				}
-			}
-
-			return $found_files;
-		}
-
-		/**
-		 * Scan template files for ver changes.
-		 *
-		 * @param string $template_path The Path to templates.
-		 *
-		 * @return array
-		 */
-		private static function scan_template_files( string $template_path ): array {
-			$files  = scandir( $template_path );
-			$result = array();
-
-			if ( $files ) {
-				foreach ( $files as $value ) {
-					if ( ! in_array( $value, array( '.', '..' ), true ) ) {
-						if ( is_dir( $template_path . DIRECTORY_SEPARATOR . $value ) ) {
-							$sub_files = self::scan_template_files( $template_path . DIRECTORY_SEPARATOR . $value );
-							foreach ( $sub_files as $sub_file ) {
-								$result[] = $value . DIRECTORY_SEPARATOR . $sub_file;
-							}
-						} else {
-							$result[] = $value;
-						}
-					}
-				}
-			}
-
-			return $result;
 		}
 
 		/**
@@ -807,8 +677,8 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		 *
 		 * @param array $attributes Array of attributes.
 		 */
-		public static function html_attributes( array $attributes = array() ) {
-			$string = join(
+		public static function html_attributes( array $attributes = array() ): string {
+			return join(
 				' ',
 				array_map(
 					function ( $key ) use ( $attributes ) {
@@ -821,35 +691,6 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 					array_keys( $attributes )
 				)
 			) . ' ';
-		}
-
-		/**
-		 * Output filesize based on letter indicator.
-		 *
-		 * @param string $size Size with letter.
-		 *
-		 * @return bool|int|string
-		 */
-		private static function let_to_num( string $size ) {
-			$l   = substr( $size, - 1 );
-			$ret = substr( $size, 0, - 1 );
-
-			switch ( strtoupper( $l ) ) {
-				case 'T':
-				case 'G':
-				case 'M':
-				case 'P':
-					$ret *= 1024;
-					break;
-				// Must remain recursive, do not use 'break'.
-				// Must remain recursive, do not use 'break'.
-				// Must remain recursive, do not use 'break'.
-				// Must remain recursive, do not use 'break'.
-				case 'K':
-					$ret *= 1024;
-			}
-
-			return $ret;
 		}
 
 		/**
@@ -879,12 +720,12 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		/**
 		 * Checks a nested capabilities array or string to determine if the current user meets the requirements.
 		 *
-		 * @param string|array $capabilities Permission string or array to check. See self::user_can() for details.
+		 * @param string|array $caps Permission string or array to check. See self::user_can() for details.
 		 *
 		 * @return bool Whether the user meets the requirements. False on invalid user.
 		 * @since 3.6.3.4
 		 */
-		public static function current_user_can( $capabilities ): bool {
+		public static function current_user_can( $caps ): bool { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 			$current_user = wp_get_current_user();
 
 			if ( empty( $current_user ) ) {
@@ -894,7 +735,7 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 			$name_arr = func_get_args();
 			$args     = array_merge( array( $current_user ), $name_arr );
 
-			return call_user_func_array( array( 'self', 'user_can' ), $args );
+			return call_user_func_array( array( __CLASS__, 'user_can' ), $args );
 		}
 
 		/**
@@ -903,10 +744,10 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		 * The capability 'relation' is reserved for controlling the relation mode (AND/OR), which defaults to AND.
 		 * Max depth of 30 levels.  False is returned for any conditions exceeding max depth.
 		 * If you want to check meta caps, you must also pass the object ID on which to check against.
-		 * If you get the error: PHP Notice:  Undefined offset: 0 in /wp-includes/capabilities.php, you didn't
+		 * If you get the error: PHP Notice: Undefined offset: 0 in /wp-includes/capabilities.php, you didn't
 		 * pass the required $object_id.
 		 *
-		 * @param int|object   $user          User ID or WP_User object to check. Defaults to the current user.
+		 * @param int|WP_User  $user          User ID or WP_User object to check. Defaults to the current user.
 		 * @param string|array $capabilities  Capability string or array to check. The array lets you use multiple
 		 *                                    conditions to determine if a user has permission.
 		 *                                    Invalid conditions are skipped (conditions which aren't a string/array/bool/number(cast to bool)).
@@ -932,7 +773,7 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		 * @since 3.6.3.4
 		 * @example
 		 *        user_can( 42, 'edit_pages' );                        // Checks if user ID 42 has the 'edit_pages' cap.
-		 *        user_can( 42, 'edit_page', 17433 );                  // Checks if user ID 42 has the 'edit_page' cap for post ID 17433.
+		 *        user_can( 42, 'edit_page', 17433 );                  // Checks if user ID 42 has the 'edit_page' cap for post-ID 17433.
 		 *        user_can( 42, array( 'edit_pages', 'edit_posts' ) ); // Checks if user ID 42 has both the 'edit_pages' and 'edit_posts' caps.
 		 */
 		public static function user_can( $user, $capabilities, int $object_id = null ): bool {
@@ -959,11 +800,9 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 				}
 
 				return call_user_func_array( 'user_can', $args );
-			} else {
+			} elseif ( ! is_array( $capabilities ) ) {
 				// Only strings and arrays are allowed as valid capabilities.
-				if ( ! is_array( $capabilities ) ) {
-					return false;
-				}
+				return false;
 			}
 
 			// Capability array check.
@@ -1000,11 +839,11 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 
 						$expression_result = call_user_func_array( 'user_can', $args ) === true;
 					} elseif ( is_array( $value ) ) {
-						$depth ++;
+						++$depth;
 
 						$expression_result = self::user_can( $user, $value, $object_id );
 
-						$depth --;
+						--$depth;
 					} else {
 						// Invalid types are skipped.
 						continue;
@@ -1020,11 +859,11 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 
 						$expression_result = call_user_func_array( 'user_can', $args ) === (bool) $value;
 					} elseif ( is_array( $value ) ) {
-						$depth ++;
+						++$depth;
 
 						$expression_result = self::user_can( $user, $value, $object_id );
 
-						$depth --;
+						--$depth;
 					} else {
 						// Invalid types are skipped.
 						continue;
@@ -1037,11 +876,9 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 						// If the relation is OR, return on the first true expression.
 						return true;
 					}
-				} else {
-					if ( ! $expression_result ) {
-						// If the relation is AND, return on the first false expression.
-						return false;
-					}
+				} elseif ( ! $expression_result ) {
+					// If the relation is AND, return on the first false expression.
+					return false;
 				}
 			}
 
@@ -1056,10 +893,10 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		 * @return bool
 		 */
 		public static function google_fonts_update_needed(): bool {
-
 			$path = trailingslashit( Redux_Core::$upload_dir ) . 'google_fonts.json';
 			$now  = time();
 			$secs = 60 * 60 * 24 * 7;
+
 			if ( file_exists( $path ) ) {
 				if ( ( $now - filemtime( $path ) ) < $secs ) {
 					return false;
@@ -1070,7 +907,7 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		}
 
 		/**
-		 * Retrieve updated Google font array.
+		 * Retrieve an updated Google font array.
 		 *
 		 * @param bool $download Flag to download to file.
 		 *
@@ -1263,10 +1100,10 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		/**
 		 * Sanitize array keys and values.
 		 *
-		 * @param array $array Array to sanitize.
+		 * @param array $arr Array to sanitize.
 		 */
-		public static function sanitize_array( array $array ): array {
-			return self::array_map_r( 'wp_kses_post', $array );
+		public static function sanitize_array( array $arr ): array {
+			return self::array_map_r( 'wp_kses_post', $arr );
 		}
 
 		/**
@@ -1292,9 +1129,9 @@ if ( ! class_exists( 'Redux_Helpers', false ) ) {
 		 *
 		 * @param string $context Mode to use.
 		 *
-		 * @return array|mixed
+		 * @return array
 		 */
-		public static function get_material_design_colors( string $context = 'primary' ) {
+		public static function get_material_design_colors( string $context = 'primary' ): array {
 			$colors = array(
 				'primary'     => array( '#FFFFFF', '#000000', '#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722', '#795548', '#9E9E9E', '#607D8B' ),
 				'red'         => array( '#FFEBEE', '#FFCDD2', '#EF9A9A', '#E57373', '#EF5350', '#F44336', '#E53935', '#D32F2F', '#C62828', '#B71C1C', '#FF8A80', '#FF5252', '#FF1744', '#D50000' ),

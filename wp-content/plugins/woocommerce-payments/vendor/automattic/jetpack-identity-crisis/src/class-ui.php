@@ -10,7 +10,7 @@ namespace Automattic\Jetpack\IdentityCrisis;
 use Automattic\Jetpack\Assets;
 use Automattic\Jetpack\Identity_Crisis;
 use Automattic\Jetpack\Status\Host;
-use Automattic\Jetpack\Tracking as Tracking;
+use Automattic\Jetpack\Tracking;
 use Jetpack_Options;
 use Jetpack_Tracks_Client;
 
@@ -107,7 +107,7 @@ class UI {
 			'WP_API_nonce'                   => wp_create_nonce( 'wp_rest' ),
 			'wpcomHomeUrl'                   => ( is_array( $idc_urls ) && array_key_exists( 'wpcom_url', $idc_urls ) ) ? $idc_urls['wpcom_url'] : null,
 			'currentUrl'                     => ( is_array( $idc_urls ) && array_key_exists( 'current_url', $idc_urls ) ) ? $idc_urls['current_url'] : null,
-			'redirectUri'                    => str_replace( '/wp-admin/', '/', $_SERVER['REQUEST_URI'] ),
+			'redirectUri'                    => isset( $_SERVER['REQUEST_URI'] ) ? str_replace( '/wp-admin/', '/', filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : '',
 			'tracksUserData'                 => Jetpack_Tracks_Client::get_connected_user_tracks_identity(),
 			'tracksEventData'                => array(
 				'isAdmin'       => $is_admin,
@@ -119,6 +119,15 @@ class UI {
 			'consumerData'                   => static::get_consumer_data(),
 			'isAdmin'                        => $is_admin,
 			'possibleDynamicSiteUrlDetected' => $possible_dynamic_site_url_detected,
+
+			/**
+			 * Use the filter to provide custom HTML elecontainer ID.
+			 *
+			 * @since 0.10.0
+			 *
+			 * @param string|null $containerID The container ID.
+			 */
+			'containerID'                    => apply_filters( 'identity_crisis_container_id', null ),
 		);
 	}
 
@@ -144,7 +153,7 @@ class UI {
 				$priority1 = ( array_key_exists( 'priority', $c1 ) && (int) $c1['priority'] ) ? (int) $c1['priority'] : 10;
 				$priority2 = ( array_key_exists( 'priority', $c2 ) && (int) $c2['priority'] ) ? (int) $c2['priority'] : 10;
 
-				return $priority1 > $priority2 ? 1 : -1;
+				return $priority1 <=> $priority2;
 			}
 		);
 
@@ -156,7 +165,7 @@ class UI {
 				continue;
 			}
 
-			if ( 0 === strpos( $_SERVER['REQUEST_URI'], $consumer['admin_page'] ) && strlen( $consumer['admin_page'] ) > $consumer_url_length ) {
+			if ( isset( $_SERVER['REQUEST_URI'] ) && str_starts_with( filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $consumer['admin_page'] ) && strlen( $consumer['admin_page'] ) > $consumer_url_length ) {
 				$consumer_chosen     = $consumer;
 				$consumer_url_length = strlen( $consumer['admin_page'] );
 			}
@@ -189,5 +198,4 @@ class UI {
 
 		return 'self-hosted';
 	}
-
 }

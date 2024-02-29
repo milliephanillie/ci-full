@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * An email sent to the admin when a subscription is cancelled (either by a store manager, or the customer).
  *
  * @class WCS_Email_Cancelled_Subscription
- * @version 2.1
+ * @version 1.0.0 - Migrated from WooCommerce Subscriptions v2.1
  * @package WooCommerce_Subscriptions/Classes/Emails
  * @author Prospress
  * @extends WC_Email
@@ -48,7 +48,7 @@ class WCS_Email_Cancelled_Subscription extends WC_Email {
 	/**
 	 * Get the default e-mail subject.
 	 *
-	 * @since 2.5.3
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.5.3
 	 * @return string
 	 */
 	public function get_default_subject() {
@@ -58,7 +58,7 @@ class WCS_Email_Cancelled_Subscription extends WC_Email {
 	/**
 	 * Get the default e-mail heading.
 	 *
-	 * @since 2.5.3
+	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.5.3
 	 * @return string
 	 */
 	public function get_default_heading() {
@@ -83,7 +83,9 @@ class WCS_Email_Cancelled_Subscription extends WC_Email {
 			return;
 		}
 
-		update_post_meta( $subscription->get_id(), '_cancelled_email_sent', 'true' );
+		$subscription->set_cancelled_email_sent( 'true' );
+		$subscription->save();
+
 		$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
 	}
 
@@ -174,7 +176,7 @@ class WCS_Email_Cancelled_Subscription extends WC_Email {
 				'type'        => 'select',
 				'description' => __( 'Choose which format of email to send.', 'woocommerce-subscriptions' ),
 				'default'     => 'html',
-				'class'       => 'email_type',
+				'class'       => 'email_type wc-enhanced-select',
 				'options'     => array(
 					'plain'     => _x( 'Plain text', 'email type', 'woocommerce-subscriptions' ),
 					'html'      => _x( 'HTML', 'email type', 'woocommerce-subscriptions' ),

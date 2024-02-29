@@ -2,10 +2,10 @@
 /**
  * Redux JS Button Extension Class
  *
- * @package Redux Pro
+ * @package Redux
  * @author  Kevin Provance <kevin.provance@gmail.com>
  * @class   Redux_Extension_Js_Button
- * @version 2.0.0
+ * @version 4.3.16
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -39,12 +39,12 @@ if ( ! class_exists( 'Redux_Extension_Js_Button' ) ) {
 		 * @since       1.0.0
 		 * @access      public
 		 *
-		 * @param       ReduxFramework $parent Parent settings.
+		 * @param       ReduxFramework $redux Parent settings.
 		 *
 		 * @return      void
 		 */
-		public function __construct( $parent ) {
-			parent::__construct( $parent, __FILE__ );
+		public function __construct( $redux ) {
+			parent::__construct( $redux, __FILE__ );
 
 			$this->add_field( 'js_button' );
 		}

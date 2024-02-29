@@ -75,8 +75,9 @@ class Assets {
 	 *
 	 * @param string $script_handle Script handle.
 	 */
-	public function add_async_script( $script_handle ) {
-		$this->defer_script_handles[] = $script_handle;
+	public static function add_async_script( $script_handle ) {
+		$assets_instance                         = self::instance();
+		$assets_instance->defer_script_handles[] = $script_handle;
 	}
 
 	/**
@@ -92,7 +93,8 @@ class Assets {
 		}
 
 		if ( in_array( $handle, $this->defer_script_handles, true ) ) {
-			return preg_replace( '/^<script /i', '<script defer ', $tag );
+			// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+			return preg_replace( '/<script( [^>]*)? src=/i', '<script defer$1 src=', $tag );
 		}
 
 		return $tag;
@@ -277,10 +279,10 @@ class Assets {
 			} elseif ( '..' === $pp[ $i ] ) {
 				array_splice( $pp, --$i, 2 );
 			} else {
-				$i++;
+				++$i;
 			}
 		}
-		$ret .= join( '/', $pp );
+		$ret .= implode( '/', $pp );
 
 		$ret .= isset( $parts['query'] ) ? '?' . $parts['query'] : '';
 		$ret .= isset( $parts['fragment'] ) ? '#' . $parts['fragment'] : '';
@@ -448,6 +450,7 @@ class Assets {
 		$content_dir = Jetpack_Constants::get_constant( 'WP_CONTENT_DIR' );
 		$abspath     = Jetpack_Constants::get_constant( 'ABSPATH' );
 
+		// Note: str_starts_with() is not used here, as wp-includes/compat.php may not be loaded at this point.
 		if ( strpos( $lang_dir, $content_dir ) === 0 ) {
 			$data['baseUrl'] = content_url( substr( trailingslashit( $lang_dir ), strlen( trailingslashit( $content_dir ) ) ) );
 		} elseif ( strpos( $lang_dir, $abspath ) === 0 ) {
@@ -507,7 +510,7 @@ class Assets {
 		}
 
 		// Deprecated state module: Depend on wp-i18n to ensure global `wp` exists and because anything needing this will need that too.
-		$wp_scripts->add( 'wp-jp-i18n-state', null, array( 'wp-deprecated', 'wp-jp-i18n-loader' ) );
+		$wp_scripts->add( 'wp-jp-i18n-state', false, array( 'wp-deprecated', 'wp-jp-i18n-loader' ) );
 		$wp_scripts->add_inline_script( 'wp-jp-i18n-state', 'wp.deprecated( "wp-jp-i18n-state", { alternative: "wp-jp-i18n-loader" } );' );
 		$wp_scripts->add_inline_script( 'wp-jp-i18n-state', 'wp.jpI18nState = wp.jpI18nLoader.state;' );
 	}
@@ -729,7 +732,6 @@ class Assets {
 	}
 
 	// endregion .
-
 }
 
 // Enable section folding in vim:
