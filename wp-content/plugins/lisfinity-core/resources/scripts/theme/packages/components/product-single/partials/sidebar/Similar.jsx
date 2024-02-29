@@ -17,7 +17,7 @@ function Similar(props) {
 
   return (
     !isEmpty(advertisements) &&
-    <section id="similar--products" className="py-40 bg-grey-100 px-10 xs:px-20 sm:px-40 lg:px-100 lg:py-60">
+    <section id="similar--products similiar-products-wrapper-custom" className="py-40 bg-grey-100 px-10 xs:px-20 sm:px-40 lg:px-100 lg:py-60">
       <div className="container">
         <div className="mb-30 font-bold text-grey-1000 text-2xl">{lc_data.jst[538]}</div>
         <div className="row -mb-30 md:mb-0">

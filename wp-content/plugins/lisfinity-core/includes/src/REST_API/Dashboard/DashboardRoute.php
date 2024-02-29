@@ -1388,13 +1388,12 @@ class DashboardRoute extends Route {
 	protected function get_overall_stats( $user_id ) {
 		$stats   = [];
 		$all_ads = $this->ads;
+		$all_packages_count = $this->get_all_packages_count( $user_id );
 
 		$stats['ads']      = ! empty( $all_ads ) ? count( $all_ads ) : 0;
-		$stats['bids']     = ! empty( $all_ads ) ? count( $this->bids ) : 0;
-		$stats['messages'] = ! empty( $all_ads ) ? count( $this->messages ) : 0;
-		$stats['packages'] = ! empty( $all_ads ) ? $this->get_all_packages_count( $user_id ) : 0;
-
-		return apply_filters('lisfinity__get_overall_stats', $stats);
+		$stats['bids']     = ! empty( $this->bids ) ? count( $this->bids ) : 0;
+		$stats['messages'] = ! empty( $this->messages ) ? count( $this->messages ) : 0;
+		$stats['packages'] = ! empty( $all_packages_count ) ? $all_packages_count : 0;
 	}
 
 	protected function get_bids( $user_id ) {

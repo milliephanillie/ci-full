@@ -491,10 +491,14 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 						$product_summaries = array();
 						$product_counts    = array_count_values( $item_product_ids );
 						foreach ( $product_counts as $product_id => $count ) {
-							/** @var WC_Product $product */
+							/**
+							 * WC Product.
+							 *
+							 * @var WC_product $product
+							 */
 							$product = $this->lookup_product( $package, $product_id );
-							if ( $product ) {
-								$item_name           = WC_Connect_Compatibility::instance()->get_product_name( $product );
+							if ( is_a( $product, 'WC_Product' ) ) {
+								$item_name           = $product->get_name();
 								$item                = $item_by_product[ $product_id ];
 								$item_measurements   = sprintf( $measurements_format, $item->length, $item->width, $item->height, $item->weight );
 								$product_summaries[] =
@@ -638,6 +642,7 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 		 * @param string $type    Notice type.
 		 */
 		public function debug( $message, $type = 'notice' ) {
+      // phpcs:ignore WordPress.Security.NonceVerification.Missing --- No input from $_POST is used as input.
 			if ( WC_Connect_Functions::is_cart() || WC_Connect_Functions::is_checkout() || isset( $_POST['update_cart'] ) || WC_Connect_Functions::is_store_api_call() ) {
 				$debug_message = sprintf( '%s (%s:%d)', $message, esc_html( $this->title ), $this->instance_id );
 				$this->logger->debug( $debug_message, $type );

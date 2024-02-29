@@ -1,10 +1,12 @@
 === WooCommerce Shipping & Tax ===
 Contributors: woocommerce, automattic, woothemes, allendav, kellychoffman, jkudish, jeffstieler, nabsul, robobot3000, danreylop, mikeyarce, shaunkuschel, orangesareorange, pauldechov, dappermountain, radogeorgiev, bor0, royho, cshultz88, bartoszbudzanowski, harriswong, ferdev, superdav42
 Tags: shipping, stamps, usps, woocommerce, taxes, payment, dhl, labels
-Requires at least: 4.6
-Requires PHP: 5.3
-Tested up to: 5.9
-Stable tag: 1.26.3
+Requires PHP: 7.3
+Requires at least: 6.2
+Tested up to: 6.4
+WC requires at least: 8.0
+WC tested up to: 8.3
+Stable tag: 2.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,11 +34,15 @@ This section describes how to install the plugin and get it working.
 1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Install and activate WooCommerce if you haven't already done so
-1. Install, activate and connect Jetpack if you haven't already done so
+1. Install, activate and connect to your WordPress.com account if you haven't already done so
 1. Want to buy shipping labels? First, add your credit card to https://wordpress.com/me/purchases/billing and then print labels for orders right from the Edit Order page
 1. Enable automated taxes from WooCommerce > Settings > Tax (make sure "enable taxes" is checked in General settings first)
 
 == Frequently Asked Questions ==
+
+= Why is a WordPress.com account connection required? =
+
+We connect to your WordPress.com account to authenticate your site and user account so we can securely charge the payment method on file for any labels purchased.
 
 = What services are included? =
 
@@ -51,10 +57,6 @@ Yes! You can buy and print USPS shipping labels for domestic destinations and US
 = This works with WooCommerce, right? =
 
 Yep! WooCommerce version 3.0 or newer, please.
-
-= Why is a Jetpack Connection and WordPress.com account required? =
-
-We use the Jetpack connection to authenticate each request and, if you use the shipping label service, to charge your credit card on file.
 
 = Are there Terms of Service and data usage policies? =
 
@@ -76,13 +78,84 @@ The source code is freely available [in GitHub](https://github.com/Automattic/wo
 
 == Changelog ==
 
+= 2.5.1 - 2024-02-12 =
+* Fix - Cannot call constructor in classes/wc-api-dev/class-wc-rest-dev-data-continents-controller.php.
+
+= 2.5.0 - 2024-01-08 =
+* Add - Ability to keep connected to WordPress.com after Jetpack is uninstalled.
+* Fix - Deprecation notices for PHP 8.2.
+
+= 2.4.2 - 2023-11-30 =
+* Fix - When automated taxes are enabled, the order refund button will fail
+
+= 2.4.1 - 2023-11-28 =
+* Fix - Street address is not included when recalculating the tax in edit order page.
+
+= 2.4.0 - 2023-10-31 =
+* Add - Ability to connect to WordPress.com without the Jetpack plugin.
+* Fix - NUX banner display on Edit Order pages.
+
+= 2.3.7 - 2023-10-23 =
+* Add - Load Sift when printing a label.
+
+= 2.3.6 - 2023-10-10 =
+* Fix - Occasionally block user to checkout when using WooCommerce Blocks.
+* Fix - Fix notice error when shipping location(s) is disabled in WooCommerce settings.
+
+= 2.3.5 - 2023-09-20 =
+* Tweak - Move Jetpack Connection requirement to the top in FAQ.
+
+= 2.3.4 - 2023-09-05 =
+* Fix - Shipping label reports to display proper HTML.
+
+= 2.3.3 - 2023-08-22 =
+* Tweak - Update .org assets.
+
+= 2.3.2 - 2023-08-09 =
+* Add   - Added QIT tools for development.
+
+= 2.3.1 - 2023-07-17 =
+* Fix    - Fix notice error on the WooCommerce tax settings page.
+
+= 2.3.0 - 2023-07-11 =
+* Add   - Add USPS HAZMAT support.
+
+= 2.2.5 - 2023-05-23 =
+* Update - Security update.
+
+= 2.2.4 - 2023-03-14 =
+* Fix   - Incompatibility with Kadence WooCommerce Email Designer.
+
+= 2.2.3 - 2023-02-14 =
+* Fix   - Link correction on Automated taxes description text.
+
+= 2.2.2 - 2023-02-02 =
+* Fix   - Adjust checkout US zipcode validation to run only when exactly 5 or 10 digits are typed.
+
+= 2.2.1 - 2023-01-24 =
+* Fix   - Fix warning on checkout page apper if zipcode doesn't match selected state.
+
+= 2.2.0 - 2023-01-19 =
+* Add   - Add option to let user pick whether to save the last package & service or not.
+
+= 2.1.1 - 2023-01-02 =
+* Fix   - Save the selected package box and do not skip the package step.
+
+= 2.1.0 - 2022-11-30 =
+* Tweak - Catch malformed zipcode and display WC notice.
+
+= 2.0.0 - 2022-11-16 =
+* Add   - High-Performance Order Storage compatibility.
+* Add   - Add list of tax rate backup files for merchants to click and download.
+* Tweak - Transition version numbering from SemVer to WordPress versioning.
+
 = 1.26.3 - 2022-08-03 =
 * Tweak - Always let the user to pick the package box.
 * Add   - Add filter to override TaxJar result.
-* Fix   - Uncatch error when installing/connecting the Jetpack. 
+* Fix   - Uncatch error when installing/connecting the Jetpack.
 
 = 1.26.2 - 2022-07-04 =
-* Fix   - Change the wp-calypso commit to fix NPM Error when run `npm run prepare`. 
+* Fix   - Change the wp-calypso commit to fix NPM Error when run `npm run prepare`.
 * Fix   - E2E Tests: npm ci, update puppeteer to v2
 * Fix   - JS Tests: npm ci
 * Tweak - Replace colors npm package with chalk

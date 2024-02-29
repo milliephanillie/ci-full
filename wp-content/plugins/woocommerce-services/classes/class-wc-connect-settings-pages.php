@@ -13,6 +13,15 @@ if ( ! class_exists( 'WC_Connect_Settings_Pages' ) ) {
 		 */
 		protected $continents;
 
+		/**
+		 * @var string;
+		 */
+		protected $id;
+
+		/**
+		 * @var string;
+		 */
+		protected $label;
 
 		/**
 		 * @var WC_Connect_API_Client
@@ -66,11 +75,11 @@ if ( ! class_exists( 'WC_Connect_Settings_Pages' ) ) {
 			global $hide_save_button;
 			$hide_save_button = true;
 
-			if ( WC_Connect_Jetpack::is_development_mode() ) {
-				if ( WC_Connect_Jetpack::is_active() ) {
-					$message = __( 'Note: Jetpack is connected, but development mode is also enabled on this site. Please disable development mode.', 'woocommerce-services' );
+			if ( WC_Connect_Jetpack::is_offline_mode() ) {
+				if ( WC_Connect_Jetpack::is_connected() ) {
+					$message = __( 'Note: Your site is connected but WooCommerce Shipping & Tax is configured to work in offline mode. Please disable offline mode.', 'woocommerce-services' );
 				} else {
-					$message = __( 'Note: Jetpack development mode is enabled on this site. This site will not be able to obtain payment methods from WooCommerce Shipping & Tax production servers.', 'woocommerce-services' );
+					$message = __( 'Note: WooCommerce Shipping & Tax is configured to work in offline mode. This site will not be able to obtain payment methods from WooCommerce Shipping & Tax production servers.', 'woocommerce-services' );
 				}
 				?>
 					<div class="wc-connect-admin-dev-notice">
@@ -101,12 +110,14 @@ if ( ! class_exists( 'WC_Connect_Settings_Pages' ) ) {
 			}
 
 			if ( isset( $_GET['from_order'] ) ) {
-				$extra_args['order_id']   = $_GET['from_order'];
-				$extra_args['order_href'] = get_edit_post_link( $_GET['from_order'] );
+				$from_order               = sanitize_text_field( $_GET['from_order'] );
+				$extra_args['order_id']   = $from_order;
+				$extra_args['order_href'] = get_edit_post_link( $from_order );
 			}
 
 			if ( ! empty( $_GET['carrier'] ) ) {
-				$extra_args['carrier']    = $_GET['carrier'];
+				$carrier                  = sanitize_text_field( $_GET['carrier'] );
+				$extra_args['carrier']    = $carrier;
 				$extra_args['continents'] = $this->continents->get();
 
 				$carrier_information = array();
@@ -115,7 +126,7 @@ if ( ! class_exists( 'WC_Connect_Settings_Pages' ) ) {
 						array_filter(
 							$extra_args['carrier_accounts'],
 							function( $carrier ) {
-								return $carrier->type === $_GET['carrier'];
+								return $carrier->type === $carrier;
 							}
 						)
 					);

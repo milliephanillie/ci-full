@@ -161,7 +161,7 @@ if ( ! class_exists( 'WC_Connect_PayPal_EC' ) ) {
 		 */
 		public function maybe_trigger_banner( $order_id ) {
 			$order          = wc_get_order( $order_id );
-			$payment_method = WC_Connect_Compatibility::instance()->get_payment_method( $order );
+			$payment_method = $order ? $order->get_payment_method() : false;
 
 			if ( 'ppec_paypal' === $payment_method ) {
 				WC_Connect_Options::update_option( 'banner_ppec', 'yes' );
@@ -178,6 +178,9 @@ if ( ! class_exists( 'WC_Connect_PayPal_EC' ) ) {
 
 			$screen = get_current_screen();
 
+			$order          = wc_get_order();
+			$payment_method = $order ? $order->get_payment_method() : false;
+
 			if ( // Display if on any of these admin pages.
 				( // Orders list.
 					'shop_order' === $screen->post_type
@@ -186,7 +189,7 @@ if ( ! class_exists( 'WC_Connect_PayPal_EC' ) ) {
 				|| ( // Edit order page.
 					'shop_order' === $screen->post_type
 					&& 'post' === $screen->base
-					&& 'ppec_paypal' === WC_Connect_Compatibility::instance()->get_payment_method( wc_get_order() )
+					&& 'ppec_paypal' === $payment_method
 					)
 				|| ( // WooCommerce » Settings » Payments.
 					'woocommerce_page_wc-settings' === $screen->base
@@ -276,12 +279,12 @@ if ( ! class_exists( 'WC_Connect_PayPal_EC' ) ) {
 				);
 				$api_creds_template = __( 'Payments will be authenticated by WooCommerce Shipping & Tax and directed to the following email address. To disable this feature and link a PayPal account, <a href="%s">click here</a>.', 'woocommerce-services' );
 				if ( empty( $settings->api_username ) ) {
-					$api_creds_text                                = sprintf( $api_creds_template, add_query_arg( 'environment', 'live', $reset_link ) );
+					$api_creds_text                                = sprintf( $api_creds_template, esc_url( add_query_arg( 'environment', 'live', $reset_link ) ) );
 					$form_fields['api_credentials']['description'] = $api_creds_text;
 					unset( $form_fields['api_username'], $form_fields['api_password'], $form_fields['api_signature'], $form_fields['api_certificate'] );
 				}
 				if ( empty( $settings->sandbox_api_username ) ) {
-					$api_creds_text                                        = sprintf( $api_creds_template, add_query_arg( 'environment', 'sandbox', $reset_link ) );
+					$api_creds_text                                        = sprintf( $api_creds_template, esc_url( add_query_arg( 'environment', 'sandbox', $reset_link ) ) );
 					$form_fields['sandbox_api_credentials']['description'] = $api_creds_text;
 					unset( $form_fields['sandbox_api_username'], $form_fields['sandbox_api_password'], $form_fields['sandbox_api_signature'], $form_fields['sandbox_api_certificate'] );
 				}
@@ -296,11 +299,11 @@ if ( ! class_exists( 'WC_Connect_PayPal_EC' ) ) {
 				);
 				$api_creds_template = __( 'To authenticate payments with WooCommerce Shipping & Tax, <a href="%s">click here</a>.', 'woocommerce-services' );
 				if ( empty( $settings->api_username ) ) {
-					$api_creds_text                                 = sprintf( $api_creds_template, add_query_arg( 'environment', 'live', $reset_link ) );
+					$api_creds_text                                 = sprintf( $api_creds_template, esc_url( add_query_arg( 'environment', 'live', $reset_link ) ) );
 					$form_fields['api_credentials']['description'] .= '<br /><br />' . $api_creds_text;
 				}
 				if ( empty( $settings->sandbox_api_username ) ) {
-					$api_creds_text = sprintf( $api_creds_template, add_query_arg( 'environment', 'sandbox', $reset_link ) );
+					$api_creds_text = sprintf( $api_creds_template, esc_url( add_query_arg( 'environment', 'sandbox', $reset_link ) ) );
 					$form_fields['sandbox_api_credentials']['description'] .= '<br /><br />' . $api_creds_text;
 				}
 			}
@@ -334,7 +337,8 @@ if ( ! class_exists( 'WC_Connect_PayPal_EC' ) ) {
 			if (
 				! isset( $_GET['page'] ) || 'wc-settings' !== $_GET['page'] ||
 				empty( $_GET['reroute_requests'] ) ||
-				empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'reroute_requests' )
+				empty( $_GET['nonce'] ) ||
+				! wp_verify_nonce( $_GET['nonce'], 'reroute_requests' ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			) {
 				return;
 			}

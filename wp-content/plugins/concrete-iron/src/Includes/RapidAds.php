@@ -48,7 +48,11 @@ class RapidAds {
                 }
 
                 if (!empty(array_intersect($term_slugs, $promoted_terms_slugs)) && $promoted_product->product_id != $product_id) {
-                    $matching_promoted_ids[] = $promoted_product->product_id;
+                    $p_id =$promoted_product->product_id;
+
+                    if('publish' ==  get_post_status($p_id)) {
+                        $matching_promoted_ids[] = $promoted_product->product_id;
+                    }
                 }
             }
 

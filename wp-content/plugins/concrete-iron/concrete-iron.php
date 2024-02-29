@@ -3,7 +3,7 @@
 Plugin Name: ConcreteIron
 Plugin URI:  https://www.concreteiron.com/
 Description: To manage concrete iron marketplace
-Version:     1.0
+Version:     1.0.0
 Author:      1027
 Author URI:  https://www.concreteiron.com/
 */
@@ -22,6 +22,11 @@ require_once plugin_dir_path( CONCRETEIRON ) . 'vendor/autoload.php';
 // Include your class file
 require_once plugin_dir_path( CONCRETEIRON ) . 'src/Includes/RapidFormSubmitModel.php';
 require_once plugin_dir_path( CONCRETEIRON ) . 'src/Includes/RapidProductSubmit.php';
+
+
+use ConcreteIron\Templates\CIWC_TemplateHelper;
+use ConcreteIron\Templates\CIWC_CartEmptyTemplate;
+add_filter( 'woocommerce_locate_template', [CIWC_TemplateHelper::class, 'plugin_locate_woo_templates'], 10, 3 );
 
 
 use ConcreteIron\Includes\RapidFormSubmitModel;
@@ -56,6 +61,9 @@ function load_my_plugin() {
     // Check if the class from the other plugin exists
     if(class_exists('Lisfinity\Models\Taxonomies\TaxonomiesAdminModel')) {
         // The other plugin is activated, and you can use its classes.
+        $cartEmptyTemplate = new CIWC_CartEmptyTemplate();
+
+
         $rapidHooks = new RapidHooks();
         $rapidProductSubmit = new RapidProductSubmit();
         $rapidEditModel = new RapidEditModel();

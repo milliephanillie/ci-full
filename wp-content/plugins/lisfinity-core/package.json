@@ -5,7 +5,7 @@
   "scripts": {
     "internal:pipeline": "webpack --colors",
     "dev": "cross-env NODE_ENV=development npm run internal:pipeline --color=always -- --config resources/build/webpack.development.js",
-    "build": "cross-env NODE_ENV=production npm run internal:pipeline --color=always -- --config resources/build/webpack.production.js",
+    "build": "cross-env NODE_ENV=production npm run internal:pipeline --color=always -- --config resources/build/webpack.production.js --progress",
     "lint": "run-s -cl lint:wpcs lint:scripts lint:styles",
     "lint-fix": "run-s -cl lint-fix:wpcs lint-fix:scripts lint-fix:styles",
     "lint:wpcs": "./wpcs/vendor/bin/phpcs --colors --standard=WordPress --ignore=includes/src/*,includes/woocommerce-product includes/",

@@ -7,11 +7,13 @@
  * Author URI: https://woocommerce.com/
  * Text Domain: woocommerce-services
  * Domain Path: /i18n/languages/
- * Version: 1.26.3
- * WC requires at least: 3.5.5
- * WC tested up to: 6.6.1
+ * Version: 2.5.1
+ * Requires at least: 6.2
+ * Tested up to: 6.4
+ * WC requires at least: 8.0
+ * WC tested up to: 8.3
  *
- * Copyright (c) 2017-2022 Automattic
+ * Copyright (c) 2017-2023 Automattic
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +36,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/vendor/autoload_packages.php';
+
 require_once __DIR__ . '/classes/class-wc-connect-extension-compatibility.php';
 require_once __DIR__ . '/classes/class-wc-connect-functions.php';
 require_once __DIR__ . '/classes/class-wc-connect-jetpack.php';
@@ -41,21 +45,10 @@ require_once __DIR__ . '/classes/class-wc-connect-options.php';
 
 if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 	define( 'WOOCOMMERCE_CONNECT_MINIMUM_WOOCOMMERCE_VERSION', '2.6' );
-	define( 'WOOCOMMERCE_CONNECT_MINIMUM_JETPACK_VERSION', '7.5' );
 	define( 'WOOCOMMERCE_CONNECT_MAX_JSON_DECODE_DEPTH', 32 );
 
 	if ( ! defined( 'WOOCOMMERCE_CONNECT_SERVER_API_VERSION' ) ) {
 		define( 'WOOCOMMERCE_CONNECT_SERVER_API_VERSION', '5' );
-	}
-
-	// Check for CI environment variable to trigger test mode.
-	if ( false !== getenv( 'WOOCOMMERCE_SERVICES_CI_TEST_MODE' ) ) {
-		if ( ! defined( 'WOOCOMMERCE_SERVICES_LOCAL_TEST_MODE' ) ) {
-			define( 'WOOCOMMERCE_SERVICES_LOCAL_TEST_MODE', true );
-		}
-		if ( ! defined( 'JETPACK_DEV_DEBUG' ) ) {
-			define( 'JETPACK_DEV_DEBUG', true );
-		}
 	}
 
 	class WC_Connect_Loader {
@@ -154,6 +147,48 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		protected $rest_carrier_types_controller;
 
 		/**
+		 * WC_REST_Connect_Assets_Controller
+		 *
+		 * @var WC_REST_Connect_Assets_Controller
+		 */
+		protected $rest_assets_controller;
+
+		/**
+		 * WC_REST_Connect_Shipping_Carrier_Controller
+		 *
+		 * @var WC_REST_Connect_Shipping_Carrier_Controller
+		 */
+		protected $rest_carrier_controller;
+
+		/**
+		 * WC_REST_Connect_Shipping_Carriers_Controller
+		 *
+		 * @var WC_REST_Connect_Shipping_Carriers_Controller
+		 */
+		protected $rest_carriers_controller;
+
+		/**
+		 * WC_REST_Connect_Subscriptions_Controller
+		 *
+		 * @var WC_REST_Connect_Subscriptions_Controller
+		 */
+		protected $rest_subscriptions_controller;
+
+		/**
+		 * WC_REST_Connect_Subscription_Activate_Controller
+		 *
+		 * @var WC_REST_Connect_Subscription_Activate_Controller
+		 */
+		protected $rest_subscription_activate_controller;
+
+		/**
+		 * WC_REST_Connect_Shipping_Carrier_Delete_Controller
+		 *
+		 * @var WC_REST_Connect_Shipping_Carrier_Delete_Controller
+		 */
+		protected $rest_carrier_delete_controller;
+
+		/**
 		 * @var WC_Connect_Service_Schemas_Validator
 		 */
 		protected $service_schemas_validator;
@@ -187,6 +222,16 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		 * @var WC_Connect_PayPal_EC
 		 */
 		protected $paypal_ec;
+
+		/**
+		 * @var WC_Connect_Tracks
+		 */
+		protected $tracks;
+
+		/**
+		 * @var WC_Connect_Label_Reports
+		 */
+		protected $label_reports;
 
 		/**
 		 * @var WC_REST_Connect_Tos_Controller
@@ -282,14 +327,17 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			}
 		}
 
-		function wpcom_static_url( $file ) {
-			$i   = hexdec( substr( md5( $file ), -1 ) ) % 2;
-			$url = 'http://s' . $i . '.wp.com' . $file;
-			return set_url_scheme( $url );
-		}
-
 		public function __construct() {
 			$this->wc_connect_base_url = self::get_wc_connect_base_url();
+			add_action(
+				'before_woocommerce_init',
+				function() {
+					if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+						\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'woocommerce-services/woocommerce-services.php' );
+					}
+				}
+			);
+			add_action( 'plugins_loaded', array( $this, 'jetpack_on_plugins_loaded' ), 1 );
 			add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
 		}
 
@@ -514,6 +562,17 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			load_plugin_textdomain( 'woocommerce-services', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages' );
 		}
 
+		public function jetpack_on_plugins_loaded() {
+			$jetpack_config = new Automattic\Jetpack\Config();
+			$jetpack_config->ensure(
+				'connection',
+				array(
+					'slug' => WC_Connect_Jetpack::JETPACK_PLUGIN_SLUG,
+					'name' => __( 'WooCommerce Shipping & Tax', 'woocommerce-services' ),
+				)
+			);
+		}
+
 		public function on_plugins_loaded() {
 			$this->load_textdomain();
 
@@ -527,6 +586,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				);
 				return;
 			}
+
 			add_action( 'before_woocommerce_init', array( $this, 'pre_wc_init' ) );
 		}
 
@@ -554,17 +614,13 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			add_action( 'admin_init', array( $this, 'admin_enqueue_scripts' ) );
 			add_action( 'admin_init', array( $this->nux, 'set_up_nux_notices' ) );
 
-			// Plugin should be enabled if dev mode or connected + TOS.
-			$jetpack_status       = $this->nux->get_jetpack_install_status();
-			$is_jetpack_connected = WC_Connect_Nux::JETPACK_CONNECTED === $jetpack_status;
-			$is_jetpack_dev_mode  = WC_Connect_Nux::JETPACK_DEV === $jetpack_status;
-
-			if ( ! $is_jetpack_connected && ! $is_jetpack_dev_mode ) {
+			if ( WC_Connect_Nux::JETPACK_NOT_CONNECTED === $this->nux->get_jetpack_install_status() ) {
 				return;
 			}
 
 			add_action( 'rest_api_init', array( $this, 'tos_rest_init' ) );
 
+			// The entire plugin should be enabled if dev mode or connected + TOS.
 			if ( ! $tos_accepted ) {
 				return;
 			}
@@ -665,6 +721,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		 * Load all plugin dependencies.
 		 */
 		public function load_dependencies() {
+			require_once __DIR__ . '/classes/class-wc-connect-utils.php';
 			require_once __DIR__ . '/classes/class-wc-connect-logger.php';
 			require_once __DIR__ . '/classes/class-wc-connect-service-schemas-validator.php';
 			require_once __DIR__ . '/classes/class-wc-connect-taxjar-integration.php';
@@ -799,7 +856,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 5, 2 );
 			add_filter( 'woocommerce_shipping_fields', array( $this, 'add_shipping_phone_to_checkout' ) );
 			add_action( 'woocommerce_admin_shipping_fields', array( $this, 'add_shipping_phone_to_order_fields' ) );
-			add_filter( 'woocommerce_get_order_address', array( $this, 'get_shipping_phone_from_order' ), 10, 3 );
+			add_filter( 'woocommerce_get_order_address', array( $this, 'get_shipping_or_billing_phone_from_order' ), 10, 3 );
 			add_action( 'admin_enqueue_scripts', array( $this->nux, 'show_pointers' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_plugin_action_links' ) );
 			add_action( 'enqueue_wc_connect_script', array( $this, 'enqueue_wc_connect_script' ), 10, 2 );
@@ -807,6 +864,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			add_action( 'woocommerce_email_after_order_table', array( $this, 'add_tracking_info_to_emails' ), 10, 3 );
 			add_filter( 'woocommerce_admin_reports', array( $this, 'reports_tabs' ) );
 			add_action( 'woocommerce_checkout_order_processed', array( $this, 'track_completed_order' ), 10, 3 );
+			add_action( 'admin_print_footer_scripts', array( $this, 'add_sift_js_tracker' ) );
 
 			$tracks = $this->get_tracks();
 			$tracks->init();
@@ -1098,7 +1156,13 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			foreach ( $packages as $package ) {
 				$shipping_methods  = WC()->shipping()->load_shipping_methods( $package );
 				$shipping_packages = WC()->shipping()->calculate_shipping_for_package( $package );
-				$shipping_rates    = $shipping_packages['rates'];
+
+				// Only process the valid shipping package.
+				if ( empty( $shipping_packages['rates'] ) || ! is_array( $shipping_packages['rates'] ) ) {
+					continue;
+				}
+
+				$shipping_rates = $shipping_packages['rates'];
 
 				$shipping_method_ids = array();
 				foreach ( $shipping_rates as $rate ) {
@@ -1149,21 +1213,20 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		/**
 		 * Add tracking info (if available) to completed emails using the woocommerce_email_after_order_table hook
 		 *
-		 * @param $order
+		 * @param bool|\WC_Order|\WC_Order_Refund $order
 		 * @param $sent_to_admin
 		 * @param $plain_text
 		 */
 		public function add_tracking_info_to_emails( $order, $sent_to_admin, $plain_text ) {
-			$id = WC_Connect_Compatibility::instance()->get_order_id( $order );
 
-			// Abort if no id was passed, if the order is not marked as 'completed' or if another extension is handling the emailing.
-			if ( ! $id
-				|| ! $order->has_status( 'completed' )
-				|| ! WC_Connect_Extension_Compatibility::should_email_tracking_details( $id ) ) {
+			// Abort if no $order was passed, if the order is not marked as 'completed' or if another extension is handling the emailing.
+			if ( ! $order
+				 || ! $order->has_status( 'completed' )
+				 || ! WC_Connect_Extension_Compatibility::should_email_tracking_details( $order->get_id() ) ) {
 				return;
 			}
 
-			$labels = $this->service_settings_store->get_label_order_meta_data( $id );
+			$labels = $this->service_settings_store->get_label_order_meta_data( $order->get_id() );
 
 			// Abort if there are no labels.
 			if ( empty( $labels ) ) {
@@ -1224,23 +1287,23 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 
 			if ( $plain_text ) {
 				echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
-				echo mb_strtoupper( __( 'Tracking', 'woocommerce-services' ), 'UTF-8' ) . "\n\n";
-				echo $markup;
+				echo esc_html( mb_strtoupper( __( 'Tracking', 'woocommerce-services' ), 'UTF-8' ) ) . "\n\n";
+				echo wp_kses( $markup, array() );
 				return;
 			}
 
 			?>
 				<div style="font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;">
-					<h2><?php echo __( 'Tracking', 'woocommerce-services' ); ?></h2>
+					<h2><?php esc_html_e( 'Tracking', 'woocommerce-services' ); ?></h2>
 					<table class="td" cellspacing="0" cellpadding="6" style="margin-top: 10px; width: 100%;">
 						<thead>
 							<tr>
-								<th class="td" scope="col"><?php echo __( 'Provider', 'woocommerce-services' ); ?></th>
-								<th class="td" scope="col"><?php echo __( 'Tracking number', 'woocommerce-services' ); ?></th>
+								<th class="td" scope="col"><?php esc_html_e( 'Provider', 'woocommerce-services' ); ?></th>
+								<th class="td" scope="col"><?php esc_html_e( 'Tracking number', 'woocommerce-services' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
-							<?php echo $markup; ?>
+							<?php echo wp_kses_post( $markup ); ?>
 						</tbody>
 					</table>
 				</div>
@@ -1335,7 +1398,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			return $payment_gateways;
 		}
 
-		function get_i18n_json() {
+		private function get_i18n_json() {
 			$i18n_json = plugin_dir_path( __FILE__ ) . 'i18n/languages/woocommerce-services-' . get_locale() . '.json';
 			if ( is_file( $i18n_json ) && is_readable( $i18n_json ) ) {
 				$locale_data = @file_get_contents( $i18n_json );
@@ -1436,7 +1499,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		}
 
 		public function should_show_shipping_debug_meta_box( $post ) {
-			$order = wc_get_order( $post );
+			$order = WC_Connect_Compatibility::instance()->init_theorder_object( $post );
 
 			if ( false === $order ) {
 				return false;
@@ -1453,15 +1516,17 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			return false;
 		}
 
-		public function add_meta_boxes( $post_type, $post ) {
-			if ( $this->shipping_label->should_show_meta_box() ) {
+		public function add_meta_boxes( $screen_id, $post ) {
+
+			if ( $this->shipping_label->should_show_meta_box( $post ) ) {
 				add_meta_box( 'woocommerce-order-shipment-tracking', __( 'Shipment Tracking', 'woocommerce-services' ), array( $this->shipping_label, 'meta_box' ), null, 'side', 'default', array( 'context' => 'shipment_tracking' ) );
 
 				add_meta_box( 'woocommerce-order-label', __( 'Shipping Label', 'woocommerce-services' ), array( $this->shipping_label, 'meta_box' ), null, 'normal', 'high', array( 'context' => 'shipping_label' ) );
 			}
 
 			if ( $this->should_show_shipping_debug_meta_box( $post ) ) {
-				add_meta_box( 'woocommerce-services-shipping-debug', __( 'Shipping Debug', 'woocommerce-services' ), array( $this, 'shipping_rate_packaging_debug_log_meta_box' ), 'shop_order', 'normal', 'default' );
+				$screen = WC_Connect_Compatibility::instance()->get_order_admin_screen();
+				add_meta_box( 'woocommerce-services-shipping-debug', __( 'Shipping Debug', 'woocommerce-services' ), array( $this, 'shipping_rate_packaging_debug_log_meta_box' ), $screen, 'normal', 'default' );
 			}
 		}
 
@@ -1511,7 +1576,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			return $hidden_keys;
 		}
 
-		function hide_wc_connect_order_meta_data( $protected, $meta_key, $meta_type ) {
+		public function hide_wc_connect_order_meta_data( $protected, $meta_key, $meta_type ) {
 			if ( in_array( $meta_key, array( 'wc_connect_labels', 'wc_connect_destination_normalized' ), true ) ) {
 				$protected = true;
 			}
@@ -1519,7 +1584,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			return $protected;
 		}
 
-		function add_shipping_phone_to_checkout( $fields ) {
+		public function add_shipping_phone_to_checkout( $fields ) {
 			$defaults = array(
 				'label'        => __( 'Phone', 'woocommerce-services' ),
 				'type'         => 'tel',
@@ -1547,27 +1612,24 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			return $fields;
 		}
 
-		function add_shipping_phone_to_order_fields( $fields ) {
+		public function add_shipping_phone_to_order_fields( $fields ) {
 			$fields['phone'] = array(
 				'label' => __( 'Phone', 'woocommerce-services' ),
 			);
 			return $fields;
 		}
 
-		function get_shipping_phone_from_order( $fields, $address_type, WC_Order $order ) {
-			$order_id = WC_Connect_Compatibility::instance()->get_order_id( $order );
-			if ( 'shipping' === $address_type ) {
-				$shipping_phone = get_post_meta( $order_id, '_shipping_phone', true );
-				if ( ! $shipping_phone ) {
-					$billing_address = $order->get_address( 'billing' );
-					$shipping_phone  = $billing_address['phone'];
-				}
-				$fields['phone'] = $shipping_phone;
+		public function get_shipping_or_billing_phone_from_order( $fields, $address_type, WC_Order $order ) {
+			if ( 'shipping' !== $address_type ) {
+				return $fields;
 			}
+
+			$fields['phone'] = $order->get_shipping_phone() ? $order->get_shipping_phone() : $order->get_billing_phone();
+
 			return $fields;
 		}
 
-		function add_plugin_action_links( $links ) {
+		public function add_plugin_action_links( $links ) {
 			$links[] = sprintf(
 				wp_kses(
 					/* translators: %s Support url */
@@ -1579,7 +1641,46 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			return $links;
 		}
 
-		function enqueue_wc_connect_script( $root_view, $extra_args = array() ) {
+		/**
+		 * Adds the Sift JS page tracker if needed. See the comments for the detailed logic.
+		 *
+		 * @return  void
+		 */
+		public function add_sift_js_tracker() {
+			$sift_configurations = $this->api_client->get_sift_configuration();
+
+			$connected_data = WC_Connect_Jetpack::get_connection_owner_wpcom_data();
+
+			if ( is_wp_error( $sift_configurations ) || empty( $sift_configurations->beacon_key ) || empty( $connected_data['ID'] ) ) {
+				// Don't add sift tracking if we can't have the parameters to initialize Sift
+				return;
+			}
+
+			$fraud_config = array(
+				'beacon_key' => $sift_configurations->beacon_key,
+				'user_id'    => $connected_data['ID'],
+			);
+
+			?>
+			<script type="text/javascript">
+				var src = 'https://cdn.sift.com/s.js';
+
+				var _sift = ( window._sift = window._sift || [] );
+				_sift.push( [ '_setAccount', '<?php echo esc_attr( $fraud_config['beacon_key'] ); ?>' ] );
+				_sift.push( [ '_setUserId', '<?php echo esc_attr( $fraud_config['user_id'] ); ?>' ] );
+				_sift.push( [ '_trackPageview' ] );
+
+				if ( ! document.querySelector( '[src="' + src + '"]' ) ) {
+					var script = document.createElement( 'script' );
+					script.src = src;
+					script.async = true;
+					document.body.appendChild( script );
+				}
+			</script>
+			<?php
+		}
+
+		public function enqueue_wc_connect_script( $root_view, $extra_args = array() ) {
 			$is_alive = $this->api_client->is_alive_cached();
 
 			$payload = array(
@@ -1591,29 +1692,25 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			wp_localize_script( 'wc_connect_admin', 'wcConnectData', $payload );
 			wp_enqueue_script( 'wc_connect_admin' );
 
-			$debug_page_uri = esc_url(
-				add_query_arg(
-					array(
-						'page' => 'wc-status',
-						'tab'  => 'connect',
-					),
-					admin_url( 'admin.php' )
-				)
+			$debug_page_uri = add_query_arg(
+				array(
+					'page' => 'wc-status',
+					'tab'  => 'connect',
+				),
+				admin_url( 'admin.php' )
 			);
 
 			$encoded_arguments = wp_json_encode( $extra_args );
-			$escaped_arguments = function_exists( 'wc_esc_json' ) ? wc_esc_json( $encoded_arguments ) : esc_attr( $encoded_arguments );
-
 			?>
-				<div class="wcc-root woocommerce <?php echo esc_attr( $root_view ); ?>" data-args="<?php echo $escaped_arguments; ?>">
+				<div class="wcc-root woocommerce <?php echo esc_attr( $root_view ); ?>" data-args="<?php echo wc_esc_json( $encoded_arguments ); ?>">
 					<span class="form-troubles" style="opacity: 0">
-						<?php printf( __( 'Section not loading? Visit the <a href="%s">status page</a> for troubleshooting steps.', 'woocommerce-services' ), $debug_page_uri ); ?>
+						<?php printf( esc_html__( 'Section not loading? Visit the <a href="%s">status page</a> for troubleshooting steps.', 'woocommerce-services' ), esc_url( $debug_page_uri ) ); ?>
 					</span>
 				</div>
 			<?php
 		}
 
-		function render_schema_notices() {
+		public function render_schema_notices() {
 			$schemas = $this->get_service_schemas_store()->get_service_schemas();
 			if ( empty( $schemas ) || ! property_exists( $schemas, 'notices' ) || empty( $schemas->notices ) ) {
 				return;
@@ -1651,11 +1748,14 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			}
 		}
 	}
-
-	if ( ! defined( 'WC_UNIT_TESTING' ) ) {
-		new WC_Connect_Loader();
-	}
 }
 
 register_deactivation_hook( __FILE__, array( 'WC_Connect_Loader', 'plugin_deactivation' ) );
 register_uninstall_hook( __FILE__, array( 'WC_Connect_Loader', 'plugin_uninstall' ) );
+
+// Jetpack's Rest_Authentication needs to be initialized even before plugins_loaded.
+Automattic\Jetpack\Connection\Rest_Authentication::init();
+
+if ( ! defined( 'WC_UNIT_TESTING' ) ) {
+	new WC_Connect_Loader();
+}
